@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import configureMiddlewares from './middleware';
+import configureMiddlewares from './presentation/middleware';
 
 
 dotenv.config();
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Puedes omitir la conexión y arrancar el servidor directamente:
 app.listen(PORT, () => {
