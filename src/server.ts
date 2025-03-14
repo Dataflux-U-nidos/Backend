@@ -1,10 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import configureMiddlewares from './presentation/middleware';
+
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+
+// 1. Aplicar middlewares
+configureMiddlewares(app);
 
 // Comentamos la parte de conexión a MongoDB
 // const MONGO_URI = process.env.MONGO_URI || 'mongodb://prueba123:prueba123@mongo:27017/mydb?authSource=admin';
@@ -23,9 +27,9 @@ app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Puedes omitir la conexión y arrancar el servidor directamente:
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 });
