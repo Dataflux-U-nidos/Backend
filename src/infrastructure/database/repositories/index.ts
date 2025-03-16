@@ -1,3 +1,3 @@
-// src/infrastructure/database/repositories/index.ts
+import { EducationalInstitutionRepository } from './educational-institution.repository.Impl';
 import { MajorRepository } from './major.repository.impl';
-export default MajorRepository;
+export { EducationalInstitutionRepository, MajorRepository };

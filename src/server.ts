@@ -1,7 +1,8 @@
-import express from "express";
-import dotenv from "dotenv";
-import configureMiddlewares from "./presentation/middleware";
-import Database from "./infrastructure/database"; // Import DB instanceimport majorRouter from './presentation/routes/major.router';
+import express from 'express';
+import dotenv from 'dotenv';
+import configureMiddlewares from './presentation/middleware';
+import Database from "./infrastructure/database";
+import educationalInstitutionRouter from './presentation/routes/educational-institution.router';
 import majorRouter from './presentation/routes/major.router';
 
 dotenv.config();
@@ -13,6 +14,8 @@ configureMiddlewares(app);
 
 // 2. Routes
 app.use('/carreras', majorRouter);
+
+app.use('/educational-institutions', educationalInstitutionRouter);
 
 // Ruta de prueba
 app.get("/", (req, res) => {
