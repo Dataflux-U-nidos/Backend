@@ -1,2 +1,3 @@
 // src/infrastructure/database/repositories/index.ts
-export * from './major.repository.impl';
+import { MajorRepository } from './major.repository.impl';
+export default MajorRepository;
