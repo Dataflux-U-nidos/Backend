@@ -1,7 +1,7 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import configureMiddlewares from './presentation/middleware';
-
+import express from "express";
+import dotenv from "dotenv";
+import configureMiddlewares from "./presentation/middleware";
+import Database from "./infrastructure/database"; // Import DB instance
 
 dotenv.config();
 
@@ -10,26 +10,25 @@ const app = express();
 // 1. Aplicar middlewares
 configureMiddlewares(app);
 
-// Comentamos la parte de conexión a MongoDB
-// const MONGO_URI = process.env.MONGO_URI || 'mongodb://prueba123:prueba123@mongo:27017/mydb?authSource=admin';
-// export const connectDB = async () => {
-//   try {
-//     await mongoose.connect(MONGO_URI);
-//     console.log('Conectado a MongoDB correctamente');
-//   } catch (error) {
-//     console.error('Error conectando a MongoDB:', error);
-//     process.exit(1);
-//   }
-// };
-
 // Ruta de prueba
-app.get('/', (req, res) => {
-  res.send('Servidor Express funcionando correctamente');
+app.get("/", (req, res) => {
+  res.send("Servidor Express funcionando correctamente");
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ?? 3000;
 
-// Puedes omitir la conexión y arrancar el servidor directamente:
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
-});
+// Conectar la base de datos antes de iniciar el servidor
+const startServer = async () => {
+  try {
+    await Database.connect(); // Ensure DB is connected before starting the server
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Error al iniciar la aplicación:", error);
+    process.exit(1);
+  }
+};
+
+// Iniciar la aplicación
+startServer();
