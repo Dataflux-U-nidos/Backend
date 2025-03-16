@@ -5,13 +5,12 @@ FROM oven/bun:1.0 as builder
 WORKDIR /app
 
 # Copia los archivos del proyecto
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 COPY src ./src
 
 # Instala dependencias
-RUN bun install --frozen-lockfile
+RUN bun install 
 
-# Expone el puerto en el que corre el backend (ajústalo según tu configuración)
 EXPOSE 3000
 
 # Comando por defecto para ejecutar el servidor
