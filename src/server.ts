@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import configureMiddlewares from './presentation/middleware';
+import Database from "./infrastructure/database";
+import educationalInstitutionRouter from './presentation/routes/educational-institution.router';
 
 
 dotenv.config();
@@ -21,6 +23,8 @@ configureMiddlewares(app);
 //     process.exit(1);
 //   }
 // };
+
+app.use('/educational-institutions', educationalInstitutionRouter);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
