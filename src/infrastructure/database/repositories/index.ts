@@ -1,3 +1,3 @@
 import { EducationalInstitutionRepository } from './educational-institution.repository.Impl';
-
-export default EducationalInstitutionRepository;
+import { MajorRepository } from './major.repository.impl';
+export { EducationalInstitutionRepository, MajorRepository };
