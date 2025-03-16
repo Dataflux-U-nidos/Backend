@@ -1,19 +1,19 @@
 # Dependencias
 node_modules/
+package-lock.json
 bun.lockb
 .pnp/
 .pnp.js
 
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
-bun-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
+bun-debug.log*
 
-# Directorios de construcción y salida
+# Directorios de compilación y salida
 dist/
 build/
 .out/
@@ -72,3 +72,21 @@ docker-compose.override.yml
 *.tar.gz
 *.bak
 *.log.*
+
+# Archivos específicos para frontend
+public/
+.next/
+.nuxt/
+.svelte-kit/
+.storybook/
+.idea/
+
+# Archivos de build para frameworks modernos
+/.expo/
+.webpack/
+.esbuild/
+.tailwind-cache/
+
+# Archivos de lock específicos de frontend
+yarn.lock
+pnpm-lock.yaml
