@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import configureMiddlewares from './presentation/middleware';
+import majorRouter from './presentation/routes/major.router';
 
 
 dotenv.config();
@@ -21,6 +22,9 @@ configureMiddlewares(app);
 //     process.exit(1);
 //   }
 // };
+
+// 2. Routes
+app.use('/carreras', majorRouter);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
