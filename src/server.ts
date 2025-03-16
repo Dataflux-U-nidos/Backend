@@ -1,7 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import configureMiddlewares from "./presentation/middleware";
-import Database from "./infrastructure/database"; // Import DB instance
+import Database from "./infrastructure/database"; // Import DB instanceimport majorRouter from './presentation/routes/major.router';
+import majorRouter from './presentation/routes/major.router';
 
 dotenv.config();
 
@@ -9,6 +10,9 @@ const app = express();
 
 // 1. Aplicar middlewares
 configureMiddlewares(app);
+
+// 2. Routes
+app.use('/carreras', majorRouter);
 
 // Ruta de prueba
 app.get("/", (req, res) => {
