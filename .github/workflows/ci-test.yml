@@ -11,6 +11,7 @@ on:
       - main
       - release
       - develop
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -29,3 +30,49 @@ jobs:
 
       - name: 🔍 Run tests
         run: bun test || echo "No test command found, skipping tests"
+
+  deploy-release:
+    needs: test
+    if: github.event.pull_request.merged == true && github.base_ref == 'release'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔐 Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: 🛠️ Build and Tag Docker Image for PRUEBAS
+        run: |
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          docker build -t ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG .
+          docker tag ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-test
+
+      - name: 🚀 Push Docker Image to ECR (PRUEBAS)
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}:test-${IMAGE_TAG}
+          docker push ${{ secrets.AWS_ECR_URI }}:latest-test
+
+  deploy-prod:
+    needs: test
+    if: github.event.pull_request.merged == true && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔐 Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: 🛠️ Build and Tag Docker Image for PRODUCCIÓN
+        run: |
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          docker build -t ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG .
+          docker tag ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-prod
+
+      - name: 🚀 Push Docker Image to ECR (PRODUCCIÓN)
+        run: |
+          docker push ${{ secrets.AWS_ECR_URI }}:prod-${IMAGE_TAG}
+          docker push ${{ secrets.AWS_ECR_URI }}:latest-prod
