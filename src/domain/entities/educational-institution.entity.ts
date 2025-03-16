@@ -8,3 +8,5 @@ export interface EducationalInstitution {
     link: string;
     events: string[]; // no se de que seria el array exactamente
 }
+
+export default EducationalInstitution;

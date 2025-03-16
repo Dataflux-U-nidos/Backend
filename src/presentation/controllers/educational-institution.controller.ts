@@ -1,66 +1,80 @@
-import { Request, Response } from "express";
-import { validateSchema } from "../../shared/utils/typebox-validator";
-import { EducationalInstitutionRepository } from "../../infrastructure/database/repositories/educational-institution.repository";
+import { NextFunction, Request, Response } from "express";
+import { EducationalInstitutionRepository } from "../../infrastructure/database/repositories/educational-institution.repository.Impl";
 import { CreateEducationalInstitutionUseCase } from "../../application/use-cases/educational-institution/create-educational-institution.use-case";
-import { CreateEducationalInstitutionSchema, UpdateEducationalInstitutionSchema } from "../../application/dtos/educational_institution.dto";
+import { UpdateEducationalInstitutionUseCase } from "../../application/use-cases/educational-institution/update-educational-institution.use-case";
+import { GetEducationalInstitutionByIdUseCase } from "../../application/use-cases/educational-institution/get-educational-institution-by-id.use-case";
+import { DeleteEducationalInstitutionUseCase } from "../../application/use-cases/educational-institution/delete-educational-institution.use-cases";
+import { GetAllEducationalInstitutionUseCase } from "../../application/use-cases/educational-institution/get-all-educational-institution.use-case";
+
 
 const educationalInstitutionRepository = new EducationalInstitutionRepository();
 
 export class EducationalInstitutionController {
+  constructor(
+    private readonly createEducationalInstitutionUseCase: CreateEducationalInstitutionUseCase,
+    private readonly getAllEducationalInstitutionsUseCase: GetAllEducationalInstitutionUseCase,
+    private readonly getEducationalInstitutionByIdUseCase: GetEducationalInstitutionByIdUseCase,
+    private readonly updateEducationalInstitutionUseCase: UpdateEducationalInstitutionUseCase,
+    private readonly deleteEducationalInstitutionUseCase: DeleteEducationalInstitutionUseCase
+  ) {}
 
-  public static async getAll(req: Request, res: Response) {
+  public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const educationalInstitutions =
-        await educationalInstitutionRepository.findAll();
-      return res.json(200).json(educationalInstitutions);
+      const educationInstitution = await this.getAllEducationalInstitutionsUseCase.execute();
+      res.status(200).json(educationInstitution);
     } catch (error) {
-      return res.status(500).json({ message: "Error to obtain educational institutions" });
+      next(error);
     }
-  }
+  };
 
-  public static async create (req: Request, res: Response) {
-    const{valid, errors} = validateSchema(CreateEducationalInstitutionSchema, req.body);
-    if(!valid){
-        return res.status(400).json({errors});
-    }
-    try {
-        const useCase = new CreateEducationalInstitutionUseCase(educationalInstitutionRepository);
-        const newEducationalInstitution = await useCase.execute(req.body);
-        return res.status(201).json(newEducationalInstitution);
-    } catch (error) {
-        return res.status(500).json({message: "Error to create educational institution"});
-    }
-  }
-
-  public static async update(req: Request, res: Response) {
-    const { valid, errors } = validateSchema(UpdateEducationalInstitutionSchema,req.body);
-    if (!valid) {
-      return res.status(400).json({ errors });
-    }
-
-    try {
-      const { _id } = req.params;
-      const educationalInstitutionUpdated = await educationalInstitutionRepository.update(_id, req.body);
-      if (!educationalInstitutionUpdated) {
-        return res.status(404).json({ message: "Educational institution not found" });
-      }
-      return res.status(200).json(educationalInstitutionUpdated);
-    } catch (error) {
-      return res.status(500).json({ message: "Error to update educational institution" });
-    }
-  }
-
-  public static async delete(req: Request, res: Response) {
-    try {
-        const { _id } = req.params;
-        const isDeleted = await educationalInstitutionRepository.delete(_id);
-        if (!isDeleted) {
-            return res.status(404).json({ message: "Educational institution not found" });
+  public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const { id } = req.params;
+        const educationalInstitution = await this.getEducationalInstitutionByIdUseCase.execute(id);
+        if (!educationalInstitution) {
+          res.status(404).json({ message: 'Institución educativa no encontrada' });
+        } else {
+          res.status(200).json(educationalInstitution);
         }
-        return res.status(200).json({message: "Educational institution deleted"});
-    } catch (error) {
-        return res.status(500).json({ message: "Error to delete educational institution" });
-    }
-  }
+      } catch (error) {
+        next(error);
+      }
+    };
 
+    public create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const newEducationalInstitution = await this.createEducationalInstitutionUseCase.execute(req.body);
+        res.status(201).json(newEducationalInstitution);
+      } catch (error) {
+        next(error);
+      }
+    };
+
+    public update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const { id } = req.params;
+        const updatedEducationalInstitution = await this.updateEducationalInstitutionUseCase.execute(id, req.body);
+        if (!updatedEducationalInstitution) {
+          res.status(404).json({ message: 'Institución educativa no encontrada' });
+        } else {
+          res.status(200).json(updatedEducationalInstitution);
+        }
+      } catch (error) {
+        next(error);
+      }
+    };
+
+    public delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const { id } = req.params;
+        const wasDeleted = await this.deleteEducationalInstitutionUseCase.execute(id);
+        if (!wasDeleted) {
+          res.status(404).json({ message: 'Institución educativa no encontrada' });
+        } else {
+          res.status(200).json({ message: 'Institución educativa eliminada correctamente' });
+        }
+      } catch (error) {
+        next(error);
+      }
+    };
 }

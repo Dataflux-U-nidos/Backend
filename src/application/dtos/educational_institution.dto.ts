@@ -15,12 +15,11 @@ export const EducationalInstitutionSchema = Type.Object({
   ]),
   description: Type.String(),
   link: Type.String({ format: "uri" }),
-  events: Type.Array(Type.String()), // Se recomienda definir un tipo más detallado si los eventos tienen estructura
+  events: Type.Array(Type.String()), 
 });
 
 
 export type EducationalInstitutionDto = Static<typeof EducationalInstitutionSchema>;
 
 export const CreateEducationalInstitutionSchema = EducationalInstitutionSchema;
-
 export const UpdateEducationalInstitutionSchema = Type.Partial(EducationalInstitutionSchema);
