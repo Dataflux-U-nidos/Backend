@@ -50,10 +50,13 @@ jobs:
 
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
-
+        
+      - name: 📌 Definir variable IMAGE_TAG
+        run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+        
       - name: 🛠️ Build and Tag Docker Image for PRUEBAS
         run: |
-          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          echo "Tag generado: $IMAGE_TAG"
           docker build -t ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG .
           docker tag ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-test
 
@@ -77,12 +80,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: 📌 Definir variable IMAGE_TAG
+        run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+        
       - name: 🛠️ Build and Tag Docker Image for PRODUCCIÓN
         run: |
-          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          echo "Tag generado: $IMAGE_TAG"
           docker build -t ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG .
           docker tag ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-prod
 
