@@ -1,26 +1,30 @@
 import { Router } from 'express';
 import { MajorController } from '../../presentation';
+import { MajorRepository } from '../../infrastructure';
+import { CreateMajorUseCase,GetAllMajorsUseCase, GetMajorByIdUseCase, UpdateMajorUseCase, DeleteMajorUseCase } from '../../application';
 
 const router = Router();
 
-router.get('/', (req, res, next) => {
-  MajorController.getAll(req, res, next).catch(next);
-});
+const majorRepository = new MajorRepository();
 
-router.get('/:id', (req, res, next) => {
-  MajorController.getById(req, res, next).catch(next);
-});
+const createMajorUseCase = new CreateMajorUseCase(majorRepository);
+const getAllMajorsUseCase = new GetAllMajorsUseCase(majorRepository);
+const getMajorByIdUseCase = new GetMajorByIdUseCase(majorRepository);
+const updateMajorUseCase = new UpdateMajorUseCase(majorRepository);
+const deleteMajorUseCase = new DeleteMajorUseCase(majorRepository);
 
-router.post('/', (req, res, next) => {
-  MajorController.create(req, res, next).catch(next);
-});
+const majorController = new MajorController(
+  createMajorUseCase,
+  getAllMajorsUseCase,
+  getMajorByIdUseCase,
+  updateMajorUseCase,
+  deleteMajorUseCase
+);
 
-router.patch('/:id', (req, res, next) => {
-  MajorController.update(req, res, next).catch(next);
-});
-
-router.delete('/:id', (req, res, next) => {
-  MajorController.delete(req, res, next).catch(next);
-});
+router.get('/', majorController.getAll);
+router.get('/:id', majorController.getById);
+router.post('/', majorController.create);
+router.patch('/:id', majorController.update);
+router.delete('/:id', majorController.delete);
 
 export default router;

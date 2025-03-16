@@ -1,25 +1,28 @@
 import { Request, Response, NextFunction } from 'express';
-import { MajorRepository } from '../../infrastructure';
 import { CreateMajorUseCase,GetAllMajorsUseCase, GetMajorByIdUseCase, UpdateMajorUseCase, DeleteMajorUseCase } from '../../application';
 
-const majorRepository = new MajorRepository();
-
 export class MajorController {
-  public static async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+  constructor(
+    private readonly createMajorUseCase: CreateMajorUseCase,
+    private readonly getAllMajorsUseCase: GetAllMajorsUseCase,
+    private readonly getMajorByIdUseCase: GetMajorByIdUseCase,
+    private readonly updateMajorUseCase: UpdateMajorUseCase,
+    private readonly deleteMajorUseCase: DeleteMajorUseCase
+  ) {}
+
+  public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const useCase = new GetAllMajorsUseCase(majorRepository);
-      const majors = await useCase.execute();
+      const majors = await this.getAllMajorsUseCase.execute();
       res.status(200).json(majors);
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  public static async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-      const useCase = new GetMajorByIdUseCase(majorRepository);
-      const major = await useCase.execute(id);
+      const major = await this.getMajorByIdUseCase.execute(id);
       if (!major) {
         res.status(404).json({ message: 'Carrera no encontrada' });
       } else {
@@ -28,23 +31,21 @@ export class MajorController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  public static async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const useCase = new CreateMajorUseCase(majorRepository);
-      const newMajor = await useCase.execute(req.body);
+      const newMajor = await this.createMajorUseCase.execute(req.body);
       res.status(201).json(newMajor);
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  public static async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-      const useCase = new UpdateMajorUseCase(majorRepository);
-      const updatedMajor = await useCase.execute(id, req.body);
+      const updatedMajor = await this.updateMajorUseCase.execute(id, req.body);
       if (!updatedMajor) {
         res.status(404).json({ message: 'Carrera no encontrada' });
       } else {
@@ -53,13 +54,12 @@ export class MajorController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  public static async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-      const useCase = new DeleteMajorUseCase(majorRepository);
-      const wasDeleted = await useCase.execute(id);
+      const wasDeleted = await this.deleteMajorUseCase.execute(id);
       if (!wasDeleted) {
         res.status(404).json({ message: 'Carrera no encontrada' });
       } else {
@@ -68,5 +68,5 @@ export class MajorController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
