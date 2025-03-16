@@ -1,9 +1,9 @@
 
 export interface JobOpportunities {
-    id: string // en mongo se pone _id
+    id: string
     name: string
     description: string
-    jobs: string[] //lista de carreras de esa oportunidad laboral
+    jobId: string
     salary: number
 }
 

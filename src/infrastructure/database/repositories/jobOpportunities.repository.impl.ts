@@ -9,7 +9,7 @@ export class JobOpportunitiesRepository implements IJobOpportunitiesRepository{
       id: doc._id.toString(),
       name: doc.name,
       description: doc.description,
-      jobs: doc.jobs.map(job => job.toString()),  // Convertimos los ObjectId a string
+      jobId: doc.jobId.toString(),  // Convertimos los ObjectId a string
       salary: doc.salary
     }));
     }
@@ -21,7 +21,7 @@ export class JobOpportunitiesRepository implements IJobOpportunitiesRepository{
         id: doc._id.toString(),
         name: doc.name,
         description: doc.description,
-        jobs: doc.jobs.map(job => job.toString()), 
+        jobId: doc.jobId.toString(), 
         salary: doc.salary
         };
     }
@@ -41,7 +41,7 @@ export class JobOpportunitiesRepository implements IJobOpportunitiesRepository{
         id: doc._id.toString(),
         name: doc.name,
         description: doc.description,
-        jobs: doc.jobs.map(job => job.toString()), 
+        jobId: doc.jobId.toString(), 
         salary: doc.salary
         };
     }

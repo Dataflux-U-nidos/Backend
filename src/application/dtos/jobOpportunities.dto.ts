@@ -1,10 +1,10 @@
 import { Type, Static } from '@sinclair/typebox';
 
 export const JobOpportunitiesSchema = Type.Object({
-  id: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }), // MongoDB ObjectId
+  id: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   name: Type.String(),
   description: Type.String(),
-  jobs: Type.Array(Type.String({ pattern: '^[0-9a-fA-F]{24}$' })), // Array de IDs de "Major"
+  jobId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }), 
   salary: Type.Number()
 });
 
