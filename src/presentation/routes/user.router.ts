@@ -2,9 +2,7 @@
 import { Router } from 'express';
 import { UserController } from '../../presentation'; 
 import { UserRepository } from '../../infrastructure/database/repositories';
-
-import {
-  CreateUserUseCase, GetAllUsersUseCase, GetUserByIdUseCase, UpdateUserUseCase,DeleteUserUseCase} from '../../application'; 
+import { CreateUserUseCase, GetAllUsersUseCase, GetUserByIdUseCase, UpdateUserUseCase,DeleteUserUseCase } from '../../application'; 
 
 const router = Router();
 

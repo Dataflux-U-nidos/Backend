@@ -2,3 +2,4 @@
 export * from './educational-institution.controller';
 export * from './major.controller';
 export * from './user.controller';
+export * from './jobOpportunity.controller'
