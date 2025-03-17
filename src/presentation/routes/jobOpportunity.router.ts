@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { JobOpportunityController } from '../../presentation';
-import { JobOpportunityRepository }  from '../../infrastructure';
+import { JobOpportunityRepository }  from '../../infrastructure/database/repositories';
 import { CreateJobOpportunityUseCase, DeleteJobOpportunityUseCase, GetAllJobOpportunityUseCase, GetJobOpportunityByIdUseCase, UpdateJobOpportunityUseCase } from '../../application';
 
 
