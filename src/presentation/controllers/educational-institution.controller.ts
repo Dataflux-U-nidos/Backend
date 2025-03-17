@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
 import {
   CreateEducationalInstitutionUseCase,
   GetAllEducationalInstitutionUseCase,
   GetEducationalInstitutionByIdUseCase,
   UpdateEducationalInstitutionUseCase,
   DeleteEducationalInstitutionUseCase,
-} from "../../application";
+} from '../../application';
 
 export class EducationalInstitutionController {
   constructor(
@@ -13,13 +13,13 @@ export class EducationalInstitutionController {
     private readonly getAllEducationalInstitutionsUseCase: GetAllEducationalInstitutionUseCase,
     private readonly getEducationalInstitutionByIdUseCase: GetEducationalInstitutionByIdUseCase,
     private readonly updateEducationalInstitutionUseCase: UpdateEducationalInstitutionUseCase,
-    private readonly deleteEducationalInstitutionUseCase: DeleteEducationalInstitutionUseCase
+    private readonly deleteEducationalInstitutionUseCase: DeleteEducationalInstitutionUseCase,
   ) {}
 
   public getAll = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const educationInstitution =
@@ -33,7 +33,7 @@ export class EducationalInstitutionController {
   public getById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
@@ -42,7 +42,7 @@ export class EducationalInstitutionController {
       if (!educationalInstitution) {
         res
           .status(404)
-          .json({ message: "Institución educativa no encontrada" });
+          .json({ message: 'Institución educativa no encontrada' });
       } else {
         res.status(200).json(educationalInstitution);
       }
@@ -54,7 +54,7 @@ export class EducationalInstitutionController {
   public create = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const newEducationalInstitution =
@@ -68,7 +68,7 @@ export class EducationalInstitutionController {
   public update = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
@@ -77,7 +77,7 @@ export class EducationalInstitutionController {
       if (!updatedEducationalInstitution) {
         res
           .status(404)
-          .json({ message: "Institución educativa no encontrada" });
+          .json({ message: 'Institución educativa no encontrada' });
       } else {
         res.status(200).json(updatedEducationalInstitution);
       }
@@ -89,21 +89,20 @@ export class EducationalInstitutionController {
   public delete = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const wasDeleted = await this.deleteEducationalInstitutionUseCase.execute(
-        id
-      );
+      const wasDeleted =
+        await this.deleteEducationalInstitutionUseCase.execute(id);
       if (!wasDeleted) {
         res
           .status(404)
-          .json({ message: "Institución educativa no encontrada" });
+          .json({ message: 'Institución educativa no encontrada' });
       } else {
         res
           .status(200)
-          .json({ message: "Institución educativa eliminada correctamente" });
+          .json({ message: 'Institución educativa eliminada correctamente' });
       }
     } catch (error) {
       next(error);

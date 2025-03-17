@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import config from "../config";
+import mongoose from 'mongoose';
+import config from '../config';
 
 class Database {
   private static instance: Database;
@@ -19,9 +19,9 @@ class Database {
   public async connect(): Promise<void> {
     try {
       await mongoose.connect(this.dbUri);
-      console.log("Database connected successfully");
+      console.log('Database connected successfully');
     } catch (error) {
-      console.error("Database connection error:", error);
+      console.error('Database connection error:', error);
       process.exit(1);
     }
   }
@@ -29,9 +29,9 @@ class Database {
   public async disconnect(): Promise<void> {
     try {
       await mongoose.disconnect();
-      console.log("Database disconnected successfully");
+      console.log('Database disconnected successfully');
     } catch (error) {
-      console.error("Error while disconnecting database:", error);
+      console.error('Error while disconnecting database:', error);
     }
   }
 }

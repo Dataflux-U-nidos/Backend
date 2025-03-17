@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { model, Schema, Document } from 'mongoose';
 
 interface Event {
   name: string;
@@ -10,8 +10,8 @@ interface Event {
 interface EducationalInstitution extends Document {
   name: string;
   location_l: string;
-  price_range: "LOW" | "MEDIUM" | "HIGH";
-  aceptation_difficulty: "EASY" | "MEDIUM" | "HARD";
+  price_range: 'LOW' | 'MEDIUM' | 'HIGH';
+  aceptation_difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   description: string;
   link: string;
   events: Event[];
@@ -24,7 +24,7 @@ const EventSchema = new Schema<Event>(
     date: { type: Date, required: true },
     location: { type: String, required: true },
   },
-  { _id: true }
+  { _id: true },
 ); //creeria que esto es correcto
 
 const EducationalInstitutionSchema = new Schema<EducationalInstitution>({
@@ -32,12 +32,12 @@ const EducationalInstitutionSchema = new Schema<EducationalInstitution>({
   location_l: { type: String, required: true },
   price_range: {
     type: String,
-    enum: ["LOW", "MEDIUM", "HIGH"],
+    enum: ['LOW', 'MEDIUM', 'HIGH'],
     required: true,
   },
   aceptation_difficulty: {
     type: String,
-    enum: ["EASY", "MEDIUM", "HARD"],
+    enum: ['EASY', 'MEDIUM', 'HARD'],
     required: true,
   },
   description: { type: String, required: true },
@@ -46,6 +46,6 @@ const EducationalInstitutionSchema = new Schema<EducationalInstitution>({
 });
 
 export const EducationalInstitutionModel = model<EducationalInstitution>(
-  "EducationalInstitutions",
-  EducationalInstitutionSchema
+  'EducationalInstitutions',
+  EducationalInstitutionSchema,
 );

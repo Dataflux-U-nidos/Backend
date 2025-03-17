@@ -1,7 +1,13 @@
 import { Router } from 'express';
 import { CommentController } from '../../presentation';
 import { CommentRepository } from '../../infrastructure/database/repositories';
-import { CreateCommentUseCase, GetAllCommentsUseCase, GetCommentByIdUseCase, UpdateCommentUseCase, DeleteCommentUseCase } from '../../application';
+import {
+  CreateCommentUseCase,
+  GetAllCommentsUseCase,
+  GetCommentByIdUseCase,
+  UpdateCommentUseCase,
+  DeleteCommentUseCase,
+} from '../../application';
 
 const router = Router();
 
@@ -18,7 +24,7 @@ const commentController = new CommentController(
   getAllCommentsUseCase,
   getCommentByIdUseCase,
   updateCommentUseCase,
-  deleteCommentUseCase
+  deleteCommentUseCase,
 );
 
 router.get('/', commentController.getAll);

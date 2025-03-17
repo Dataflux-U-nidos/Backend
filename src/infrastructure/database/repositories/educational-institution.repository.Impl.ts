@@ -1,8 +1,8 @@
-import { EducationalInstitutionModel } from "../../../infrastructure";
+import { EducationalInstitutionModel } from '../../../infrastructure';
 import {
   EducationalInstitution,
   IEducationalInstitutionRepository,
-} from "../../../domain";
+} from '../../../domain';
 
 export class EducationalInstitutionRepository
   implements IEducationalInstitutionRepository
@@ -37,7 +37,7 @@ export class EducationalInstitutionRepository
   }
 
   public async create(
-    data: Omit<EducationalInstitution, "_id">
+    data: Omit<EducationalInstitution, '_id'>,
   ): Promise<EducationalInstitution> {
     const doc = await EducationalInstitutionModel.create(data);
     return {
@@ -48,7 +48,7 @@ export class EducationalInstitutionRepository
 
   public async update(
     _id: string,
-    data: Partial<Omit<EducationalInstitution, "_id">>
+    data: Partial<Omit<EducationalInstitution, '_id'>>,
   ): Promise<EducationalInstitution | null> {
     const doc = await EducationalInstitutionModel.findByIdAndUpdate(_id, data, {
       new: true,

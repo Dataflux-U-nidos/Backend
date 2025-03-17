@@ -1,11 +1,11 @@
 // src/infrastructure/database/models/carrera.model.ts
-import { model, Schema, Document, Types } from "mongoose";
+import { model, Schema, Document, Types } from 'mongoose';
 
 interface MajorDocument extends Document {
   _id: Types.ObjectId;
   name: string;
   institutionId: Types.ObjectId;
-  difficulty: "EASY" | "MEDIUM" | "HARD";
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   price: number;
   description: string;
   pensumLink: string;
@@ -19,7 +19,7 @@ const MajorSchema = new Schema<MajorDocument>({
   institutionId: { type: Schema.Types.ObjectId, required: true },
   difficulty: {
     type: String,
-    enum: ["EASY", "MEDIUM", "HARD"],
+    enum: ['EASY', 'MEDIUM', 'HARD'],
     required: true,
   },
   price: { type: Number, required: true },
@@ -29,4 +29,4 @@ const MajorSchema = new Schema<MajorDocument>({
   focus: { type: String, required: true },
 });
 
-export const MajorModel = model<MajorDocument>("Majors", MajorSchema);
+export const MajorModel = model<MajorDocument>('Majors', MajorSchema);

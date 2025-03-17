@@ -1,7 +1,13 @@
 import { Router } from 'express';
 import { MajorController } from '../../presentation';
 import { MajorRepository } from '../../infrastructure/database/repositories';
-import { CreateMajorUseCase,GetAllMajorsUseCase, GetMajorByIdUseCase, UpdateMajorUseCase, DeleteMajorUseCase } from '../../application';
+import {
+  CreateMajorUseCase,
+  GetAllMajorsUseCase,
+  GetMajorByIdUseCase,
+  UpdateMajorUseCase,
+  DeleteMajorUseCase,
+} from '../../application';
 
 const router = Router();
 
@@ -18,7 +24,7 @@ const majorController = new MajorController(
   getAllMajorsUseCase,
   getMajorByIdUseCase,
   updateMajorUseCase,
-  deleteMajorUseCase
+  deleteMajorUseCase,
 );
 
 router.get('/', majorController.getAll);
