@@ -11,7 +11,7 @@ interface EducationalInstitution extends Document {
   name: string;
   location_l: string;
   price_range: "LOW" | "MEDIUM" | "HIGH";
-  aceptation_difficulty: "EASY" | "MEDIUM" | "HIGH";
+  aceptation_difficulty: "EASY" | "MEDIUM" | "HARD";
   description: string;
   link: string;
   events: Event[];
@@ -37,7 +37,7 @@ const EducationalInstitutionSchema = new Schema<EducationalInstitution>({
   },
   aceptation_difficulty: {
     type: String,
-    enum: ["LOW", "MEDIUM", "HIGH"],
+    enum: ["EASY", "MEDIUM", "HARD"],
     required: true,
   },
   description: { type: String, required: true },
