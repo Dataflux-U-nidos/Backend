@@ -3,13 +3,15 @@ import {
   configureMiddlewares,
   errorHandlerMiddleware,
 } from "./presentation/middleware";
-import { database } from "./infrastructure";
-import educationalInstitutionRouter from "./presentation/routes/educational-institution.router";
-import commentRouter from "./presentation/routes/comment.router";
-import majorRouter from "./presentation/routes/major.router";
-import userRouter from "./presentation/routes/user.router";
-import JobOpportunityRouter from "./presentation/routes/jobOpportunity.router";
 import config from "./infrastructure/config";
+import { database } from "./infrastructure";
+import {
+  educationalInstitutionRouter,
+  commentRouter,
+  majorRouter,
+  userRouter,
+  JobOpportunityRouter,
+} from "./presentation/routes";
 
 // Crear la aplicación Express
 const app = express();
