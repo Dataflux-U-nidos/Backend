@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import configureMiddlewares from './presentation/middleware';
-import Database from "./infrastructure/database";
+import { database } from "./infrastructure";
 import educationalInstitutionRouter from './presentation/routes/educational-institution.router';
 import commentRouter from './presentation/routes/comment.router';
 import majorRouter from './presentation/routes/major.router';
@@ -34,7 +34,7 @@ const PORT = process.env.PORT ?? 3000;
 // Conectar la base de datos antes de iniciar el servidor
 const startServer = async () => {
   try {
-    await Database.connect(); // Ensure DB is connected before starting the server
+    await database.connect(); // Ensure DB is connected before starting the server
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
     });
