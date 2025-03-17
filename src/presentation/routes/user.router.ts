@@ -1,14 +1,9 @@
 // src/presentation/routes/user.router.ts
 import { Router } from 'express';
-import { UserController } from '../controllers/user.controller'; // Ajusta la ruta real del controlador
-import { UserRepository } from '../../infrastructure/database/repositories/user.repository.impl'; // Ajusta la ruta real del repositorio
+import { UserController } from '../../presentation'; 
+import { UserRepository } from '../../infrastructure'; 
 import {
-  CreateUserUseCase,
-  GetAllUsersUseCase,
-  GetUserByIdUseCase,
-  UpdateUserUseCase,
-  DeleteUserUseCase
-} from '../../application'; 
+  CreateUserUseCase, GetAllUsersUseCase, GetUserByIdUseCase, UpdateUserUseCase,DeleteUserUseCase} from '../../application'; 
 
 const router = Router();
 
