@@ -24,3 +24,8 @@ export * from '../use-cases/user/delete-user.use-case';
 export * from '../use-cases/user/get-all-users.use-case';
 export * from '../use-cases/user/get-user-by-id.use-case';
 export * from '../use-cases/user/update-user.use-case';
+export * from '../use-cases/comment/create-comment.use-case';
+export * from './comment/get-all-comments.use-case';
+export * from '../use-cases/comment/get-comment-by-id.use-case';
+export * from '../use-cases/comment/update-comment.use-case';
+export * from '../use-cases/comment/delete-comment.use-case';
