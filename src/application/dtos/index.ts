@@ -2,4 +2,5 @@
 export * from './educational_institution.dto';
 export * from './major.dto';
 export * from './user.dto';
+export * from './jobOpportunity.dto'
 export * from './comment.dto';

@@ -6,6 +6,8 @@ import educationalInstitutionRouter from './presentation/routes/educational-inst
 import commentRouter from './presentation/routes/comment.router';
 import majorRouter from './presentation/routes/major.router';
 import userRouter  from './presentation/routes/user.router';
+import JobOpportunityRouter from './presentation/routes/jobOpportunity.router';
+
 
 dotenv.config();
 
@@ -18,6 +20,7 @@ configureMiddlewares(app);
 app.use('/carreras', majorRouter);
 app.use('/usuarios', userRouter);
 app.use('/educational-institutions', educationalInstitutionRouter);
+app.use('/oportunidades', JobOpportunityRouter)
 
 app.use('/comment', commentRouter);
 
