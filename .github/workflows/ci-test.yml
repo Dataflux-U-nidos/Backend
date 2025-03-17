@@ -1,4 +1,4 @@
-name: Test Bun CI
+name: CI/CD pipeline
 
 on:
   push:
@@ -31,29 +31,46 @@ jobs:
       - name: 🔍 Run tests
         run: bun test || echo "No test command found, skipping tests"
 
+      - name: 🚀 Run application
+        run: bun run
+
   deploy-release:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/release'
-
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v3
-        
-      - name: 🔐 Configure AWS credentioals
+
+      - name: 🔍 Debug AWS Credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+          echo "AWS_SECRET_ACCESS_KEY: $(echo $AWS_SECRET_ACCESS_KEY | sed 's/./*/g')"
+          echo "AWS_REGION: $AWS_REGION"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: 🔐 Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: 🔐 Logout de Docker (Limpieza previa)
+        run: docker logout public.ecr.aws || true
+
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
-        
+        with:
+          mask-password: false
+
       - name: 📌 Definir variable IMAGE_TAG
         run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-        
+
       - name: 🛠️ Build and Tag Docker Image for PRUEBAS
         run: |
           echo "Tag generado: $IMAGE_TAG"
@@ -68,25 +85,40 @@ jobs:
   deploy-prod:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v3
-      - name: 🔐 Configure AWS credentioals
+
+      - name: 🔍 Debug AWS Credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+          echo "AWS_SECRET_ACCESS_KEY: $(echo $AWS_SECRET_ACCESS_KEY | sed 's/./*/g')"
+          echo "AWS_REGION: $AWS_REGION"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: 🔐 Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          
+
+      - name: 🔐 Logout de Docker (Limpieza previa)
+        run: docker logout public.ecr.aws || true
+
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: false
 
       - name: 📌 Definir variable IMAGE_TAG
         run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-        
+
       - name: 🛠️ Build and Tag Docker Image for PRODUCCIÓN
         run: |
           echo "Tag generado: $IMAGE_TAG"
