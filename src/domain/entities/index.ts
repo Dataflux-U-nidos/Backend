@@ -2,3 +2,4 @@
 //test
 export * from './educational-institution.entity';
 export * from './major.entity';
+export * from './user.entity';
