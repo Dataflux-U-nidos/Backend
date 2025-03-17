@@ -2,7 +2,3 @@
 export { default as database } from './database';
 export * from './repositories';
 export * from './models';
-
-
-// import database from "./database";
-// export default database;

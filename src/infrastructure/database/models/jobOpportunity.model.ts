@@ -14,5 +14,5 @@ const JobOpportunitySchema = new Schema<JobOpportunityDocument>({
     salary: { type: Number, required: true }
 });
 
-export const JobOpportunityModel = model<JobOpportunityDocument>('JobOpportunity', JobOpportunitySchema);
+export const JobOpportunityModel = model<JobOpportunityDocument>('JobOpportunities', JobOpportunitySchema);
 

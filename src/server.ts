@@ -17,10 +17,10 @@ const app = express();
 configureMiddlewares(app);
 
 // 2. Routes
-app.use('/carreras', majorRouter);
-app.use('/usuarios', userRouter);
-app.use('/educational-institutions', educationalInstitutionRouter);
-app.use('/oportunidades', JobOpportunityRouter)
+app.use('/major', majorRouter);
+app.use('/user', userRouter);
+app.use('/educational-institution', educationalInstitutionRouter);
+app.use('/opportunity', JobOpportunityRouter)
 
 app.use('/comment', commentRouter);
 

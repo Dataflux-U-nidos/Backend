@@ -34,4 +34,4 @@ const EducationalInstitutionSchema = new Schema<EducationalInstitution>({
     events: { type: [EventSchema], required: true }, 
 });
 
-export const EducationalInstitutionModel = model<EducationalInstitution>('EducationalInstitution', EducationalInstitutionSchema);
+export const EducationalInstitutionModel = model<EducationalInstitution>('EducationalInstitutions', EducationalInstitutionSchema);

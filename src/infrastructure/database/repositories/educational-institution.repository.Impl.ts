@@ -1,6 +1,6 @@
-import { EducationalInstitutionModel } from "../models/educational-institution.model";
-import { EducationalInstitution } from "../../../domain/entities/educational-institution.entity";
-import { IEducationalInstitutionRepository } from "../../../domain/repositories/educational-institution.repository";
+import { EducationalInstitutionModel } from '../../../infrastructure';
+import { EducationalInstitution, IEducationalInstitutionRepository } from "../../../domain";
+
 
 export class EducationalInstitutionRepository implements IEducationalInstitutionRepository {
 
