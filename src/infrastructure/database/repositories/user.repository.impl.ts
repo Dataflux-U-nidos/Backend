@@ -1,4 +1,4 @@
-import { UserModel } from '../models';
+import { UserModel } from '../../../infrastructure';
 import { User, IUserRepository } from '../../../domain';
 
 export class UserRepository implements IUserRepository {
