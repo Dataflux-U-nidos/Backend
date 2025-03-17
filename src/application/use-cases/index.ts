@@ -18,3 +18,9 @@ export * from './jobOpportunity/delete-jobOpportunity.use-case'
 export * from './jobOpportunity/get-all-jobOpportunity.use-case'
 export * from './jobOpportunity/get-jobOpportunity-by-id.use-case'
 export * from './jobOpportunity/update-jobOpportunity.use-case'
+//Use cases user
+export * from '../use-cases/user/create-user.use-case';
+export * from '../use-cases/user/delete-user.use-case';
+export * from '../use-cases/user/get-all-users.use-case';
+export * from '../use-cases/user/get-user-by-id.use-case';
+export * from '../use-cases/user/update-user.use-case';
