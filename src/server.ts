@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import configureMiddlewares from "./presentation/middleware";
 import Database from "./infrastructure/database"; // Import DB instanceimport majorRouter from './presentation/routes/major.router';
 import majorRouter from './presentation/routes/major.router';
+import JobOpportunityRouter from './presentation/routes/jobOpportunity.router';
+
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ configureMiddlewares(app);
 
 // 2. Routes
 app.use('/carreras', majorRouter);
+app.use('/oportunidades', JobOpportunityRouter)
 
 // Ruta de prueba
 app.get("/", (req, res) => {

@@ -1,5 +1,5 @@
 
-export interface JobOpportunities {
+export interface JobOpportunity {
     id: string
     name: string
     description: string
@@ -7,4 +7,4 @@ export interface JobOpportunities {
     salary: number
 }
 
-export default JobOpportunities;
+export default JobOpportunity;

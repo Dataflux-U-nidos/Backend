@@ -2,3 +2,4 @@
 //test
 
 export * from './major.entity';
+export * from './jobOpportunity.entity'
