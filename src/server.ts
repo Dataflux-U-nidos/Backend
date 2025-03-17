@@ -1,17 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import config from './infrastructure/config';
 import configureMiddlewares from './presentation/middleware';
 import { database } from "./infrastructure";
-import educationalInstitutionRouter from './presentation/routes/educational-institution.router';
-import commentRouter from './presentation/routes/comment.router';
-import majorRouter from './presentation/routes/major.router';
-import userRouter  from './presentation/routes/user.router';
-import JobOpportunityRouter from './presentation/routes/jobOpportunity.router';
-import config from './infrastructure/config';
-
+import { educationalInstitutionRouter,commentRouter, majorRouter, userRouter, JobOpportunityRouter} from './presentation/routes';
 
 dotenv.config();
-
 const app = express();
 
 // 1. Aplicar middlewares
