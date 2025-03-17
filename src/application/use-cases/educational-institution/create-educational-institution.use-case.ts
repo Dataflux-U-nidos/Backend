@@ -1,5 +1,5 @@
 import { EducationalInstitutionRepository } from "../../../infrastructure";
-import { EducationalInstitution } from "../../../domain/entities/educational-institution.entity";
+import { EducationalInstitution } from "../../../domain";
 
 export class CreateEducationalInstitutionUseCase {
     constructor(private educationalInstitutionRepository: EducationalInstitutionRepository) {}
