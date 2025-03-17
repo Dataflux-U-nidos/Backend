@@ -1,10 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 
+interface CustomError extends Error {
+  code?: number;
+  keyValue?: Record<string, unknown>;
+  errors?: Record<string, { message: string }>;
+  path?: string;
+  value?: unknown;
+}
+
 export const errorHandlerMiddleware = (
-  err: any,
+  err: CustomError,
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction, // Renombrado para indicar que no se utiliza
 ) => {
   console.error(err); // Log the error for debugging
 
@@ -12,16 +20,14 @@ export const errorHandlerMiddleware = (
   let message = 'Internal Server Error';
 
   // 🔹 Handle MongoDB Errors
-  if (err.code === 11000) {
+  if (err.code === 11000 && err.keyValue) {
     statusCode = 409;
-    message = `Duplicate value: ${Object.keys(err.keyValue).join(
-      ', ',
-    )} already exists.`;
+    message = `Duplicate value: ${Object.keys(err.keyValue).join(', ')} already exists.`;
   }
-  if (err.name === 'ValidationError') {
+  if (err.name === 'ValidationError' && err.errors) {
     statusCode = 400;
     message = Object.values(err.errors)
-      .map((error: any) => error.message)
+      .map((error) => error.message)
       .join(', ');
   }
   if (err.name === 'CastError') {
