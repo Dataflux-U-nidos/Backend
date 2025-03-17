@@ -1,4 +1,4 @@
-import { EducationalInstitutionRepository } from "../../../infrastructure/database/repositories/educational-institution.repository.Impl";
+import { EducationalInstitutionRepository } from "../../../infrastructure";
 
 export class DeleteEducationalInstitutionUseCase {
   constructor(private readonly educationalInstitutionRepository: EducationalInstitutionRepository) {}

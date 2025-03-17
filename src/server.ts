@@ -5,6 +5,7 @@ import Database from "./infrastructure/database";
 import educationalInstitutionRouter from './presentation/routes/educational-institution.router';
 import commentRouter from './presentation/routes/comment.router';
 import majorRouter from './presentation/routes/major.router';
+import userRouter  from './presentation/routes/user.router';
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ configureMiddlewares(app);
 
 // 2. Routes
 app.use('/carreras', majorRouter);
-
+app.use('/usuarios', userRouter);
 app.use('/educational-institutions', educationalInstitutionRouter);
 
 app.use('/comment', commentRouter);

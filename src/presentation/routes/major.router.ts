@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { MajorController } from '../../presentation';
-import {MajorRepository} from '../../infrastructure/database/repositories';
+import { MajorRepository } from '../../infrastructure/database/repositories';
 import { CreateMajorUseCase,GetAllMajorsUseCase, GetMajorByIdUseCase, UpdateMajorUseCase, DeleteMajorUseCase } from '../../application';
 
 const router = Router();

@@ -33,7 +33,7 @@ jobs:
 
   deploy-release:
     needs: test
-    if: github.event.pull_request.merged == true && github.base_ref == 'release'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
 
   deploy-prod:
     needs: test
-    if: github.event.pull_request.merged == true && github.base_ref == 'main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
