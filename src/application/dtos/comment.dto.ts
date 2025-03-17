@@ -1,9 +1,9 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, Static } from '@sinclair/typebox';
 
 export const CommentSchema = Type.Object({
-  UserId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }), 
+  UserId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   text: Type.String({ minLength: 1, maxLength: 500 }),
-  date: Type.String({ format: "date-time" }),
+  date: Type.String({ format: 'date-time' }),
 });
 
 export type CommentType = Static<typeof CommentSchema>;

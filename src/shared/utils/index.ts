@@ -1,4 +1,4 @@
 //Funciones auxiliares reutilizables
-import { validateEnv } from "./validateEnv";
+import { validateEnv } from './validateEnv';
 
 export { validateEnv };

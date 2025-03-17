@@ -1,17 +1,17 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, Static } from '@sinclair/typebox';
 
 export const MajorSchema = Type.Object({
   name: Type.String(),
-  institutionId: Type.String({ pattern: "^[0-9a-fA-F]{24}$" }),
+  institutionId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   difficulty: Type.Union([
-    Type.Literal("LOW"),
-    Type.Literal("MEDIUM"),
-    Type.Literal("HIGH"),
+    Type.Literal('LOW'),
+    Type.Literal('MEDIUM'),
+    Type.Literal('HIGH'),
   ]),
   price: Type.Number(),
   description: Type.String(),
-  pensumLink: Type.String({ format: "uri" }),
-  jobId: Type.String({ pattern: "^[0-9a-fA-F]{24}$" }),
+  pensumLink: Type.String({ format: 'uri' }),
+  jobId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   focus: Type.String(),
 });
 

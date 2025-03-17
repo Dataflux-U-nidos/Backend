@@ -1,8 +1,14 @@
 // src/presentation/routes/user.router.ts
 import { Router } from 'express';
-import { UserController } from '../../presentation'; 
+import { UserController } from '../../presentation';
 import { UserRepository } from '../../infrastructure/database/repositories';
-import { CreateUserUseCase, GetAllUsersUseCase, GetUserByIdUseCase, UpdateUserUseCase,DeleteUserUseCase } from '../../application'; 
+import {
+  CreateUserUseCase,
+  GetAllUsersUseCase,
+  GetUserByIdUseCase,
+  UpdateUserUseCase,
+  DeleteUserUseCase,
+} from '../../application';
 
 const router = Router();
 
@@ -22,7 +28,7 @@ const userController = new UserController(
   getAllUsersUseCase,
   getUserByIdUseCase,
   updateUserUseCase,
-  deleteUserUseCase
+  deleteUserUseCase,
 );
 
 // Definimos las rutas y asignamos los métodos del controlador

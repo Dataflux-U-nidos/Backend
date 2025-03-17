@@ -1,10 +1,9 @@
-
 export interface JobOpportunity {
-    id: string
-    name: string
-    description: string
-    jobId: string
-    salary: number
+  id: string;
+  name: string;
+  description: string;
+  jobId: string;
+  salary: number;
 }
 
 export default JobOpportunity;

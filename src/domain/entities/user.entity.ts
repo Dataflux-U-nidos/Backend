@@ -5,12 +5,12 @@ export interface BaseUser {
   email: string;
   password: string;
   age: number;
-  type: "ADMIN" | "STUDENT" | "VIEWER";
+  type: 'ADMIN' | 'STUDENT' | 'VIEWER';
 }
 
 // Para el STUDENT, se agregan atributos específicos.
 export interface StudentUser extends BaseUser {
-  type: "STUDENT";
+  type: 'STUDENT';
   locality: string;
   school: string;
   preferences: Record<string, unknown>;

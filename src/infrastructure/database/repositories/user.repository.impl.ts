@@ -2,7 +2,10 @@ import { UserModel } from '../../../infrastructure';
 import { User, IUserRepository } from '../../../domain';
 
 export class UserRepository implements IUserRepository {
-  public async findAll(filter?: { type?: string; email?: string }): Promise<User[]> {
+  public async findAll(filter?: {
+    type?: string;
+    email?: string;
+  }): Promise<User[]> {
     const query: Record<string, unknown> = {};
     if (filter?.type) query.type = filter.type;
     if (filter?.email) query.email = filter.email;
@@ -17,7 +20,7 @@ export class UserRepository implements IUserRepository {
       type: doc.type,
       locality: doc.locality,
       school: doc.school,
-      preferences: doc.preferences
+      preferences: doc.preferences,
     }));
   }
 
@@ -34,7 +37,7 @@ export class UserRepository implements IUserRepository {
       type: doc.type,
       locality: doc.locality,
       school: doc.school,
-      preferences: doc.preferences
+      preferences: doc.preferences,
     };
   }
 
@@ -42,11 +45,14 @@ export class UserRepository implements IUserRepository {
     const doc = await UserModel.create(data);
     return {
       id: doc._id.toString(),
-      ...data
+      ...data,
     };
   }
 
-  public async update(id: string, data: Partial<Omit<User, 'id'>>): Promise<User | null> {
+  public async update(
+    id: string,
+    data: Partial<Omit<User, 'id'>>,
+  ): Promise<User | null> {
     const doc = await UserModel.findByIdAndUpdate(id, data, { new: true });
     if (!doc) return null;
     return {
@@ -59,7 +65,7 @@ export class UserRepository implements IUserRepository {
       type: doc.type,
       locality: doc.locality,
       school: doc.school,
-      preferences: doc.preferences
+      preferences: doc.preferences,
     };
   }
 

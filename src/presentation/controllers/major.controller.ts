@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 import {
   CreateMajorUseCase,
   GetAllMajorsUseCase,
   GetMajorByIdUseCase,
   UpdateMajorUseCase,
   DeleteMajorUseCase,
-} from "../../application";
+} from '../../application';
 
 export class MajorController {
   constructor(
@@ -13,13 +13,13 @@ export class MajorController {
     private readonly getAllMajorsUseCase: GetAllMajorsUseCase,
     private readonly getMajorByIdUseCase: GetMajorByIdUseCase,
     private readonly updateMajorUseCase: UpdateMajorUseCase,
-    private readonly deleteMajorUseCase: DeleteMajorUseCase
+    private readonly deleteMajorUseCase: DeleteMajorUseCase,
   ) {}
 
   public getAll = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const majors = await this.getAllMajorsUseCase.execute();
@@ -32,13 +32,13 @@ export class MajorController {
   public getById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
       const major = await this.getMajorByIdUseCase.execute(id);
       if (!major) {
-        res.status(404).json({ message: "Carrera no encontrada" });
+        res.status(404).json({ message: 'Carrera no encontrada' });
       } else {
         res.status(200).json(major);
       }
@@ -50,7 +50,7 @@ export class MajorController {
   public create = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const newMajor = await this.createMajorUseCase.execute(req.body);
@@ -63,13 +63,13 @@ export class MajorController {
   public update = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
       const updatedMajor = await this.updateMajorUseCase.execute(id, req.body);
       if (!updatedMajor) {
-        res.status(404).json({ message: "Carrera no encontrada" });
+        res.status(404).json({ message: 'Carrera no encontrada' });
       } else {
         res.status(200).json(updatedMajor);
       }
@@ -81,15 +81,15 @@ export class MajorController {
   public delete = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
       const wasDeleted = await this.deleteMajorUseCase.execute(id);
       if (!wasDeleted) {
-        res.status(404).json({ message: "Carrera no encontrada" });
+        res.status(404).json({ message: 'Carrera no encontrada' });
       } else {
-        res.status(200).json({ message: "Carrera eliminada correctamente" });
+        res.status(200).json({ message: 'Carrera eliminada correctamente' });
       }
     } catch (error) {
       next(error);

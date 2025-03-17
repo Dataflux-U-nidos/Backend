@@ -6,9 +6,9 @@ export class CommentRepository implements ICommentRepository {
     const results = await CommentModel.find({});
     return results.map((doc) => ({
       id: doc._id.toString(),
-      userId: doc.userId.toString(),  
+      userId: doc.userId.toString(),
       text: doc.text,
-      date: doc.date
+      date: doc.date,
     }));
   }
 
@@ -19,7 +19,7 @@ export class CommentRepository implements ICommentRepository {
       id: doc._id.toString(),
       userId: doc.userId.toString(),
       text: doc.text,
-      date: doc.date
+      date: doc.date,
     };
   }
 
@@ -27,18 +27,21 @@ export class CommentRepository implements ICommentRepository {
     const doc = await CommentModel.create(data);
     return {
       id: doc._id.toString(),
-      ...data
+      ...data,
     };
   }
 
-  public async update(id: string, data: Partial<Omit<Comment, 'id'>>): Promise<Comment | null> {
+  public async update(
+    id: string,
+    data: Partial<Omit<Comment, 'id'>>,
+  ): Promise<Comment | null> {
     const doc = await CommentModel.findByIdAndUpdate(id, data, { new: true });
     if (!doc) return null;
     return {
       id: doc._id.toString(),
       userId: doc.userId.toString(),
       text: doc.text,
-      date: doc.date
+      date: doc.date,
     };
   }
 

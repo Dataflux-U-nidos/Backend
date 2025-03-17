@@ -1,12 +1,12 @@
 //.
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 import {
   CreateJobOpportunityUseCase,
   DeleteJobOpportunityUseCase,
   GetAllJobOpportunityUseCase,
   GetJobOpportunityByIdUseCase,
   UpdateJobOpportunityUseCase,
-} from "../../application";
+} from '../../application';
 
 export class JobOpportunityController {
   constructor(
@@ -14,13 +14,13 @@ export class JobOpportunityController {
     private readonly getAllJobOpportunityUseCase: GetAllJobOpportunityUseCase,
     private readonly getJobOpportunityByIdUseCase: GetJobOpportunityByIdUseCase,
     private readonly updateJobOpportunityUseCase: UpdateJobOpportunityUseCase,
-    private readonly deleteJobOpportunityUseCase: DeleteJobOpportunityUseCase
+    private readonly deleteJobOpportunityUseCase: DeleteJobOpportunityUseCase,
   ) {}
 
   public getAll = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       console.log(typeof res.status);
@@ -34,17 +34,16 @@ export class JobOpportunityController {
   public getById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const jobOpportunity = await this.getJobOpportunityByIdUseCase.execute(
-        id
-      );
+      const jobOpportunity =
+        await this.getJobOpportunityByIdUseCase.execute(id);
       if (!jobOpportunity) {
         res
           .status(404)
-          .json({ message: "Oportunidad de trabajo no encontrada" });
+          .json({ message: 'Oportunidad de trabajo no encontrada' });
       } else {
         res.status(200).json(jobOpportunity);
       }
@@ -56,11 +55,11 @@ export class JobOpportunityController {
   public create = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const newJobOpportunity = await this.createJobOpportunityUseCase.execute(
-        req.body
+        req.body,
       );
       res.status(201).json(newJobOpportunity);
     } catch (error) {
@@ -71,7 +70,7 @@ export class JobOpportunityController {
   public update = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
@@ -80,7 +79,7 @@ export class JobOpportunityController {
       if (!updatedJobOpportunity) {
         res
           .status(404)
-          .json({ message: "Oportunidad de trabajo no encontrada" });
+          .json({ message: 'Oportunidad de trabajo no encontrada' });
       } else {
         res.status(200).json(updatedJobOpportunity);
       }
@@ -92,7 +91,7 @@ export class JobOpportunityController {
   public delete = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
@@ -100,11 +99,11 @@ export class JobOpportunityController {
       if (!wasDeleted) {
         res
           .status(404)
-          .json({ message: "Oportunidad de trabajo no encontrada" });
+          .json({ message: 'Oportunidad de trabajo no encontrada' });
       } else {
         res
           .status(200)
-          .json({ message: "Oportunidad de trabajo eliminada correctamente" });
+          .json({ message: 'Oportunidad de trabajo eliminada correctamente' });
       }
     } catch (error) {
       next(error);

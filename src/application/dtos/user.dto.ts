@@ -1,16 +1,16 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, Static } from '@sinclair/typebox';
 
 export const UserTypeEnum = Type.Union([
-  Type.Literal("ADMIN"),
-  Type.Literal("STUDENT"),
-  Type.Literal("VIEWER"),
+  Type.Literal('ADMIN'),
+  Type.Literal('STUDENT'),
+  Type.Literal('VIEWER'),
 ]);
 
 // Esquema para crear un usuario
 export const CreateUserSchema = Type.Object({
   name: Type.String(),
   last_name: Type.String(),
-  email: Type.String({ format: "email" }),
+  email: Type.String({ format: 'email' }),
   password: Type.String(),
   age: Type.Number(),
   type: UserTypeEnum,
@@ -30,7 +30,7 @@ export const UserResponseSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
   last_name: Type.String(),
-  email: Type.String({ format: "email" }),
+  email: Type.String({ format: 'email' }),
   age: Type.Number(),
   type: UserTypeEnum,
   locality: Type.Optional(Type.String()),

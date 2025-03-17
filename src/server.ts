@@ -1,17 +1,17 @@
-import express from "express";
+import express from 'express';
 import {
   configureMiddlewares,
   errorHandlerMiddleware,
-} from "./presentation/middleware";
-import config from "./infrastructure/config";
-import { database } from "./infrastructure";
+} from './presentation/middleware';
+import config from './infrastructure/config';
+import { database } from './infrastructure';
 import {
   educationalInstitutionRouter,
   commentRouter,
   majorRouter,
   userRouter,
   JobOpportunityRouter,
-} from "./presentation/routes";
+} from './presentation/routes';
 
 // Crear la aplicación Express
 const app = express();
@@ -24,14 +24,14 @@ app.use(`${config.api.conventionApi}/major`, majorRouter);
 app.use(`${config.api.conventionApi}/user`, userRouter);
 app.use(
   `${config.api.conventionApi}/educational-institution`,
-  educationalInstitutionRouter
+  educationalInstitutionRouter,
 );
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 
 // Ruta de prueba
-app.get("/", (req, res) => {
-  res.send("Servidor Express funcionando correctamente");
+app.get('/', (req, res) => {
+  res.send('Servidor Express funcionando correctamente');
 });
 
 // 3. Middleware para manejo de errores
@@ -45,7 +45,7 @@ const startServer = async () => {
       console.log(`🚀 Servidor corriendo en el puerto ${config.server.port}`);
     });
   } catch (error) {
-    console.error("❌ Error al iniciar la aplicación:", error);
+    console.error('❌ Error al iniciar la aplicación:', error);
     process.exit(1);
   }
 };
