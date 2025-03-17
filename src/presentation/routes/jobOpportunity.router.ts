@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { JobOpportunityController } from '../../presentation';
-import JobOpportunityRepository  from '../../infrastructure/database/repositories';
+import { JobOpportunityRepository }  from '../../infrastructure';
 import { CreateJobOpportunityUseCase, DeleteJobOpportunityUseCase, GetAllJobOpportunityUseCase, GetJobOpportunityByIdUseCase, UpdateJobOpportunityUseCase } from '../../application';
 
 
@@ -8,11 +8,11 @@ const router = Router();
 
 const jobOpportunityRepository = new JobOpportunityRepository();
 
-const createJobOpportunityUseCase = new CreateJobOpportunityUseCase(JobOpportunityRepository);
-const getAllJobOpportunityUseCase = new GetAllJobOpportunityUseCase(JobOpportunityRepository);
-const getJobOpportunityByIdUseCase = new GetJobOpportunityByIdUseCase(JobOpportunityRepository);
-const updateJobOpportunityUseCase = new UpdateJobOpportunityUseCase(JobOpportunityRepository);
-const deleteJobOpportunityUseCase = new DeleteJobOpportunityUseCase(JobOpportunityRepository);
+const createJobOpportunityUseCase = new CreateJobOpportunityUseCase(jobOpportunityRepository);
+const getAllJobOpportunityUseCase = new GetAllJobOpportunityUseCase(jobOpportunityRepository);
+const getJobOpportunityByIdUseCase = new GetJobOpportunityByIdUseCase(jobOpportunityRepository);
+const updateJobOpportunityUseCase = new UpdateJobOpportunityUseCase(jobOpportunityRepository);
+const deleteJobOpportunityUseCase = new DeleteJobOpportunityUseCase(jobOpportunityRepository);
 
 const jobOpportunityController = new JobOpportunityController(
   createJobOpportunityUseCase,
