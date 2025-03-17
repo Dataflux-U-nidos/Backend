@@ -11,22 +11,26 @@ export const EducationalInstitutionSchema = Type.Object({
   name: Type.String(),
   location_l: Type.String(),
   price_range: Type.Union([
-    Type.Literal("Bajo"),
-    Type.Literal("Medio"),
-    Type.Literal("Alto"),
+    Type.Literal("LOW"),
+    Type.Literal("MEDIUM"),
+    Type.Literal("HIGH"),
   ]),
   aceptation_difficulty: Type.Union([
-    Type.Literal("Fácil"),
-    Type.Literal("Medio"),
-    Type.Literal("Difícil"),
+    Type.Literal("LOW"),
+    Type.Literal("MEDIUM"),
+    Type.Literal("HIGH"),
   ]),
   description: Type.String(),
   link: Type.String({ format: "uri" }),
-  events: Type.Array(EventSchema), 
+  events: Type.Array(EventSchema),
 });
 
-export type EducationalInstitutionDto = Static<typeof EducationalInstitutionSchema>;
+export type EducationalInstitutionDto = Static<
+  typeof EducationalInstitutionSchema
+>;
 export type EventDto = Static<typeof EventSchema>;
 
 export const CreateEducationalInstitutionSchema = EducationalInstitutionSchema;
-export const UpdateEducationalInstitutionSchema = Type.Partial(EducationalInstitutionSchema);
+export const UpdateEducationalInstitutionSchema = Type.Partial(
+  EducationalInstitutionSchema
+);
