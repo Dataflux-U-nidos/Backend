@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import configureMiddlewares from './presentation/middleware';
 import Database from "./infrastructure/database";
 import educationalInstitutionRouter from './presentation/routes/educational-institution.router';
+import commentRouter from './presentation/routes/comment.router';
 import majorRouter from './presentation/routes/major.router';
 
 dotenv.config();
@@ -16,6 +17,8 @@ configureMiddlewares(app);
 app.use('/carreras', majorRouter);
 
 app.use('/educational-institutions', educationalInstitutionRouter);
+
+app.use('/comment', commentRouter);
 
 // Ruta de prueba
 app.get("/", (req, res) => {
