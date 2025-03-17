@@ -16,9 +16,9 @@ export const EducationalInstitutionSchema = Type.Object({
     Type.Literal("HIGH"),
   ]),
   aceptation_difficulty: Type.Union([
-    Type.Literal("LOW"),
+    Type.Literal("EASY"),
     Type.Literal("MEDIUM"),
-    Type.Literal("HIGH"),
+    Type.Literal("HARD"),
   ]),
   description: Type.String(),
   link: Type.String({ format: "uri" }),
