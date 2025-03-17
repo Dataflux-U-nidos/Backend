@@ -3,7 +3,7 @@ import { validateEnv } from "../../shared/utils/index";
 
 dotenv.config();
 
-const requiredEnvVars = ["MONGO_URI"];
+const requiredEnvVars = ["MONGO_URI", "CONVENTION_API"];
 validateEnv(requiredEnvVars);
 
 const config = {
@@ -20,6 +20,11 @@ const config = {
   logging: {
     level: process.env.LOG_LEVEL ?? "info",
   },
+  api: {
+    conventionApi: process.env.CONVENTION_API as string
+  }
 };
+
+
 
 export default config;

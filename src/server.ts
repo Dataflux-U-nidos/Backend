@@ -7,6 +7,7 @@ import commentRouter from './presentation/routes/comment.router';
 import majorRouter from './presentation/routes/major.router';
 import userRouter  from './presentation/routes/user.router';
 import JobOpportunityRouter from './presentation/routes/jobOpportunity.router';
+import config from './infrastructure/config';
 
 
 dotenv.config();
@@ -16,13 +17,12 @@ const app = express();
 // 1. Aplicar middlewares
 configureMiddlewares(app);
 
-// 2. Routes
-app.use('/major', majorRouter);
-app.use('/user', userRouter);
-app.use('/educational-institution', educationalInstitutionRouter);
-app.use('/opportunity', JobOpportunityRouter)
-
-app.use('/comment', commentRouter);
+// 2. Routes  
+app.use(`${config.api.conventionApi}/major`, majorRouter);
+app.use(`${config.api.conventionApi}/user`, userRouter);
+app.use(`${config.api.conventionApi}/educational-institution`, educationalInstitutionRouter);
+app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter)
+app.use(`${config.api.conventionApi}/comment`, commentRouter);
 
 // Ruta de prueba
 app.get("/", (req, res) => {
