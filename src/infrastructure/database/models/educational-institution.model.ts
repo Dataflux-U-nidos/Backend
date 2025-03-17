@@ -10,8 +10,8 @@ interface Event {
 interface EducationalInstitution extends Document {
   name: string;
   location_l: string;
-  price_range: "low" | "medium" | "high";
-  aceptation_difficulty: "easy" | "medium" | "high";
+  price_range: "LOW" | "MEDIUM" | "HIGH";
+  aceptation_difficulty: "EASY" | "MEDIUM" | "HIGH";
   description: string;
   link: string;
   events: Event[];
@@ -32,12 +32,12 @@ const EducationalInstitutionSchema = new Schema<EducationalInstitution>({
   location_l: { type: String, required: true },
   price_range: {
     type: String,
-    enum: ["low", "medium", "high"],
+    enum: ["LOW", "MEDIUM", "HIGH"],
     required: true,
   },
   aceptation_difficulty: {
     type: String,
-    enum: ["low", "medium", "high"],
+    enum: ["LOW", "MEDIUM", "HIGH"],
     required: true,
   },
   description: { type: String, required: true },

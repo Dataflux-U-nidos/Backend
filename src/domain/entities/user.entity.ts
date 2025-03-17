@@ -5,17 +5,17 @@ export interface BaseUser {
   email: string;
   password: string;
   age: number;
-  type: "admin" | "student" | "viewer";
+  type: "ADMIN" | "STUDENT" | "VIEWER";
 }
 
-// Para el student, se agregan atributos específicos.
+// Para el STUDENT, se agregan atributos específicos.
 export interface StudentUser extends BaseUser {
-  type: "student";
+  type: "STUDENT";
   locality: string;
   school: string;
   preferences: Record<string, unknown>;
 }
 
-// Si los tipos "admin" y "viewer" tienen la misma estructura,
+// Si los tipos "ADMIN" y "VIEWER" tienen la misma estructura,
 // basta con usar BaseUser para ellos.
 export type User = BaseUser | StudentUser;

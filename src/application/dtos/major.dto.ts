@@ -4,9 +4,9 @@ export const MajorSchema = Type.Object({
   name: Type.String(),
   institutionId: Type.String({ pattern: "^[0-9a-fA-F]{24}$" }),
   difficulty: Type.Union([
-    Type.Literal("low"),
-    Type.Literal("medium"),
-    Type.Literal("high"),
+    Type.Literal("LOW"),
+    Type.Literal("MEDIUM"),
+    Type.Literal("HIGH"),
   ]),
   price: Type.Number(),
   description: Type.String(),

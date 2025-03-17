@@ -5,7 +5,7 @@ interface MajorDocument extends Document {
   _id: Types.ObjectId;
   name: string;
   institutionId: Types.ObjectId;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "EASY" | "MEDIUM" | "HARD";
   price: number;
   description: string;
   pensumLink: string;
@@ -19,7 +19,7 @@ const MajorSchema = new Schema<MajorDocument>({
   institutionId: { type: Schema.Types.ObjectId, required: true },
   difficulty: {
     type: String,
-    enum: ["easy", "medium", "hard"],
+    enum: ["EASY", "MEDIUM", "HARD"],
     required: true,
   },
   price: { type: Number, required: true },

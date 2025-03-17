@@ -9,8 +9,8 @@ export interface EducationalInstitution {
   _id: string;
   name: string;
   location_l: string;
-  price_range: "low" | "medium" | "high";
-  aceptation_difficulty: "low" | "medium" | "high";
+  price_range: "LOW" | "MEDIUM" | "HIGH";
+  aceptation_difficulty: "LOW" | "MEDIUM" | "HIGH";
   description: string;
   link: string;
   events: Event[];

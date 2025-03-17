@@ -1,9 +1,9 @@
 import { Type, Static } from "@sinclair/typebox";
 
 export const UserTypeEnum = Type.Union([
-  Type.Literal("admin"),
-  Type.Literal("student"),
-  Type.Literal("viewer"),
+  Type.Literal("ADMIN"),
+  Type.Literal("STUDENT"),
+  Type.Literal("VIEWER"),
 ]);
 
 // Esquema para crear un usuario
@@ -14,7 +14,7 @@ export const CreateUserSchema = Type.Object({
   password: Type.String(),
   age: Type.Number(),
   type: UserTypeEnum,
-  // Campos opcionales para el usuario student
+  // Campos opcionales para el usuario STUDENT
   locality: Type.Optional(Type.String()),
   school: Type.Optional(Type.String()),
   preferences: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
