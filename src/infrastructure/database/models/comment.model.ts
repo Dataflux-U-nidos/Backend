@@ -15,4 +15,4 @@ const CommentSchema = new Schema<CommentDocument>({
   date: { type: Date, required: true, default: Date.now }
 });
 
-export const CommentModel = model<CommentDocument>('Comment', CommentSchema);
+export const CommentModel = model<CommentDocument>('Comments', CommentSchema);

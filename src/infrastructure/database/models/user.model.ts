@@ -25,4 +25,4 @@ const UserSchema = new Schema<UserDocument>({
   preferences: { type: Schema.Types.Mixed } // Se utiliza Mixed sin any, ya que Mongoose no tipa internamente
 });
 
-export const UserModel = model<UserDocument>('User', UserSchema);
+export const UserModel = model<UserDocument>('Users', UserSchema);

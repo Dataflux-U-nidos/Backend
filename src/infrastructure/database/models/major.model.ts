@@ -25,4 +25,4 @@ const MajorSchema = new Schema<MajorDocument>({
   focus: { type: String, required: true }
 });
 
-export const MajorModel = model<MajorDocument>('Carrera', MajorSchema);
+export const MajorModel = model<MajorDocument>('Majors', MajorSchema);
