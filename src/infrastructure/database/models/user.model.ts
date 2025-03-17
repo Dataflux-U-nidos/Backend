@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document, Types } from "mongoose";
 
 export interface UserDocument extends Document {
   _id: Types.ObjectId;
@@ -7,7 +7,7 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   age: number;
-  type: 'administrador' | 'estudiante' | 'visualizador';
+  type: "admin" | "student" | "viewer";
   locality?: string;
   school?: string;
   preferences?: Record<string, unknown>;
@@ -19,10 +19,10 @@ const UserSchema = new Schema<UserDocument>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   age: { type: Number, required: true },
-  type: { type: String, required: true, enum: ['administrador', 'estudiante', 'visualizador'] },
+  type: { type: String, required: true, enum: ["admin", "student", "viewer"] },
   locality: { type: String },
   school: { type: String },
-  preferences: { type: Schema.Types.Mixed } // Se utiliza Mixed sin any, ya que Mongoose no tipa internamente
+  preferences: { type: Schema.Types.Mixed }, // Se utiliza Mixed sin any, ya que Mongoose no tipa internamente
 });
 
-export const UserModel = model<UserDocument>('Users', UserSchema);
+export const UserModel = model<UserDocument>("Users", UserSchema);
