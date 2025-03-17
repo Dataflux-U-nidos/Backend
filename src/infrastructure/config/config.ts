@@ -11,7 +11,7 @@ const config = {
     mongoUri: process.env.MONGO_URI as string,
   },
   server: {
-    port: parseInt(process.env.PORT as string, 10),
+    port: parseInt(process.env.PORT ?? ("3000" as string), 10),
   },
   jwt: {
     secret: process.env.JWT_SECRET as string,
@@ -21,10 +21,8 @@ const config = {
     level: process.env.LOG_LEVEL ?? "info",
   },
   api: {
-    conventionApi: process.env.CONVENTION_API as string
-  }
+    conventionApi: process.env.CONVENTION_API as string,
+  },
 };
-
-
 
 export default config;
