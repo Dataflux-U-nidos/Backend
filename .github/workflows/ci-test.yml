@@ -32,6 +32,10 @@ jobs:
         run: bun test || echo "No test command found, skipping tests"
 
       - name: 🚀 Run application
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          CONVENTION_API: ${{ secrets.CONVENTION_API }}
+
         run: bun run dev
       
       - name: 🧹 Lint code
