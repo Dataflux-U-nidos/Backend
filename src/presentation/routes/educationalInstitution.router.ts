@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { EducationalInstitutionController } from '../controllers/educationalInstitutionController';
-import { EducationalInstitutionRepository } from '../../infrastructure/database/repositories/educationalInstitutionRepositoryImpl';
+import { EducationalInstitutionController } from '../controllers/educationalInstitution.controller';
+import { EducationalInstitutionRepository } from '../../infrastructure/database/repositories/educationalInstitution.repository.impl';
 import {
   CreateEducationalInstitutionUseCase,
   GetAllEducationalInstitutionUseCase,

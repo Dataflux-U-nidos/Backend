@@ -1,4 +1,4 @@
-import { EducationalInstitutionModel } from '../../../infrastructure';
+import { EducationalInstitutionModel } from '../..';
 import {
   EducationalInstitution,
   IEducationalInstitutionRepository,

@@ -1,4 +1,4 @@
-import { EducationalInstitution } from '../../domain';
+import { EducationalInstitution } from '..';
 
 export interface IEducationalInstitutionRepository {
   findAll(): Promise<EducationalInstitution[]>;
