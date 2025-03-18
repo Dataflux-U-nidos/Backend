@@ -54,7 +54,7 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: 🔐 Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -76,10 +76,12 @@ jobs:
           echo "Tag generado: $IMAGE_TAG"
           docker build -t ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG .
           docker tag ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-test
+
       - name: 🚀 Push Docker Image to ECR (PRUEBAS)
         run: |
-          docker push ${{ secrets.AWS_ECR_URI }}:test-${IMAGE_TAG}
+          docker push ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG
           docker push ${{ secrets.AWS_ECR_URI }}:latest-test
+
   deploy-prod:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -100,7 +102,7 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: 🔐 Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -122,7 +124,8 @@ jobs:
           echo "Tag generado: $IMAGE_TAG"
           docker build -t ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG .
           docker tag ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-prod
+
       - name: 🚀 Push Docker Image to ECR (PRODUCCIÓN)
         run: |
-          docker push ${{ secrets.AWS_ECR_URI }}:prod-${IMAGE_TAG}
+          docker push ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG
           docker push ${{ secrets.AWS_ECR_URI }}:latest-prod
