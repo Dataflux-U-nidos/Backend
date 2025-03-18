@@ -1,4 +1,4 @@
-name: Test Bun CI
+name: CI/CD pipeline
 
 on:
   push:
@@ -31,6 +31,9 @@ jobs:
       - name: 🔍 Run tests
         run: bun test || echo "No test command found, skipping tests"
 
+      - name: 🚀 Run application
+        run: bun run
+
   deploy-release:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/release'
@@ -40,20 +43,43 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
+      - name: 🔍 Debug AWS Credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+          echo "AWS_SECRET_ACCESS_KEY: $(echo $AWS_SECRET_ACCESS_KEY | sed 's/./*/g')"
+          echo "AWS_REGION: $AWS_REGION"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: 🔐 Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: 🔐 Logout de Docker (Limpieza previa)
+        run: docker logout public.ecr.aws || true
+
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: false
 
-      - name: 🛠️ Build and Tag Docker Image for PRUEBAS
+      - name: 📌 Definir variable IMAGE_TAG
+        run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+      - name: 🛠 Build and Tag Docker Image for PRUEBAS
         run: |
-          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          echo "Tag generado: $IMAGE_TAG"
           docker build -t ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG .
           docker tag ${{ secrets.AWS_ECR_URI }}:test-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-test
-
       - name: 🚀 Push Docker Image to ECR (PRUEBAS)
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}:test-${IMAGE_TAG}
           docker push ${{ secrets.AWS_ECR_URI }}:latest-test
-
   deploy-prod:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -63,15 +89,39 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
+      - name: 🔍 Debug AWS Credentials
+        run: |
+          echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+          echo "AWS_SECRET_ACCESS_KEY: $(echo $AWS_SECRET_ACCESS_KEY | sed 's/./*/g')"
+          echo "AWS_REGION: $AWS_REGION"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: 🔐 Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: 🔐 Logout de Docker (Limpieza previa)
+        run: docker logout public.ecr.aws || true
+
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: false
 
-      - name: 🛠️ Build and Tag Docker Image for PRODUCCIÓN
+      - name: 📌 Definir variable IMAGE_TAG
+        run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+      - name: 🛠 Build and Tag Docker Image for PRODUCCIÓN
         run: |
-          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          echo "Tag generado: $IMAGE_TAG"
           docker build -t ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG .
           docker tag ${{ secrets.AWS_ECR_URI }}:prod-$IMAGE_TAG ${{ secrets.AWS_ECR_URI }}:latest-prod
-
       - name: 🚀 Push Docker Image to ECR (PRODUCCIÓN)
         run: |
           docker push ${{ secrets.AWS_ECR_URI }}:prod-${IMAGE_TAG}
