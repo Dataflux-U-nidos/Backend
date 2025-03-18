@@ -30,8 +30,8 @@ app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 
 // Ruta de prueba
-app.get("/", (req, res) => {
-  res.send("Servidor Express funcionando correctamente");
+app.get('/', (req, res) => {
+  res.send('Servidor·Express·funcionando·correctamente');
 });
 
 // 3. Middleware para manejo de errores
