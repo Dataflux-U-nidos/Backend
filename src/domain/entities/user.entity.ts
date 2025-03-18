@@ -1,3 +1,6 @@
+// src/domain/entities/user.entity.ts
+export type UserType = 'ADMIN' | 'STUDENT' | 'VIEWER';
+
 export interface BaseUser {
   id: string;
   name: string;
@@ -5,7 +8,9 @@ export interface BaseUser {
   email: string;
   password: string;
   age: number;
-  type: 'ADMIN' | 'STUDENT' | 'VIEWER';
+  type: UserType;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Para el STUDENT, se agregan atributos específicos.
@@ -16,6 +21,5 @@ export interface StudentUser extends BaseUser {
   preferences: Record<string, unknown>;
 }
 
-// Si los tipos "ADMIN" y "VIEWER" tienen la misma estructura,
-// basta con usar BaseUser para ellos.
+// Si los tipos "ADMIN" y "VIEWER" tienen la misma estructura, se usa BaseUser
 export type User = BaseUser | StudentUser;

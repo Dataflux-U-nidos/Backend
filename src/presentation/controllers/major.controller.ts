@@ -16,11 +16,7 @@ export class MajorController {
     private readonly deleteMajorUseCase: DeleteMajorUseCase,
   ) {}
 
-  public getAll = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const majors = await this.getAllMajorsUseCase.execute();
       res.status(200).json(majors);
@@ -29,11 +25,7 @@ export class MajorController {
     }
   };
 
-  public getById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
       const major = await this.getMajorByIdUseCase.execute(id);
@@ -47,24 +39,17 @@ export class MajorController {
     }
   };
 
-  public create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const newMajor = await this.createMajorUseCase.execute(req.body);
+      // La respuesta incluirá createdAt y updatedAt
       res.status(201).json(newMajor);
     } catch (error) {
       next(error);
     }
   };
 
-  public update = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
       const updatedMajor = await this.updateMajorUseCase.execute(id, req.body);
@@ -78,11 +63,7 @@ export class MajorController {
     }
   };
 
-  public delete = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
       const wasDeleted = await this.deleteMajorUseCase.execute(id);
