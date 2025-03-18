@@ -5,8 +5,8 @@ export class UpdateMajorUseCase {
   constructor(private readonly majorRepository: MajorRepository) {}
 
   public async execute(
-    id: string, 
-    data: Partial<Omit<Major, 'id'>>
+    id: string,
+    data: Partial<Omit<Major, 'id'>>,
   ): Promise<Major | null> {
     return this.majorRepository.update(id, data);
   }
