@@ -3,7 +3,7 @@ export const validateEnv = (requiredEnvVars: string[]): void => {
 
   if (missingVars.length > 0) {
     throw new Error(
-      `Missing required environment variables: ${missingVars.join(", ")}`
+      `Missing required environment variables: ${missingVars.join(', ')}`,
     );
   }
 };

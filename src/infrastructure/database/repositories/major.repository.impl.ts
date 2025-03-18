@@ -13,7 +13,7 @@ export class MajorRepository implements IMajorRepository {
       description: doc.description,
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
-      focus: doc.focus
+      focus: doc.focus,
     }));
   }
 
@@ -29,7 +29,7 @@ export class MajorRepository implements IMajorRepository {
       description: doc.description,
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
-      focus: doc.focus
+      focus: doc.focus,
     };
   }
 
@@ -37,11 +37,14 @@ export class MajorRepository implements IMajorRepository {
     const doc = await MajorModel.create(data);
     return {
       id: doc._id.toString(),
-      ...data
+      ...data,
     };
   }
 
-  public async update(id: string, data: Partial<Omit<Major, 'id'>>): Promise<Major | null> {
+  public async update(
+    id: string,
+    data: Partial<Omit<Major, 'id'>>,
+  ): Promise<Major | null> {
     const doc = await MajorModel.findByIdAndUpdate(id, data, { new: true });
     if (!doc) return null;
     return {
@@ -53,7 +56,7 @@ export class MajorRepository implements IMajorRepository {
       description: doc.description,
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
-      focus: doc.focus
+      focus: doc.focus,
     };
   }
 

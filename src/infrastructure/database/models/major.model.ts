@@ -2,10 +2,10 @@
 import { model, Schema, Document, Types } from 'mongoose';
 
 interface MajorDocument extends Document {
-_id: Types.ObjectId;
+  _id: Types.ObjectId;
   name: string;
-  institutionId: Types.ObjectId; 
-  difficulty: 'Fácil' | 'Medio' | 'Difícil';
+  institutionId: Types.ObjectId;
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   price: number;
   description: string;
   pensumLink: string;
@@ -17,12 +17,16 @@ const MajorSchema = new Schema<MajorDocument>({
   name: { type: String, required: true },
   // Guarda como ObjectId pero sin ref
   institutionId: { type: Schema.Types.ObjectId, required: true },
-  difficulty: { type: String, enum: ['Fácil', 'Medio', 'Difícil'], required: true },
+  difficulty: {
+    type: String,
+    enum: ['EASY', 'MEDIUM', 'HARD'],
+    required: true,
+  },
   price: { type: Number, required: true },
   description: { type: String, required: true },
   pensumLink: { type: String, required: true },
   jobId: { type: Schema.Types.ObjectId, required: true },
-  focus: { type: String, required: true }
+  focus: { type: String, required: true },
 });
 
-export const MajorModel = model<MajorDocument>('Carrera', MajorSchema);
+export const MajorModel = model<MajorDocument>('Majors', MajorSchema);
