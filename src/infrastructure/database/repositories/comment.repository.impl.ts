@@ -9,6 +9,8 @@ export class CommentRepository implements ICommentRepository {
       userId: doc.userId.toString(),
       text: doc.text,
       date: doc.date,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     }));
   }
 
@@ -20,6 +22,8 @@ export class CommentRepository implements ICommentRepository {
       userId: doc.userId.toString(),
       text: doc.text,
       date: doc.date,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -28,6 +32,8 @@ export class CommentRepository implements ICommentRepository {
     return {
       id: doc._id.toString(),
       ...data,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -42,6 +48,8 @@ export class CommentRepository implements ICommentRepository {
       userId: doc.userId.toString(),
       text: doc.text,
       date: doc.date,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
