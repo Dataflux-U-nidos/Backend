@@ -18,7 +18,11 @@ const MajorSchema = new Schema<MajorDocument>(
   {
     name: { type: String, required: true },
     institutionId: { type: Schema.Types.ObjectId, required: true },
-    difficulty: { type: String, enum: ['EASY', 'MEDIUM', 'HARD'], required: true },
+    difficulty: {
+      type: String,
+      enum: ['EASY', 'MEDIUM', 'HARD'],
+      required: true,
+    },
     price: { type: Number, required: true },
     description: { type: String, required: true },
     pensumLink: { type: String, required: true },
@@ -26,8 +30,8 @@ const MajorSchema = new Schema<MajorDocument>(
     focus: { type: String, required: true },
   },
   {
-    timestamps: true, 
-  }
+    timestamps: true,
+  },
 );
 
 export const MajorModel = model<MajorDocument>('Majors', MajorSchema);

@@ -47,7 +47,10 @@ export class MajorRepository implements IMajorRepository {
     };
   }
 
-  public async update(id: string, data: Partial<Omit<Major, 'id'>>): Promise<Major | null> {
+  public async update(
+    id: string,
+    data: Partial<Omit<Major, 'id'>>,
+  ): Promise<Major | null> {
     const doc = await MajorModel.findByIdAndUpdate(id, data, { new: true });
     if (!doc) return null;
     return {

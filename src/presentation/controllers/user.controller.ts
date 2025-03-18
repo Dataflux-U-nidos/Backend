@@ -16,7 +16,11 @@ export class UserController {
     private readonly deleteUserUseCase: DeleteUserUseCase,
   ) {}
 
-  public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getAll = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       const { type, email } = req.query;
       // Verifica que 'type' y 'email' sean strings, de lo contrario se ignoran (undefined)
@@ -33,7 +37,11 @@ export class UserController {
     }
   };
 
-  public getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       const { id } = req.params;
       const user = await this.getUserByIdUseCase.execute(id);
@@ -47,7 +55,11 @@ export class UserController {
     }
   };
 
-  public create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       const newUser = await this.createUserUseCase.execute(req.body);
       // La respuesta incluye ahora createdAt y updatedAt
@@ -57,7 +69,11 @@ export class UserController {
     }
   };
 
-  public update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       const { id } = req.params;
       const updatedUser = await this.updateUserUseCase.execute(id, req.body);
@@ -71,7 +87,11 @@ export class UserController {
     }
   };
 
-  public delete = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       const { id } = req.params;
       const wasDeleted = await this.deleteUserUseCase.execute(id);

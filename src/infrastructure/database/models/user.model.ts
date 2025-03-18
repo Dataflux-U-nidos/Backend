@@ -23,14 +23,18 @@ const UserSchema = new Schema<UserDocument>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     age: { type: Number, required: true },
-    type: { type: String, required: true, enum: ['ADMIN', 'STUDENT', 'VIEWER'] },
+    type: {
+      type: String,
+      required: true,
+      enum: ['ADMIN', 'STUDENT', 'VIEWER'],
+    },
     locality: { type: String },
     school: { type: String },
     preferences: { type: Schema.Types.Mixed },
   },
   {
     timestamps: true, // Agrega createdAt y updatedAt automáticamente
-  }
+  },
 );
 
 export const UserModel = model<UserDocument>('Users', UserSchema);
