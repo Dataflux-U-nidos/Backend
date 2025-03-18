@@ -26,11 +26,17 @@ export const EducationalInstitutionSchema = Type.Object({
 });
 
 export const CreateEducationalInstitutionSchema = EducationalInstitutionSchema;
-export type EducationalInstitutionDto = Static<typeof EducationalInstitutionSchema>;
+export type EducationalInstitutionDto = Static<
+  typeof EducationalInstitutionSchema
+>;
 export type EventDto = Static<typeof EventSchema>;
 
-export const UpdateEducationalInstitutionSchema = Type.Partial(EducationalInstitutionSchema,);
-export type UpdateEducationalInstitutionDto = Static<typeof UpdateEducationalInstitutionSchema>;
+export const UpdateEducationalInstitutionSchema = Type.Partial(
+  EducationalInstitutionSchema,
+);
+export type UpdateEducationalInstitutionDto = Static<
+  typeof UpdateEducationalInstitutionSchema
+>;
 
 export const EducationalInstitutionResponseSchema = Type.Intersect([
   EducationalInstitutionSchema,
@@ -41,4 +47,6 @@ export const EducationalInstitutionResponseSchema = Type.Intersect([
   }),
 ]);
 
-export type EducationalInstitutionResponseDto = Static<typeof EducationalInstitutionResponseSchema>;
+export type EducationalInstitutionResponseDto = Static<
+  typeof EducationalInstitutionResponseSchema
+>;

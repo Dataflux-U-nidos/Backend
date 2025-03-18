@@ -57,7 +57,8 @@ export class EducationalInstitutionController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const newEducationalInstitution = await this.createEducationalInstitutionUseCase.execute(req.body);
+      const newEducationalInstitution =
+        await this.createEducationalInstitutionUseCase.execute(req.body);
       res.status(201).json(newEducationalInstitution);
     } catch (error) {
       next(error);

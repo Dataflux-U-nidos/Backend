@@ -1,5 +1,8 @@
 import { EducationalInstitutionModel } from '../../../infrastructure';
-import {EducationalInstitution,IEducationalInstitutionRepository} from '../../../domain';
+import {
+  EducationalInstitution,
+  IEducationalInstitutionRepository,
+} from '../../../domain';
 
 export class EducationalInstitutionRepository
   implements IEducationalInstitutionRepository

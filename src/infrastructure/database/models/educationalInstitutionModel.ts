@@ -27,7 +27,7 @@ const EventSchema = new Schema<Event>(
     location: { type: String, required: true },
   },
   { _id: true },
-); 
+);
 
 const EducationalInstitutionSchema = new Schema<EducationalInstitution>(
   {
@@ -47,9 +47,12 @@ const EducationalInstitutionSchema = new Schema<EducationalInstitution>(
     link: { type: String, required: true },
     events: { type: [EventSchema], required: true },
   },
-  { 
-    timestamps: true 
+  {
+    timestamps: true,
   },
 );
 
-export const EducationalInstitutionModel = model<EducationalInstitution>('EducationalInstitutions',EducationalInstitutionSchema);
+export const EducationalInstitutionModel = model<EducationalInstitution>(
+  'EducationalInstitutions',
+  EducationalInstitutionSchema,
+);
