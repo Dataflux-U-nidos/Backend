@@ -23,17 +23,14 @@ export class UserController {
   ): Promise<void> => {
     try {
       const { type, email } = req.query;
-
-      // Verifica si 'type' y 'email' son strings, en caso contrario los ignora (undefined)
+      // Verifica que 'type' y 'email' sean strings, de lo contrario se ignoran (undefined)
       const typeString = typeof type === 'string' ? type : undefined;
       const emailString = typeof email === 'string' ? email : undefined;
-
-      // Ahora 'typeString' y 'emailString' son cadenas o undefined
+      // Se ejecuta el caso de uso, el cual ya mapea los timestamps
       const users = await this.getAllUsersUseCase.execute({
         type: typeString,
         email: emailString,
       });
-
       res.status(200).json(users);
     } catch (error) {
       next(error);
@@ -65,6 +62,7 @@ export class UserController {
   ): Promise<void> => {
     try {
       const newUser = await this.createUserUseCase.execute(req.body);
+      // La respuesta incluye ahora createdAt y updatedAt
       res.status(201).json(newUser);
     } catch (error) {
       next(error);

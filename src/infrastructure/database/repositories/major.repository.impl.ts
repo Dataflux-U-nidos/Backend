@@ -14,6 +14,8 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
       focus: doc.focus,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     }));
   }
 
@@ -30,6 +32,8 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
       focus: doc.focus,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -38,6 +42,8 @@ export class MajorRepository implements IMajorRepository {
     return {
       id: doc._id.toString(),
       ...data,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -57,6 +63,8 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
       focus: doc.focus,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 

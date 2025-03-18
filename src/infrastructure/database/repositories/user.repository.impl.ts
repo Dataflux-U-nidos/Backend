@@ -9,6 +9,7 @@ export class UserRepository implements IUserRepository {
     const query: Record<string, unknown> = {};
     if (filter?.type) query.type = filter.type;
     if (filter?.email) query.email = filter.email;
+
     const results = await UserModel.find(query);
     return results.map((doc) => ({
       id: doc._id.toString(),
@@ -21,6 +22,8 @@ export class UserRepository implements IUserRepository {
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     }));
   }
 
@@ -38,6 +41,8 @@ export class UserRepository implements IUserRepository {
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -46,6 +51,8 @@ export class UserRepository implements IUserRepository {
     return {
       id: doc._id.toString(),
       ...data,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -66,6 +73,8 @@ export class UserRepository implements IUserRepository {
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
