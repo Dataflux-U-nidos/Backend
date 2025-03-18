@@ -32,7 +32,10 @@ jobs:
         run: bun test || echo "No test command found, skipping tests"
 
       - name: 🚀 Run application
-        run: bun run
+        run: bun run dev
+      
+      - name: 🧹 Lint code
+        run: bun run lint
 
   deploy-release:
     needs: test
