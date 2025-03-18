@@ -13,11 +13,11 @@ export * from '../use-cases/major/get-major-by-id.use-case';
 export * from '../use-cases/major/update-major.use-case';
 export * from '../use-cases/major/delete-major.use-case';
 //Use cases job opportunity
-export * from './jobOpportunity/create-jobOpportunity.use-case';
-export * from './jobOpportunity/delete-jobOpportunity.use-case';
-export * from './jobOpportunity/get-all-jobOpportunity.use-case';
-export * from './jobOpportunity/get-jobOpportunity-by-id.use-case';
-export * from './jobOpportunity/update-jobOpportunity.use-case';
+export * from './jobOpportunity/createJobOpportunity.useCase';
+export * from './jobOpportunity/deleteJobOpportunity.useCase';
+export * from './jobOpportunity/getAllJobOpportunity.useCase';
+export * from './jobOpportunity/getJobOpportunityById.useCase';
+export * from './jobOpportunity/updateJobOpportunity.useCase';
 //Use cases user
 export * from '../use-cases/user/create-user.use-case';
 export * from '../use-cases/user/delete-user.use-case';

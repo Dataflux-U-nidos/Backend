@@ -8,8 +8,10 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
       id: doc._id.toString(),
       name: doc.name,
       description: doc.description,
-      jobId: doc.jobId.toString(), // Convertimos los ObjectId a string
+      jobId: doc.jobId.toString(),
       salary: doc.salary,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     }));
   }
 
@@ -22,6 +24,8 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
       description: doc.description,
       jobId: doc.jobId.toString(),
       salary: doc.salary,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -32,6 +36,8 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
     return {
       id: doc._id.toString(),
       ...data,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -49,6 +55,8 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
       description: doc.description,
       jobId: doc.jobId.toString(),
       salary: doc.salary,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
