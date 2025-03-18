@@ -1,11 +1,11 @@
 //Casos de uso específicos
 
 //Use cases educational institution
-export * from './educational-institution/create-educational-institution.use-case';
-export * from './educational-institution/delete-educational-institution.use-cases';
-export * from './educational-institution/get-educational-institution-by-id.use-case';
-export * from './educational-institution/get-all-educational-institution.use-case';
-export * from './educational-institution/update-educational-institution.use-case';
+export * from './educationalInstitution/createEducationalInstitutionUseCase';
+export * from './educationalInstitution/deleteEducationalInstitutionUseCase';
+export * from './educationalInstitution/getEducationalInstitutionByIdUseCase';
+export * from './educationalInstitution/getAllEducationalInstitutionUseCase';
+export * from './educationalInstitution/updateEducationalInstitutionUseCase';
 //Use cases major
 export * from '../use-cases/major/create-major.use-case';
 export * from '../use-cases/major/get-all-majors.use-case';

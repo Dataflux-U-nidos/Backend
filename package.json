@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "eslint . --ext .ts --fix && ts-node-dev --respawn --transpile-only src/server.ts ",
+    "grani": "eslint . --ext .ts --fix && bun run --watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts"
