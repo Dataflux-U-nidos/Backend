@@ -1,11 +1,12 @@
 import { UserModel } from '../../../infrastructure';
 import { User, IUserRepository } from '../../../domain';
+import { UserResponseDto } from '../../../application';
 
 export class UserRepository implements IUserRepository {
   public async findAll(filter?: {
     type?: string;
     email?: string;
-  }): Promise<User[]> {
+  }): Promise<UserResponseDto[]> {
     const query: Record<string, unknown> = {};
     if (filter?.type) query.type = filter.type;
     if (filter?.email) query.email = filter.email;
@@ -16,18 +17,17 @@ export class UserRepository implements IUserRepository {
       name: doc.name,
       last_name: doc.last_name,
       email: doc.email,
-      password: doc.password,
       age: doc.age,
       type: doc.type,
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
     }));
   }
 
-  public async findById(id: string): Promise<User | null> {
+  public async findById(id: string): Promise<UserResponseDto | null> {
     const doc = await UserModel.findById(id);
     if (!doc) return null;
     return {
@@ -35,14 +35,13 @@ export class UserRepository implements IUserRepository {
       name: doc.name,
       last_name: doc.last_name,
       email: doc.email,
-      password: doc.password,
       age: doc.age,
       type: doc.type,
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
     };
   }
 
