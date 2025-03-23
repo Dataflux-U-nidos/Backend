@@ -6,6 +6,7 @@ import {
   CreateUserUseCase,
   GetAllUsersUseCase,
   GetUserByIdUseCase,
+  GetUserByEmailUseCase,
   UpdateUserUseCase,
   DeleteUserUseCase,
 } from '../../application';
@@ -19,6 +20,7 @@ const userRepository = new UserRepository();
 const createUserUseCase = new CreateUserUseCase(userRepository);
 const getAllUsersUseCase = new GetAllUsersUseCase(userRepository);
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
+const getUserByEmailUseCase = new GetUserByEmailUseCase(userRepository);
 const updateUserUseCase = new UpdateUserUseCase(userRepository);
 const deleteUserUseCase = new DeleteUserUseCase(userRepository);
 
@@ -27,6 +29,7 @@ const userController = new UserController(
   createUserUseCase,
   getAllUsersUseCase,
   getUserByIdUseCase,
+  getUserByEmailUseCase,
   updateUserUseCase,
   deleteUserUseCase,
 );
@@ -34,6 +37,7 @@ const userController = new UserController(
 // Definimos las rutas y asignamos los métodos del controlador
 router.get('/', userController.getAll);
 router.get('/:id', userController.getById);
+router.get('/email/:email', userController.getByEmail);
 router.post('/', userController.create);
 router.patch('/:id', userController.update);
 router.delete('/:id', userController.delete);

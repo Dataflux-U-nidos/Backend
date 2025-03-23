@@ -45,6 +45,24 @@ export class UserRepository implements IUserRepository {
     };
   }
 
+  public async findByEmail(email: string): Promise<UserResponseDto | null> {
+    const doc = await UserModel.findOne({ email: email });
+    if (!doc) return null;
+    return {
+      id: doc._id.toString(),
+      name: doc.name,
+      last_name: doc.last_name,
+      email: doc.email,
+      age: doc.age,
+      type: doc.type,
+      locality: doc.locality,
+      school: doc.school,
+      preferences: doc.preferences,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    };
+  }
+
   public async create(data: Omit<User, 'id'>): Promise<User> {
     const doc = await UserModel.create(data);
     return {
