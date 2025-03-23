@@ -6,6 +6,8 @@ interface CommentDocument extends Document {
   userId: Types.ObjectId;
   text: string;
   date: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const CommentSchema = new Schema<CommentDocument>({
@@ -13,6 +15,8 @@ const CommentSchema = new Schema<CommentDocument>({
   userId: { type: Schema.Types.ObjectId, required: true }, // Referencia a la colección de usuarios
   text: { type: String, required: true, minlength: 1, maxlength: 500 },
   date: { type: Date, required: true, default: Date.now },
-});
+  },
+  { timestamps: true},
+);
 
 export const CommentModel = model<CommentDocument>('Comments', CommentSchema);
