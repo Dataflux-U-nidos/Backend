@@ -1,4 +1,5 @@
-import { IUserRepository, User } from '../../../domain';
+import { IUserRepository } from '../../../domain';
+import { UserResponseDto } from '../../dtos';
 
 export class GetAllUsersUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
@@ -6,7 +7,7 @@ export class GetAllUsersUseCase {
   public async execute(filter?: {
     type?: string;
     email?: string;
-  }): Promise<User[]> {
+  }): Promise<UserResponseDto[]> {
     return this.userRepository.findAll(filter);
   }
 }

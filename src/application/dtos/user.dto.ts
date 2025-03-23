@@ -7,7 +7,6 @@ export const UserTypeEnum = Type.Union([
   Type.Literal('VIEWER'),
 ]);
 
-// Esquema para crear un usuario (entrada)
 export const CreateUserSchema = Type.Object({
   name: Type.String(),
   last_name: Type.String(),
@@ -27,7 +26,6 @@ export const UpdateUserSchema = Type.Partial(CreateUserSchema);
 export type UpdateUserDto = Static<typeof UpdateUserSchema>;
 
 // Esquema para la respuesta de un usuario (salida)
-// Se excluye la contraseña y se usa "id" en lugar de "_id", además se agregan timestamps
 export const UserResponseSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
