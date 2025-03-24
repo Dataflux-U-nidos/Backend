@@ -1,8 +1,9 @@
 import { MajorModel } from '../../../infrastructure';
 import { Major, IMajorRepository } from '../../../domain';
+import { MajorResponseDto } from '../../../application';
 
 export class MajorRepository implements IMajorRepository {
-  public async findAll(): Promise<Major[]> {
+  public async findAll(): Promise<MajorResponseDto[]> {
     const results = await MajorModel.find({});
     return results.map((doc) => ({
       id: doc._id.toString(),
@@ -14,12 +15,12 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
       focus: doc.focus,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
     }));
   }
 
-  public async findById(id: string): Promise<Major | null> {
+  public async findById(id: string): Promise<MajorResponseDto | null> {
     const doc = await MajorModel.findById(id);
     if (!doc) return null;
     return {
@@ -32,8 +33,8 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
       focus: doc.focus,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
     };
   }
 

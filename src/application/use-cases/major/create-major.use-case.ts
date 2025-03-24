@@ -1,8 +1,7 @@
-import { MajorRepository } from '../../../infrastructure';
-import { Major } from '../../../domain';
+import { IMajorRepository, Major } from '../../../domain';
 
 export class CreateMajorUseCase {
-  constructor(private readonly majorRepository: MajorRepository) {}
+  constructor(private readonly majorRepository: IMajorRepository) {}
 
   public async execute(data: Omit<Major, 'id'>): Promise<Major> {
     // Lógica de negocio adicional (si es necesaria) antes de crear

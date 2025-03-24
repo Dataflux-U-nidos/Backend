@@ -1,10 +1,10 @@
-import { MajorRepository } from '../../../infrastructure';
-import { Major } from '../../../domain';
+import { IMajorRepository } from '../../../domain';
+import { MajorResponseDto } from '../../dtos';
 
 export class GetMajorByIdUseCase {
-  constructor(private readonly majorRepository: MajorRepository) {}
+  constructor(private readonly majorRepository: IMajorRepository) {}
 
-  public async execute(id: string): Promise<Major | null> {
+  public async execute(id: string): Promise<MajorResponseDto | null> {
     return this.majorRepository.findById(id);
   }
 }

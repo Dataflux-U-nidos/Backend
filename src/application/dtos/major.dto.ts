@@ -5,9 +5,9 @@ export const MajorBaseSchema = Type.Object({
   name: Type.String(),
   institutionId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   difficulty: Type.Union([
-    Type.Literal('LOW'),
+    Type.Literal('EASY'),
     Type.Literal('MEDIUM'),
-    Type.Literal('HIGH'),
+    Type.Literal('HARD'),
   ]),
   price: Type.Number(),
   description: Type.String(),
@@ -26,7 +26,6 @@ export const UpdateMajorSchema = Type.Partial(CreateMajorSchema);
 export type UpdateMajorDto = Static<typeof UpdateMajorSchema>;
 
 // Esquema para la respuesta de un Major (salida)
-// Se añade "id" y los campos de timestamps (createdAt y updatedAt)
 export const MajorResponseSchema = Type.Intersect([
   MajorBaseSchema,
   Type.Object({
