@@ -3,7 +3,6 @@ import {
   CreateUserUseCase,
   GetAllUsersUseCase,
   GetUserByIdUseCase,
-  GetUserByEmailUseCase,
   UpdateUserUseCase,
   DeleteUserUseCase,
 } from '../../application';
@@ -13,7 +12,6 @@ export class UserController {
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly getAllUsersUseCase: GetAllUsersUseCase,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
-    private readonly getUserByEmailUseCase: GetUserByEmailUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
   ) {}
@@ -47,24 +45,6 @@ export class UserController {
     try {
       const { id } = req.params;
       const user = await this.getUserByIdUseCase.execute(id);
-      if (!user) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-      } else {
-        res.status(200).json(user);
-      }
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public getByEmail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const { email } = req.params;
-      const user = await this.getUserByEmailUseCase.execute(email);
       if (!user) {
         res.status(404).json({ message: 'Usuario no encontrado' });
       } else {

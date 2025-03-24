@@ -45,7 +45,7 @@ export class UserRepository implements IUserRepository {
     };
   }
 
-  public async findByEmail(email: string): Promise<UserResponseDto | null> {
+  public async findByEmail(email: string): Promise<User | null> {
     const doc = await UserModel.findOne({ email: email });
     if (!doc) return null;
     return {
@@ -53,13 +53,14 @@ export class UserRepository implements IUserRepository {
       name: doc.name,
       last_name: doc.last_name,
       email: doc.email,
+      password: doc.password,
       age: doc.age,
       type: doc.type,
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
-      createdAt: doc.createdAt.toISOString(),
-      updatedAt: doc.updatedAt.toISOString(),
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
