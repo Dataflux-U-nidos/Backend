@@ -36,6 +36,10 @@ router.get('/', userController.getAll);
 router.get('/:id', userController.getById);
 router.post('/', userController.create);
 router.patch('/:id', validateRoleMiddleware(['VIEWER']), userController.update);
-router.delete('/:id', userController.delete);
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['VIEWER', 'ADMIN']),
+  userController.delete,
+);
 
 export default router;

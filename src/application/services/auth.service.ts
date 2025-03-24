@@ -35,8 +35,8 @@ export class AuthService {
     // Crear el JWT (access token)
     const payload = { id: user.id, type: user.type };
     const accessToken = jwt.sign(payload, config.jwt.secret, {
-      expiresIn: parseInt(config.jwt.expiresIn, 10),
-    });
+      expiresIn: config.jwt.expiresIn,
+    } as jwt.SignOptions);
 
     // Solo devolvemos el access token, no el refresh token
     return {
