@@ -1,12 +1,7 @@
 import jwt from 'jsonwebtoken';
 import argon2 from 'argon2';
 import { IUserRepository } from '../../domain/repositories/user.repository';
-import {
-  LoginDto,
-  //RefreshTokenDto,
-  JwtAccessTokenDto,
-  //JwtRefreshTokenDto,
-} from '../dtos/auth.dto';
+import { LoginDto, JwtAccessTokenDto } from '../dtos/auth.dto';
 import config from '../../infrastructure/config';
 
 export class AuthService {
@@ -43,30 +38,4 @@ export class AuthService {
       accessToken,
     };
   }
-
-  // Refresh Token - Solo devuelve refresh token
-  //   public async refreshToken(
-  //     refreshTokenDto: RefreshTokenDto,
-  //   ): Promise<JwtRefreshTokenDto> {
-  //     const { refreshToken } = refreshTokenDto;
-
-  //     try {
-  //       // Verificar el refresh token
-  //       const decoded: any = jwt.verify(refreshToken, config.jwt.secret);
-
-  //       // Crear un nuevo refresh token
-  //       const newRefreshToken = jwt.sign(
-  //         { id: decoded.id, type: decoded.type },
-  //         config.jwt.secret,
-  //         { expiresIn: parseInt(config.jwt.refreshExpiresTokenIn, 10) },
-  //       );
-
-  //       // Devolver solo el refresh token
-  //       return {
-  //         refreshToken: newRefreshToken,
-  //       };
-  //     } catch (error) {
-  //       throw new Error('Invalid refresh token');
-  //     }
-  //   }
 }
