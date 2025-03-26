@@ -1,8 +1,9 @@
+import { CommentResponseDto } from '../../application/dtos'; // Asegúrate de importar desde la ruta correcta
 import { Comment } from '../../domain';
 
 export interface ICommentRepository {
-  findAll(): Promise<Comment[]>;
-  findById(id: string): Promise<Comment | null>;
+  findAll(): Promise<CommentResponseDto[]>; // 🔹 Devuelve DTOs en lugar de Comment[]
+  findById(id: string): Promise<CommentResponseDto | null>; // 🔹 También usa DTO
   create(data: Omit<Comment, 'id'>): Promise<Comment>;
   update(
     id: string,

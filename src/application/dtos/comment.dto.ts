@@ -28,3 +28,9 @@ export const CommentResponseSchema = Type.Intersect([
   }),
 ]);
 export type CommentResponseDto = Static<typeof CommentResponseSchema>;
+
+// Esquema para una lista de comentarios
+export const CommentsListSchema = Type.Object({
+  comments: Type.Array(CommentResponseSchema),
+});
+export type CommentsListDto = Static<typeof CommentsListSchema>;
