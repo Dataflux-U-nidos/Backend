@@ -11,6 +11,7 @@ import {
   majorRouter,
   userRouter,
   JobOpportunityRouter,
+  authRouter,
 } from './presentation/routes';
 
 // Crear la aplicación Express
@@ -28,6 +29,7 @@ app.use(
 );
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
+app.use(`${config.api.conventionApi}/auth`, authRouter);
 
 // Ruta de prueba
 app.get('/', (req, res) => {

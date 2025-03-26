@@ -10,13 +10,14 @@ interface CommentDocument extends Document {
   updatedAt: Date;
 }
 
-const CommentSchema = new Schema<CommentDocument>({
-  // Guarda como ObjectId pero sin ref
-  userId: { type: Schema.Types.ObjectId, required: true }, // Referencia a la colección de usuarios
-  text: { type: String, required: true, minlength: 1, maxlength: 500 },
-  date: { type: Date, required: true, default: Date.now },
+const CommentSchema = new Schema<CommentDocument>(
+  {
+    // Guarda como ObjectId pero sin ref
+    userId: { type: Schema.Types.ObjectId, required: true }, // Referencia a la colección de usuarios
+    text: { type: String, required: true, minlength: 1, maxlength: 500 },
+    date: { type: Date, required: true, default: Date.now },
   },
-  { timestamps: true},
+  { timestamps: true },
 );
 
 export const CommentModel = model<CommentDocument>('Comments', CommentSchema);

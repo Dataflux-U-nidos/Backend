@@ -10,7 +10,7 @@ export class EducationalInstitutionRepository
   public async findAll(): Promise<EducationalInstitution[]> {
     const results = await EducationalInstitutionModel.find({});
     return results.map((doc) => ({
-      _id: (doc._id as unknown as string).toString(),
+      _id: doc._id as string,
       name: doc.name,
       location_l: doc.location_l,
       price_range: doc.price_range,

@@ -1,6 +1,6 @@
 // src/presentation/routes/user.router.ts
 import { Router } from 'express';
-import { UserController } from '../../presentation';
+import { UserController, validateRoleMiddleware } from '../../presentation';
 import { UserRepository } from '../../infrastructure/database/repositories';
 import {
   CreateUserUseCase,
@@ -35,7 +35,11 @@ const userController = new UserController(
 router.get('/', userController.getAll);
 router.get('/:id', userController.getById);
 router.post('/', userController.create);
-router.patch('/:id', userController.update);
-router.delete('/:id', userController.delete);
+router.patch('/:id', validateRoleMiddleware(['VIEWER']), userController.update);
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['VIEWER', 'ADMIN']),
+  userController.delete,
+);
 
 export default router;

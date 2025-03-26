@@ -67,7 +67,10 @@ export class CommentController {
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const updatedComment = await this.updateCommentUseCase.execute(id, req.body);
+      const updatedComment = await this.updateCommentUseCase.execute(
+        id,
+        req.body,
+      );
       if (!updatedComment) {
         res.status(404).json({ message: 'Comentario no encontrado' });
       } else {
