@@ -17,10 +17,10 @@ import {
 // Crear la aplicación Express
 const app = express();
 
-// 1. Aplicar middlewares
+// Aplicar middlewares
 configureMiddlewares(app);
 
-// 2. Routes
+// Routes
 app.use(`${config.api.conventionApi}/major`, majorRouter);
 app.use(`${config.api.conventionApi}/user`, userRouter);
 app.use(
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-// 3. Middleware para manejo de errores
+// Middleware para manejo de errores
 app.use(errorHandlerMiddleware);
 
 // Conectar la base de datos antes de iniciar el servidor
