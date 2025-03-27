@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { JobOpportunityController } from '../../presentation';
+import {
+  JobOpportunityController,
+  validateRoleMiddleware,
+} from '../../presentation';
 import { JobOpportunityRepository } from '../../infrastructure/database/repositories';
 import {
   CreateJobOpportunityUseCase,
@@ -37,10 +40,31 @@ const jobOpportunityController = new JobOpportunityController(
   deleteJobOpportunityUseCase,
 );
 
-router.get('/', jobOpportunityController.getAll);
-router.get('/:id', jobOpportunityController.getById);
-router.post('/', jobOpportunityController.create);
-router.patch('/:id', jobOpportunityController.update);
-router.delete('/:id', jobOpportunityController.delete);
+// Defining routes with middleware validation and assigning controller methods
+router.get(
+  '/',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  jobOpportunityController.getAll,
+);
+router.get(
+  '/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  jobOpportunityController.getById,
+);
+router.post(
+  '/',
+  validateRoleMiddleware(['ADMIN']),
+  jobOpportunityController.create,
+);
+router.patch(
+  '/:id',
+  validateRoleMiddleware(['ADMIN']),
+  jobOpportunityController.update,
+);
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['ADMIN']),
+  jobOpportunityController.delete,
+);
 
 export default router;
