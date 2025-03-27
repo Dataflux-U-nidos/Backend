@@ -14,11 +14,14 @@ import {
   authRouter,
 } from './presentation/routes';
 
-// Crear la aplicación Express
+// Create express application
 const app = express();
 
-// Aplicar middlewares
+// Use Middlewares
 configureMiddlewares(app);
+
+// Error handler
+app.use(errorHandlerMiddleware);
 
 // Routes
 app.use(`${config.api.conventionApi}/major`, majorRouter);
@@ -31,18 +34,15 @@ app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 app.use(`${config.api.conventionApi}/auth`, authRouter);
 
-// Ruta de prueba
+// Testing routes
 app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-// Middleware para manejo de errores
-app.use(errorHandlerMiddleware);
-
-// Conectar la base de datos antes de iniciar el servidor
+// Connect to database and start server
 const startServer = async () => {
   try {
-    await database.connect(); // Ensure DB is connected before starting the server
+    await database.connect();
     app.listen(config.server.port, () => {
       console.log(`🚀 Servidor corriendo en el puerto ${config.server.port}`);
     });
@@ -52,5 +52,5 @@ const startServer = async () => {
   }
 };
 
-// Iniciar la aplicación
+// Start server
 startServer();
