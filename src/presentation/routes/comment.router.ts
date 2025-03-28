@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { CommentController } from '../../presentation';
+import { CommentController, validateRoleMiddleware } from '../../presentation';
 import { CommentRepository } from '../../infrastructure/database/repositories';
 import {
   CreateCommentUseCase,
@@ -27,10 +27,27 @@ const commentController = new CommentController(
   deleteCommentUseCase,
 );
 
-router.get('/', commentController.getAll);
-router.get('/:id', commentController.getById);
-router.post('/', commentController.create);
-router.patch('/:id', commentController.update);
-router.delete('/:id', commentController.delete);
+// Defining routes with middleware validation and assigning controller methods
+router.get(
+  '/',
+  validateRoleMiddleware(['ADMIN', 'STUDENT']),
+  commentController.getAll,
+);
+router.get(
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'STUDENT']),
+  commentController.getById,
+);
+router.post('/', validateRoleMiddleware(['STUDENT']), commentController.create);
+router.patch(
+  '/:id',
+  validateRoleMiddleware(['STUDENT']),
+  commentController.update,
+);
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  commentController.delete,
+);
 
 export default router;

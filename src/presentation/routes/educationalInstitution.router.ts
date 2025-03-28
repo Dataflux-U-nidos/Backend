@@ -8,6 +8,7 @@ import {
   UpdateEducationalInstitutionUseCase,
   DeleteEducationalInstitutionUseCase,
 } from '../../application';
+import { validateRoleMiddleware } from '../middleware';
 
 const router = Router();
 
@@ -32,10 +33,31 @@ const educationalInstitutionController = new EducationalInstitutionController(
   deleteEducationalInstitutionUseCase,
 );
 
-router.get('/', educationalInstitutionController.getAll);
-router.get('/:id', educationalInstitutionController.getById);
-router.post('/', educationalInstitutionController.create);
-router.patch('/:id', educationalInstitutionController.update);
-router.delete('/:id', educationalInstitutionController.delete);
+// Defining routes with middleware validation and assigning controller methods
+router.get(
+  '/',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  educationalInstitutionController.getAll,
+);
+router.get(
+  '/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  educationalInstitutionController.getById,
+);
+router.post(
+  '/',
+  validateRoleMiddleware(['ADMIN']),
+  educationalInstitutionController.create,
+);
+router.patch(
+  '/:id',
+  validateRoleMiddleware(['ADMIN']),
+  educationalInstitutionController.update,
+);
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['ADMIN']),
+  educationalInstitutionController.delete,
+);
 
 export default router;

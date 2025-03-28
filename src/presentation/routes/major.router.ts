@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { MajorController } from '../../presentation';
+import { MajorController, validateRoleMiddleware } from '../../presentation';
 import { MajorRepository } from '../../infrastructure/database/repositories';
 import {
   CreateMajorUseCase,
@@ -27,10 +27,23 @@ const majorController = new MajorController(
   deleteMajorUseCase,
 );
 
-router.get('/', majorController.getAll);
-router.get('/:id', majorController.getById);
-router.post('/', majorController.create);
-router.patch('/:id', majorController.update);
-router.delete('/:id', majorController.delete);
+// Defining routes with middleware validation and assigning controller methods
+router.get(
+  '/',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  majorController.getAll,
+);
+router.get(
+  '/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  majorController.getById,
+);
+router.post('/', validateRoleMiddleware(['ADMIN']), majorController.create);
+router.patch('/:id', validateRoleMiddleware(['ADMIN']), majorController.update);
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['ADMIN']),
+  majorController.delete,
+);
 
 export default router;
