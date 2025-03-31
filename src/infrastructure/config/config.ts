@@ -1,32 +1,16 @@
 import dotenv from 'dotenv';
 import { validateEnv } from '../../shared/utils/index';
+import { parseTime } from '../../shared/utils/time.utils';
 
 dotenv.config();
 
 const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API'];
 validateEnv(requiredEnvVars);
 
-function parseTime(timeStr: string): number {
-  if (timeStr.includes('*')) {
-    return timeStr.split('*').reduce((acc, cur) => acc * parseFloat(cur), 1);
-  }
-  if (timeStr.endsWith('s')) {
-    return parseFloat(timeStr.slice(0, -1));
-  }
-  if (timeStr.endsWith('m')) {
-    return parseFloat(timeStr.slice(0, -1)) * 60;
-  }
-  if (timeStr.endsWith('h')) {
-    return parseFloat(timeStr.slice(0, -1)) * 3600;
-  }
-  if (timeStr.endsWith('d')) {
-    return parseFloat(timeStr.slice(0, -1)) * 86400;
-  }
-  return parseFloat(timeStr);
-}
-
-const jwtExpiresInEnv = process.env.JWT_EXPIRES_IN ?? '30m';
-const jwtRefreshExpiresInEnv = process.env.JWT_REFRESH_EXPIRES_IN ?? '7d';
+const [jwtExpiresInEnv, jwtRefreshExpiresInEnv] = [
+  process.env.JWT_EXPIRES_IN ?? '30m',
+  process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
+];
 
 const config = {
   database: {
@@ -38,7 +22,7 @@ const config = {
   jwt: {
     secret: process.env.JWT_SECRET as string,
     secretRefresh: process.env.JWT_SECRET_REFRESH as string,
-    // Se convierten a segundos
+    // Transform them to seconds
     tokenExpiresIn: parseTime(jwtExpiresInEnv),
     refreshExpiresTokenIn: parseTime(jwtRefreshExpiresInEnv),
     saltRounds: parseInt(process.env.JWT_SALT_ROUNDS ?? '10', 10),

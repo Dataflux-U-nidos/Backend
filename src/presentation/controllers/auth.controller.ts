@@ -62,31 +62,6 @@ export class AuthController {
       }
     }
   }
-  //para probar en postman
-  /* public async refreshToken(req: Request, res: Response): Promise<void> {
-        try {
-            const { refreshToken } = req.body as RefreshTokenDto;
-
-            if (!refreshToken) {
-                res.status(401).json({ message: 'No se encontró el token de actualización' });
-                return;
-            }
-
-            const tokens = await this.refreshTokenUseCase.execute({ refreshToken });
-
-            this.setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
-            res.status(200).json({
-                message: 'Tokens renovados correctamente',
-                userType: tokens.userType,
-            });
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                res.status(401).json({ message: error.message });
-            } else {
-                res.status(500).json({ message: 'Error desconocido' });
-            }
-        }
-    } */
 
   //para produccion
   public async refreshToken(req: Request, res: Response): Promise<void> {
