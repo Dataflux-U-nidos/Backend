@@ -1,4 +1,5 @@
 import express from 'express';
+import http from 'http';
 import {
   configureMiddlewares,
   errorHandlerMiddleware,
@@ -39,13 +40,15 @@ app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-export default app;
+const server = http.createServer(app);
+
+export { app, server };
 
 // Connect to database and start server
 const startServer = async () => {
   try {
     await database.connect();
-    app.listen(config.server.port, () => {
+    server.listen(config.server.port, () => {
       console.log(`🚀 Servidor corriendo en el puerto ${config.server.port}`);
     });
   } catch (error) {
