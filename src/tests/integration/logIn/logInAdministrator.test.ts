@@ -1,6 +1,6 @@
-const request = require('supertest');
-const { database } = require('../../../infrastructure');
-const { app } = require('../../../server');
+import request from 'supertest';
+import { database } from '../../../infrastructure';
+import { app } from '../../../server';
 
 beforeAll(async () => {
   await database.connect();
@@ -12,7 +12,6 @@ describe('Integration tests Admin - Login', () => {
       email: 'lucho.mendoza@example.com',
       password: 'password123',
     });
-
     expect(response.status).toBe(200);
   });
 
@@ -21,7 +20,6 @@ describe('Integration tests Admin - Login', () => {
       email: 'lucho.mendoza@example.com',
       password: 'password123',
     });
-
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('accessToken');
   });
@@ -31,7 +29,6 @@ describe('Integration tests Admin - Login', () => {
       email: 'mario.calderon@example.com',
       password: 'password123',
     });
-
     expect(response.status).toBe(401);
   });
 });

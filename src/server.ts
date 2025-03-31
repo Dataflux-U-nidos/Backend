@@ -39,14 +39,10 @@ app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-let server: ReturnType<typeof app.listen> | null = null;
-
-export { server, app };
-
 const startServer = async () => {
   try {
     await database.connect();
-    server = app.listen(config.server.port, () => {
+    app.listen(config.server.port, () => {
       console.log(`🚀 Servidor corriendo en el puerto ${config.server.port}`);
     });
   } catch (error) {
@@ -55,7 +51,9 @@ const startServer = async () => {
   }
 };
 
-// Solo iniciar el servidor si el archivo es ejecutado directamente
-if (require.main === module) {
+// Only start the server if not in a testing environment
+if (config.env.nodeEnv !== 'test') {
   startServer();
 }
+
+export { app };
