@@ -27,7 +27,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@sinclair/typebox": "^0.34.30",
     "@types/cors": "^2.8.17",
