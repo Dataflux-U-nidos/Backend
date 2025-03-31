@@ -3,7 +3,7 @@ import { validateEnv } from '../../shared/utils/index';
 
 dotenv.config();
 
-const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API'];
+const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API', 'JWT_SECRET'];
 validateEnv(requiredEnvVars);
 
 const config = {
