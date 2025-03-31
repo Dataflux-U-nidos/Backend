@@ -1,2 +1,1 @@
-//helo
-export * from './logInAdministrator.test';
+export * from './loginAdministrator.test';

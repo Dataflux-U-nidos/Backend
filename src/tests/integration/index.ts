@@ -1,2 +1,1 @@
-//Pruebas integración
-export * from './logIn';
+export * from './login';

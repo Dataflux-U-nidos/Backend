@@ -2,11 +2,8 @@ import request from 'supertest';
 import { database } from '../../../infrastructure';
 import app from '../../../server';
 
-// Connect to the database before all tests
 beforeAll(async () => {
-  console.log('⏳ Conectando a la base de datos en pruebas...');
   await database.connect();
-  console.log('✅ Base de datos lista para pruebas.');
 });
 
 describe('Integration tests Admin - Login', () => {
@@ -16,7 +13,6 @@ describe('Integration tests Admin - Login', () => {
       password: 'password123',
     });
 
-    console.log('Status:', response.status);
     expect(response.status).toBe(200);
   });
 
@@ -25,9 +21,6 @@ describe('Integration tests Admin - Login', () => {
       email: 'lucho.mendoza@example.com',
       password: 'password123',
     });
-
-    console.log('Status:', response.status);
-    console.log('Response body:', response.body);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('accessToken');
@@ -39,14 +32,10 @@ describe('Integration tests Admin - Login', () => {
       password: 'password123',
     });
 
-    console.log('Status:', response.status);
-
     expect(response.status).toBe(401);
   });
 });
 
-// Disconnect from the database after all tests
 afterAll(async () => {
-  console.log('🔴 Cerrando conexión a la base de datos...');
   await database.disconnect();
 });

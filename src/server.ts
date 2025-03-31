@@ -39,7 +39,6 @@ app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-//Allows to use de app for testing purposes
 export default app;
 
 // Connect to database and start server
@@ -57,6 +56,5 @@ const startServer = async () => {
 
 // Start server
 if (require.main === module) {
-  // Alows to run de test whothout starting the server
   startServer();
 }
