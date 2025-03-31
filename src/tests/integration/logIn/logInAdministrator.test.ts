@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { database } = require('../../../infrastructure');
-const { app } = require('../../../server'); // Importa `app` en lugar de `server`
+const { app } = require('../../../server');
 
 beforeAll(async () => {
   await database.connect();

@@ -41,6 +41,8 @@ app.get('/', (req, res) => {
 
 let server: ReturnType<typeof app.listen> | null = null;
 
+export { server, app };
+
 const startServer = async () => {
   try {
     await database.connect();
@@ -57,6 +59,3 @@ const startServer = async () => {
 if (require.main === module) {
   startServer();
 }
-
-// Exportar server para las pruebas
-export { server, app };
