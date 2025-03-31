@@ -16,6 +16,7 @@ export type RefreshTokenDto = Static<typeof RefreshTokenSchema>;
 // DTO para el acceso de tokens
 export const JwtAccessTokenSchema = Type.Object({
   accessToken: Type.String(),
+  userType: Type.String(),
 });
 export type JwtAccessTokenDto = Static<typeof JwtAccessTokenSchema>;
 

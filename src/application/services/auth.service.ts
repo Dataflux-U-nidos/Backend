@@ -36,6 +36,22 @@ export class AuthService {
     // Solo devolvemos el access token, no el refresh token
     return {
       accessToken,
+      userType: user.type,
     };
+  }
+
+  public async getSession(token: string): Promise<{ userType: string }> {
+    try {
+      const decoded: any = jwt.verify(token, config.jwt.secret);
+      return { userType: decoded.type };
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError) {
+        throw new Error('Token expirado');
+      }
+      if (error instanceof jwt.JsonWebTokenError) {
+        throw new Error('Token inválido');
+      }
+    }
+    throw new Error('Unable to process the token');
   }
 }
