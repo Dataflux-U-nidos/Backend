@@ -1,8 +1,7 @@
-import { CommentRepository } from '../../../infrastructure';
-import { Comment } from '../../../domain';
+import { Comment, ICommentRepository } from '../../../domain';
 
 export class UpdateCommentUseCase {
-  constructor(private readonly commentRepository: CommentRepository) {}
+  constructor(private readonly commentRepository: ICommentRepository) {}
 
   public async execute(
     id: string,

@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { validateEnv } from '../../shared/utils/index';
+import { parseTime } from '../../shared/utils/time.utils';
 
 dotenv.config();
 
@@ -15,7 +16,13 @@ const config = {
   },
   jwt: {
     secret: process.env.JWT_SECRET as string,
-    expiresIn: process.env.JWT_EXPIRES_IN ?? '4h',
+    secretRefresh: process.env.JWT_SECRET_REFRESH as string,
+    // Transform them to seconds
+    tokenExpiresIn: parseTime(process.env.JWT_EXPIRES_IN ?? '30m'),
+    refreshExpiresTokenIn: parseTime(
+      process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
+    ),
+    saltRounds: parseInt(process.env.JWT_SALT_ROUNDS ?? '10', 10),
   },
   logging: {
     level: process.env.LOG_LEVEL ?? 'info',
