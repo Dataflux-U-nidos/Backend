@@ -54,6 +54,7 @@ export class MajorController {
   ): Promise<void> => {
     try {
       const newMajor = await this.createMajorUseCase.execute(req.body);
+      // La respuesta incluirá createdAt y updatedAt
       res.status(201).json(newMajor);
     } catch (error) {
       next(error);

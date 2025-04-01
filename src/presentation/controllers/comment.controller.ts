@@ -53,8 +53,8 @@ export class CommentController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const newMajor = await this.createCommentUseCase.execute(req.body);
-      res.status(201).json(newMajor);
+      const newComment = await this.createCommentUseCase.execute(req.body);
+      res.status(201).json(newComment);
     } catch (error) {
       next(error);
     }
@@ -67,14 +67,14 @@ export class CommentController {
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const updateComment = await this.updateCommentUseCase.execute(
+      const updatedComment = await this.updateCommentUseCase.execute(
         id,
         req.body,
       );
-      if (!updateComment) {
-        res.status(404).json({ message: 'Carrera no encontrada' });
+      if (!updatedComment) {
+        res.status(404).json({ message: 'Comentario no encontrado' });
       } else {
-        res.status(200).json(updateComment);
+        res.status(200).json(updatedComment);
       }
     } catch (error) {
       next(error);
@@ -92,7 +92,7 @@ export class CommentController {
       if (!wasDeleted) {
         res.status(404).json({ message: 'Comentario no encontrado' });
       } else {
-        res.status(200).json({ message: 'Comentario eliminad correctamente' });
+        res.status(200).json({ message: 'Comentario eliminado correctamente' });
       }
     } catch (error) {
       next(error);

@@ -1,4 +1,4 @@
-import { EducationalInstitutionRepository } from './educational-institution.repository.Impl';
+import { EducationalInstitutionRepository } from './educationalInstitution.repository.impl';
 import { MajorRepository } from './major.repository.impl';
 import { UserRepository } from './user.repository.impl';
 import { JobOpportunityRepository } from './jobOpportunity.repository.impl';

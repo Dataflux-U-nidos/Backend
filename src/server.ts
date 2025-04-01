@@ -11,15 +11,19 @@ import {
   majorRouter,
   userRouter,
   JobOpportunityRouter,
+  authRouter,
 } from './presentation/routes';
 
-// Crear la aplicación Express
+// Create express application
 const app = express();
 
-// 1. Aplicar middlewares
+// Use Middlewares
 configureMiddlewares(app);
 
-// 2. Routes
+// Error handler
+app.use(errorHandlerMiddleware);
+
+// Routes
 app.use(`${config.api.conventionApi}/major`, majorRouter);
 app.use(`${config.api.conventionApi}/user`, userRouter);
 app.use(
@@ -28,19 +32,16 @@ app.use(
 );
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
+app.use(`${config.api.conventionApi}/auth`, authRouter);
 
-// Ruta de prueba
-app.get("/", (req, res) => {
-  res.send("Servidor Express funcionando correctamente");
+// Testing routes
+app.get('/', (req, res) => {
+  res.send('Servidor Express funcionando correctamente');
 });
 
-// 3. Middleware para manejo de errores
-app.use(errorHandlerMiddleware);
-
-// Conectar la base de datos antes de iniciar el servidor
 const startServer = async () => {
   try {
-    await database.connect(); // Ensure DB is connected before starting the server
+    await database.connect();
     app.listen(config.server.port, () => {
       console.log(`🚀 Servidor corriendo en el puerto ${config.server.port}`);
     });
@@ -50,5 +51,9 @@ const startServer = async () => {
   }
 };
 
-// Iniciar la aplicación
-startServer();
+// Only start the server if not in a testing environment
+if (config.env.nodeEnv !== 'test') {
+  startServer();
+}
+
+export { app };

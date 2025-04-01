@@ -31,8 +31,20 @@ jobs:
       - name: 🔍 Run tests
         run: bun test || echo "No test command found, skipping tests"
 
-      - name: 🚀 Run application
-        run: bun run
+      - name: 🚀 Start application in background
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          CONVENTION_API: ${{ secrets.CONVENTION_API }}
+        run: bun run dev & echo $! > bun_dev_pid
+
+      - name: ⏳ Wait for application startup
+        run: sleep 15  # Espera 10 segundos para verificar que el servidor arranca
+
+      - name: 🛑 Stop application
+        run: kill $(cat bun_dev_pid) || echo "Process already stopped"
+      
+      - name: 🧹 Lint code
+        run: bun run lint
 
   deploy-release:
     needs: test

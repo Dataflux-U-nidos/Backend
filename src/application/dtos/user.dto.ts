@@ -1,3 +1,4 @@
+// src/application/dtos/user.dto.ts
 import { Type, Static } from '@sinclair/typebox';
 
 export const UserTypeEnum = Type.Union([
@@ -6,7 +7,6 @@ export const UserTypeEnum = Type.Union([
   Type.Literal('VIEWER'),
 ]);
 
-// Esquema para crear un usuario
 export const CreateUserSchema = Type.Object({
   name: Type.String(),
   last_name: Type.String(),
@@ -21,11 +21,11 @@ export const CreateUserSchema = Type.Object({
 });
 export type CreateUserDto = Static<typeof CreateUserSchema>;
 
-// Esquema para actualizar un usuario (todos los campos son opcionales)
+// Esquema para actualizar un usuario (entrada: todos los campos son opcionales)
 export const UpdateUserSchema = Type.Partial(CreateUserSchema);
 export type UpdateUserDto = Static<typeof UpdateUserSchema>;
 
-// Esquema para la respuesta de un usuario (se excluye la contraseña, se usa "id" en lugar de "_id")
+// Esquema para la respuesta de un usuario (salida)
 export const UserResponseSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
@@ -36,6 +36,8 @@ export const UserResponseSchema = Type.Object({
   locality: Type.Optional(Type.String()),
   school: Type.Optional(Type.String()),
   preferences: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
+  createdAt: Type.String({ format: 'date-time' }),
+  updatedAt: Type.String({ format: 'date-time' }),
 });
 export type UserResponseDto = Static<typeof UserResponseSchema>;
 

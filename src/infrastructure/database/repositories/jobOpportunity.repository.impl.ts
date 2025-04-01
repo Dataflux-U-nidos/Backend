@@ -5,11 +5,13 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
   public async findAll(): Promise<JobOpportunity[]> {
     const results = await JobOpportunityModel.find({});
     return results.map((doc) => ({
-      id: doc._id.toString(),
+      id: doc._id as unknown as string,
       name: doc.name,
       description: doc.description,
-      jobId: doc.jobId.toString(), // Convertimos los ObjectId a string
+      jobId: doc.jobId as unknown as string,
       salary: doc.salary,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     }));
   }
 
@@ -17,11 +19,13 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
     const doc = await JobOpportunityModel.findById(id);
     if (!doc) return null;
     return {
-      id: doc._id.toString(),
+      id: doc._id as unknown as string,
       name: doc.name,
       description: doc.description,
-      jobId: doc.jobId.toString(),
+      jobId: doc.jobId as unknown as string,
       salary: doc.salary,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -30,8 +34,10 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
   ): Promise<JobOpportunity> {
     const doc = await JobOpportunityModel.create(data);
     return {
-      id: doc._id.toString(),
+      id: doc._id as unknown as string,
       ...data,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 
@@ -44,11 +50,13 @@ export class JobOpportunityRepository implements IJobOpportunityRepository {
     });
     if (!doc) return null;
     return {
-      id: doc._id.toString(),
+      id: doc._id as unknown as string,
       name: doc.name,
       description: doc.description,
-      jobId: doc.jobId.toString(),
+      jobId: doc.jobId as unknown as string,
       salary: doc.salary,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
     };
   }
 

@@ -1,3 +1,4 @@
+// src/infrastructure/database/models/user.model.ts
 import { Schema, model, Document, Types } from 'mongoose';
 
 export interface UserDocument extends Document {
@@ -11,18 +12,29 @@ export interface UserDocument extends Document {
   locality?: string;
   school?: string;
   preferences?: Record<string, unknown>;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const UserSchema = new Schema<UserDocument>({
-  name: { type: String, required: true },
-  last_name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  age: { type: Number, required: true },
-  type: { type: String, required: true, enum: ['ADMIN', 'STUDENT', 'VIEWER'] },
-  locality: { type: String },
-  school: { type: String },
-  preferences: { type: Schema.Types.Mixed }, // Se utiliza Mixed sin any, ya que Mongoose no tipa internamente
-});
+const UserSchema = new Schema<UserDocument>(
+  {
+    name: { type: String, required: true },
+    last_name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    age: { type: Number, required: true },
+    type: {
+      type: String,
+      required: true,
+      enum: ['ADMIN', 'STUDENT', 'VIEWER'],
+    },
+    locality: { type: String },
+    school: { type: String },
+    preferences: { type: Schema.Types.Mixed },
+  },
+  {
+    timestamps: true, // Agrega createdAt y updatedAt automáticamente
+  },
+);
 
 export const UserModel = model<UserDocument>('Users', UserSchema);

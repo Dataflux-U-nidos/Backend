@@ -1,8 +1,7 @@
-import { MajorRepository } from '../../../infrastructure';
-import { Major } from '../../../domain';
+import { IMajorRepository, Major } from '../../../domain';
 
 export class UpdateMajorUseCase {
-  constructor(private readonly majorRepository: MajorRepository) {}
+  constructor(private readonly majorRepository: IMajorRepository) {}
 
   public async execute(
     id: string,

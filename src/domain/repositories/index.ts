@@ -1,5 +1,5 @@
 //Interfaces de repositorios (sin implementación)
-export * from './educational-institution.repository';
+export * from './educationalInstitution.repository';
 export * from './major.repository';
 export * from './user.repository';
 export * from './jobOpportunity.repository';

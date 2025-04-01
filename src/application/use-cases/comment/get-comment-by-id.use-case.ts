@@ -1,10 +1,10 @@
-import { CommentRepository } from '../../../infrastructure';
-import { Comment } from '../../../domain';
+import { ICommentRepository } from '../../../domain';
+import { CommentResponseDto } from '../../dtos';
 
 export class GetCommentByIdUseCase {
-  constructor(private readonly commentRepository: CommentRepository) {}
+  constructor(private readonly commentRepository: ICommentRepository) {}
 
-  public async execute(id: string): Promise<Comment | null> {
+  public async execute(id: string): Promise<CommentResponseDto | null> {
     return this.commentRepository.findById(id);
   }
 }
