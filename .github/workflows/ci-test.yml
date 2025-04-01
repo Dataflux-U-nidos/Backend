@@ -82,7 +82,7 @@ jobs:
           registry-type: public
 
       - name: 📌 Definir variable IMAGE_TAG
-        run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=$(date +%Y%m%d%H)" >> $GITHUB_ENV
 
       - name: 🛠 Build and Tag Docker Image for PRUEBAS
         run: |
@@ -126,6 +126,7 @@ jobs:
 
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
+        registry-type: public
         with:
           mask-password: false
 
