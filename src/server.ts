@@ -39,7 +39,6 @@ app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-// Connect to database and start server
 const startServer = async () => {
   try {
     await database.connect();
@@ -52,5 +51,9 @@ const startServer = async () => {
   }
 };
 
-// Start server
-startServer();
+// Only start the server if not in a testing environment
+if (config.env.nodeEnv !== 'test') {
+  startServer();
+}
+
+export { app };
