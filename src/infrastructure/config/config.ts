@@ -4,7 +4,7 @@ import { parseTime } from '../../shared/utils/time.utils';
 
 dotenv.config();
 
-const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API'];
+const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API', 'JWT_SECRET'];
 validateEnv(requiredEnvVars);
 
 const config = {
@@ -29,6 +29,9 @@ const config = {
   },
   api: {
     conventionApi: process.env.CONVENTION_API as string,
+  },
+  env: {
+    nodeEnv: process.env.NODE_ENV ?? 'development',
   },
 };
 
