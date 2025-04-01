@@ -1,1 +1,3 @@
-//Configuración general (dotenv, database, etc.)
+import config from './config';
+
+export default config;

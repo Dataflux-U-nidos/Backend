@@ -1,35 +1,59 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import configureMiddlewares from './presentation/middleware';
+import {
+  configureMiddlewares,
+  errorHandlerMiddleware,
+} from './presentation/middleware';
+import config from './infrastructure/config';
+import { database } from './infrastructure';
+import {
+  educationalInstitutionRouter,
+  commentRouter,
+  majorRouter,
+  userRouter,
+  JobOpportunityRouter,
+  authRouter,
+} from './presentation/routes';
 
-
-dotenv.config();
-
+// Create express application
 const app = express();
 
-// 1. Aplicar middlewares
+// Use Middlewares
 configureMiddlewares(app);
 
-// Comentamos la parte de conexión a MongoDB
-// const MONGO_URI = process.env.MONGO_URI || 'mongodb://prueba123:prueba123@mongo:27017/mydb?authSource=admin';
-// export const connectDB = async () => {
-//   try {
-//     await mongoose.connect(MONGO_URI);
-//     console.log('Conectado a MongoDB correctamente');
-//   } catch (error) {
-//     console.error('Error conectando a MongoDB:', error);
-//     process.exit(1);
-//   }
-// };
+// Error handler
+app.use(errorHandlerMiddleware);
 
-// Ruta de prueba
+// Routes
+app.use(`${config.api.conventionApi}/major`, majorRouter);
+app.use(`${config.api.conventionApi}/user`, userRouter);
+app.use(
+  `${config.api.conventionApi}/educational-institution`,
+  educationalInstitutionRouter,
+);
+app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
+app.use(`${config.api.conventionApi}/comment`, commentRouter);
+app.use(`${config.api.conventionApi}/auth`, authRouter);
+
+// Testing routes
 app.get('/', (req, res) => {
   res.send('Servidor Express funcionando correctamente');
 });
 
-const PORT = process.env.PORT || 3000;
+const startServer = async () => {
+  try {
+    await database.connect();
+    app.listen(config.server.port, () => {
+      console.log(`🚀 Servidor corriendo en el puerto ${config.server.port}`);
+    });
+  } catch (error) {
+    console.error('❌ Error al iniciar la aplicación:', error);
+    process.exit(1);
+  }
+};
 
-// Puedes omitir la conexión y arrancar el servidor directamente:
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
-});
+// Only start the server if not in a testing environment
+if (config.env.nodeEnv !== 'test') {
+  startServer();
+}
+
+export { app };
