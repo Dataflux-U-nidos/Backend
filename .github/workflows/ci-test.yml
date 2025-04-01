@@ -126,9 +126,9 @@ jobs:
 
       - name: 🔐 Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
-        
         with:
           mask-password: false
+          registry-type: public
 
       - name: 📌 Definir variable IMAGE_TAG
         run: echo "IMAGE_TAG=$(date +%Y%m%d%H)" >> $GITHUB_ENV
