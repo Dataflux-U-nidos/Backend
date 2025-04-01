@@ -7,11 +7,6 @@ dotenv.config();
 const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API'];
 validateEnv(requiredEnvVars);
 
-const [jwtExpiresInEnv, jwtRefreshExpiresInEnv] = [
-  process.env.JWT_EXPIRES_IN ?? '30m',
-  process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
-];
-
 const config = {
   database: {
     mongoUri: process.env.MONGO_URI as string,
@@ -23,8 +18,10 @@ const config = {
     secret: process.env.JWT_SECRET as string,
     secretRefresh: process.env.JWT_SECRET_REFRESH as string,
     // Transform them to seconds
-    tokenExpiresIn: parseTime(jwtExpiresInEnv),
-    refreshExpiresTokenIn: parseTime(jwtRefreshExpiresInEnv),
+    tokenExpiresIn: parseTime(process.env.JWT_EXPIRES_IN ?? '30m'),
+    refreshExpiresTokenIn: parseTime(
+      process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
+    ),
     saltRounds: parseInt(process.env.JWT_SALT_ROUNDS ?? '10', 10),
   },
   logging: {
