@@ -6,24 +6,27 @@ beforeAll(async () => {
   await database.connect();
 });
 
-// Group of tests for the login functionality of the admin user type
-describe('Integration tests Admin - Login', () => {
-  it('should login as admin', async () => {
+// Group of tests for the login functionality of the viewer user type
+describe('Integration tests Viewer - Login', () => {
+
+    
+  it('should login as viewer', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'jose.rodriguez@example.com',
+      email: 'patricia.fernendez@example.com',
       password: 'password123',
     });
     expect(response.status).toBe(200);
-    expect(response.body.userType).toBe('ADMIN');
+    expect(response.body.userType).toBe('VIEWER');
   });
 
-  it('should login as admin and return the jwt', async () => {
+  it('should login as viewer and return the jwt', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'jose.rodriguez@example.com',
+      email: 'patricia.fernendez@example.com',
       password: 'password123',
     });
+
     expect(response.status).toBe(200);
-    expect(response.body.userType).toBe('ADMIN');
+    expect(response.body.userType).toBe('VIEWER');
 
     //Checks for de access and refresh tokens in the response headers
     expect(response.headers['set-cookie']).toEqual(
