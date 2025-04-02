@@ -29,3 +29,4 @@ export const JobOpportunityResponseSchema = Type.Intersect([
   }),
 ]);
 export type JobOpportunityResponseDto = Static<typeof JobOpportunityResponseSchema>;
+
