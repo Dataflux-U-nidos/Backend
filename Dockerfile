@@ -5,9 +5,9 @@ FROM oven/bun:1.0 as builder
 WORKDIR /app
 
 # Copia los archivos del proyecto
+
 COPY package.json bun.lock tsconfig.json ./
 COPY src ./src
-COPY .env ./
 
 # Instala dependencias
 RUN bun install 
@@ -28,4 +28,7 @@ RUN bun install
 EXPOSE 3000
 
 # Comando por defecto para ejecutar el servidor
+
 CMD ["bun", "run", "start"]
+
+
