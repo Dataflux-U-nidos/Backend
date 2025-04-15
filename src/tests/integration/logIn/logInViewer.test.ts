@@ -8,8 +8,6 @@ beforeAll(async () => {
 
 // Group of tests for the login functionality of the viewer user type
 describe('Integration tests Viewer - Login', () => {
-
-    
   it('should login as viewer', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
       email: 'patricia.fernendez@example.com',
