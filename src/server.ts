@@ -12,6 +12,7 @@ import {
   userRouter,
   JobOpportunityRouter,
   authRouter,
+  emailRouter,
 } from './presentation/routes';
 
 // Create express application
@@ -25,6 +26,7 @@ app.use(errorHandlerMiddleware);
 
 // Routes
 app.use(`${config.api.conventionApi}/major`, majorRouter);
+app.use(`${config.api.conventionApi}/email`, emailRouter);
 app.use(`${config.api.conventionApi}/user`, userRouter);
 app.use(
   `${config.api.conventionApi}/educational-institution`,

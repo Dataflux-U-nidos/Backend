@@ -35,3 +35,6 @@ export * from '../use-cases/comment/delete-comment.use-case';
 export * from './auth/login.use-case';
 export * from './auth/getSession.useCase';
 export * from './auth/refreshToken.useCase';
+
+// Use cases email
+export * from './email/sendRecoveryEmail.useCase';
