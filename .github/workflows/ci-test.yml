@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}
-      CONVENTION_API: ${{ secrets.CONVENTION_API}}
+      CONVENTION_API: ${{ secrets.CONVENTION_API }}
+      
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v3
