@@ -7,6 +7,7 @@ import {
   GetAllUsersUseCase,
   GetUserByIdUseCase,
   UpdateUserUseCase,
+  UpdateUserByEmailUseCase,
   DeleteUserUseCase,
 } from '../../application';
 
@@ -20,6 +21,7 @@ const createUserUseCase = new CreateUserUseCase(userRepository);
 const getAllUsersUseCase = new GetAllUsersUseCase(userRepository);
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
 const updateUserUseCase = new UpdateUserUseCase(userRepository);
+const updateUserByEmailUseCase = new UpdateUserByEmailUseCase(userRepository);
 const deleteUserUseCase = new DeleteUserUseCase(userRepository);
 
 // Instance controller with use cases injected
@@ -28,6 +30,7 @@ const userController = new UserController(
   getAllUsersUseCase,
   getUserByIdUseCase,
   updateUserUseCase,
+  updateUserByEmailUseCase,
   deleteUserUseCase,
 );
 
@@ -37,17 +40,22 @@ router.get(
   validateRoleMiddleware(['ADMIN', 'VIEWER']),
   userController.getAll,
 );
+
 router.get(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER']),
   userController.getById,
 );
+
 router.post('/', userController.create);
+
 router.patch(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT']),
   userController.update,
 );
+router.patch('/:email', userController.updateByEmail); // Update by email (optional, if needed)
+
 router.delete(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT']),

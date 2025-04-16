@@ -25,6 +25,7 @@ export * from '../use-cases/user/get-all-users.use-case';
 export * from '../use-cases/user/get-user-by-id.use-case';
 export * from '../use-cases/user/get-user-by-email.use-case';
 export * from '../use-cases/user/update-user.use-case';
+export * from '../use-cases/user/update-user-by-email.use-case';
 export * from '../use-cases/comment/create-comment.use-case';
 // Use cases comment
 export * from './comment/get-all-comments.use-case';
