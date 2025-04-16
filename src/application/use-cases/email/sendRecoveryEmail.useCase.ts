@@ -15,7 +15,6 @@ export class SendRecoveryEmailUseCase {
       to: email,
       subject: 'Recuperación de contraseña',
       type: 'PASSWORD_RECOVERY',
-      token: 'dummy-jwt-token-123456',
     };
 
     const lambdaUrl =
