@@ -8,6 +8,7 @@ import {
   GetUserByIdUseCase,
   UpdateUserUseCase,
   DeleteUserUseCase,
+  GetStudentsByTutorUseCase,
 } from '../../application';
 
 const router = Router();
@@ -21,6 +22,7 @@ const getAllUsersUseCase = new GetAllUsersUseCase(userRepository);
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
 const updateUserUseCase = new UpdateUserUseCase(userRepository);
 const deleteUserUseCase = new DeleteUserUseCase(userRepository);
+const getStudentsByTutorUseCase = new GetStudentsByTutorUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -29,6 +31,7 @@ const userController = new UserController(
   getUserByIdUseCase,
   updateUserUseCase,
   deleteUserUseCase,
+  getStudentsByTutorUseCase,
 );
 
 // Defining routes with middleware validation and assigning controller methods
@@ -41,6 +44,11 @@ router.get(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER']),
   userController.getById,
+);
+router.get(
+  '/:id/students',
+  validateRoleMiddleware(['ADMIN', 'TUTOR']),
+  userController.getStudentsByTutor,
 );
 router.post('/', userController.create);
 router.patch(

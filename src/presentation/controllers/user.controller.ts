@@ -5,6 +5,7 @@ import {
   GetUserByIdUseCase,
   UpdateUserUseCase,
   DeleteUserUseCase,
+  GetStudentsByTutorUseCase,
 } from '../../application';
 
 export class UserController {
@@ -14,6 +15,7 @@ export class UserController {
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
+    private readonly getStudentsByTutorUseCase: GetStudentsByTutorUseCase,
   ) {}
 
   public getAll = async (
@@ -102,6 +104,20 @@ export class UserController {
       }
     } catch (error) {
       next(error);
+    }
+  };
+
+  public getStudentsByTutor = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id: tutorId } = req.params;
+      const students = await this.getStudentsByTutorUseCase.execute(tutorId);
+      res.status(200).json(students);
+    } catch (err) {
+      next(err);
     }
   };
 }

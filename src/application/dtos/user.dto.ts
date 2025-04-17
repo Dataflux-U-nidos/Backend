@@ -5,6 +5,8 @@ export const UserTypeEnum = Type.Union([
   Type.Literal('ADMIN'),
   Type.Literal('STUDENT'),
   Type.Literal('VIEWER'),
+  Type.Literal('TUTOR'),
+  Type.Literal('UNIVERSITY'),
 ]);
 
 export const CreateUserSchema = Type.Object({
@@ -18,6 +20,8 @@ export const CreateUserSchema = Type.Object({
   locality: Type.Optional(Type.String()),
   school: Type.Optional(Type.String()),
   preferences: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
+  // Campo opcional para el usuario TUTOR
+  students: Type.Optional(Type.Array(Type.String({ format: 'uuid' }))),
 });
 export type CreateUserDto = Static<typeof CreateUserSchema>;
 
@@ -36,6 +40,7 @@ export const UserResponseSchema = Type.Object({
   locality: Type.Optional(Type.String()),
   school: Type.Optional(Type.String()),
   preferences: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
+  students: Type.Optional(Type.Array(Type.String())),
   createdAt: Type.String({ format: 'date-time' }),
   updatedAt: Type.String({ format: 'date-time' }),
 });
