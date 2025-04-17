@@ -15,6 +15,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      CONVENTION_API: ${{ secrets.CONVENTION_API }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_SECRET_REFRESH: ${{ secrets.JWT_SECRET_REFRESH }}
 
     steps:
       - name: 📥 Checkout repository
@@ -35,6 +40,8 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           CONVENTION_API: ${{ secrets.CONVENTION_API }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_SECRET_REFRESH: ${{ secrets.JWT_SECRET_REFRESH }}
         run: bun run dev & echo $! > bun_dev_pid
 
       - name: ⏳ Wait for application startup
