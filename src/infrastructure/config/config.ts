@@ -4,12 +4,15 @@ import { parseTime } from '../../shared/utils/time.utils';
 
 dotenv.config();
 
-const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API', 'JWT_SECRET'];
+const requiredEnvVars = ['MONGO_URI', 'CONVENTION_API', 'JWT_SECRET', 'LAMBDA_URL'];
 validateEnv(requiredEnvVars);
 
 const config = {
   database: {
     mongoUri: process.env.MONGO_URI as string,
+  },
+  lambda: {
+    lambdaUrl: process.env.LAMBDA_URL as string,
   },
   server: {
     port: parseInt(process.env.PORT ?? ('3000' as string), 10),

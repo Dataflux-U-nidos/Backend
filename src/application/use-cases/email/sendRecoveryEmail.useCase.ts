@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { IUserRepository } from '../../../domain';
+import config from '../../../infrastructure/config';
 
 export class SendRecoveryEmailUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
@@ -16,11 +17,8 @@ export class SendRecoveryEmailUseCase {
       subject: 'Recuperación de contraseña',
       type: 'PASSWORD_RECOVERY',
     };
-
-    const lambdaUrl =
-      process.env.LAMBDA_URL ||
-      'https://sreiiipsy6eog7adotnk4tbbxm0mkuxi.lambda-url.us-east-2.on.aws/';
-    const response = await axios.post(lambdaUrl, payload);
+    
+    const response = await axios.post(config.lambda.lambdaUrl, payload);
 
     console.log('SendRecoveryEmailUseCase - 2:', email);
     return response.data;
