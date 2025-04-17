@@ -17,7 +17,7 @@ export class SendRecoveryEmailUseCase {
       subject: 'Recuperación de contraseña',
       type: 'PASSWORD_RECOVERY',
     };
-    
+
     const response = await axios.post(config.lambda.lambdaUrl, payload);
 
     console.log('SendRecoveryEmailUseCase - 2:', email);

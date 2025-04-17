@@ -21,7 +21,6 @@ const app = express();
 // Use Middlewares
 configureMiddlewares(app);
 
-
 // Routes
 app.use(`${config.api.conventionApi}/major`, majorRouter);
 app.use(`${config.api.conventionApi}/email`, emailRouter);
