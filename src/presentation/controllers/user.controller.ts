@@ -14,7 +14,7 @@ export class UserController {
     private readonly getAllUsersUseCase: GetAllUsersUseCase,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
-    private readonly updateUserByEmailUseCase: UpdateUserByEmailUseCase,    
+    private readonly updateUserByEmailUseCase: UpdateUserByEmailUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
   ) {}
 
@@ -96,7 +96,10 @@ export class UserController {
   ): Promise<void> => {
     try {
       const { email } = req.params;
-      const updatedUser = await this.updateUserByEmailUseCase.execute(email, req.body);
+      const updatedUser = await this.updateUserByEmailUseCase.execute(
+        email,
+        req.body,
+      );
 
       if (!updatedUser) {
         res.status(404).json({ message: 'Usuario no encontrado' });

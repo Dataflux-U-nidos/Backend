@@ -21,8 +21,6 @@ const app = express();
 // Use Middlewares
 configureMiddlewares(app);
 
-// Error handler
-app.use(errorHandlerMiddleware);
 
 // Routes
 app.use(`${config.api.conventionApi}/major`, majorRouter);
@@ -35,6 +33,9 @@ app.use(
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 app.use(`${config.api.conventionApi}/auth`, authRouter);
+
+// Error handler
+app.use(errorHandlerMiddleware);
 
 // Testing routes
 app.get('/', (req, res) => {

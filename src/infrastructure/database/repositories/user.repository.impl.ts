@@ -98,13 +98,11 @@ export class UserRepository implements IUserRepository {
 
   public async updateByEmail(
     email: string,
-    data: Partial<Omit<User, 'id'>>
+    data: Partial<Omit<User, 'id'>>,
   ): Promise<User | null> {
-    const doc = await UserModel.findOneAndUpdate(
-      { email },
-      data,
-      { new: true }
-    );
+    const doc = await UserModel.findOneAndUpdate({ email }, data, {
+      new: true,
+    });
     if (!doc) return null;
 
     return {
