@@ -54,7 +54,7 @@ router.patch(
   validateRoleMiddleware(['ADMIN', 'STUDENT']),
   userController.update,
 );
-router.patch('/:email', userController.updateByEmail);
+router.patch('/by-email/:email', userController.updateByEmail); 
 
 router.delete(
   '/:id',
