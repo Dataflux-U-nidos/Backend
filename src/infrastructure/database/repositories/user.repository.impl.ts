@@ -68,7 +68,9 @@ export class UserRepository implements IUserRepository {
     };
   }
 
-  public async create(data: Omit<User, 'id'>): Promise<User> {
+  public async create(
+    data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<User> {
     const doc = await UserModel.create(data);
     return {
       id: doc._id as unknown as string,
@@ -80,7 +82,7 @@ export class UserRepository implements IUserRepository {
 
   public async update(
     id: string,
-    data: Partial<Omit<User, 'id'>>,
+    data: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<User | null> {
     const doc = await UserModel.findByIdAndUpdate(id, data, { new: true });
     if (!doc) return null;
@@ -129,5 +131,16 @@ export class UserRepository implements IUserRepository {
       updatedAt: doc.updatedAt.toISOString(),
     }));
     return students;
+  }
+
+  public async addStudentToTutor(
+    tutorId: string,
+    studentId: string,
+  ): Promise<void> {
+    await UserModel.findByIdAndUpdate(
+      tutorId,
+      { $addToSet: { students: studentId } }, // push único
+      { new: true },
+    ).exec();
   }
 }

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import {
   CreateUserUseCase,
   GetAllUsersUseCase,
@@ -6,7 +6,17 @@ import {
   UpdateUserUseCase,
   DeleteUserUseCase,
   GetStudentsByTutorUseCase,
+  AddStudentToTutorUseCase,
+  CreateUserDto,
 } from '../../application';
+import { UserType } from '../../domain';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    type: UserType;
+  };
+}
 
 export class UserController {
   constructor(
@@ -16,6 +26,7 @@ export class UserController {
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly getStudentsByTutorUseCase: GetStudentsByTutorUseCase,
+    private readonly addStudentToTutorUseCase: AddStudentToTutorUseCase,
   ) {}
 
   public getAll = async (
@@ -57,14 +68,26 @@ export class UserController {
     }
   };
 
-  public create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public create: RequestHandler = async (req, res, next) => {
     try {
-      const newUser = await this.createUserUseCase.execute(req.body);
-      // La respuesta incluye ahora createdAt y updatedAt
+      // 1) convierto localmente a RequestWithUser
+      const tutorReq = req as RequestWithUser;
+      const payload = req.body as CreateUserDto;
+
+      // 2) creamos el usuario
+      const newUser = await this.createUserUseCase.execute(payload);
+
+      console.log('request', tutorReq.user);
+
+      // 3) si viene de un tutor y es student, enlazamos
+      if (tutorReq.user.type === 'TUTOR' && payload.type === 'STUDENT') {
+        await this.addStudentToTutorUseCase.execute(
+          tutorReq.user.id,
+          newUser.id,
+        );
+      }
+
+      // 4) respondemos
       res.status(201).json(newUser);
     } catch (error) {
       next(error);

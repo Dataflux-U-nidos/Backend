@@ -22,6 +22,8 @@ export const CreateUserSchema = Type.Object({
   preferences: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
   // Campo opcional para el usuario TUTOR
   students: Type.Optional(Type.Array(Type.String({ format: 'uuid' }))),
+  createdAt: Type.Date(),
+  updatedAt: Type.Date(),
 });
 export type CreateUserDto = Static<typeof CreateUserSchema>;
 

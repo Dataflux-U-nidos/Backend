@@ -12,4 +12,5 @@ export interface IUserRepository {
   update(id: string, data: Partial<Omit<User, 'id'>>): Promise<User | null>;
   delete(id: string): Promise<boolean>;
   findStudentsByTutor(tutorId: string): Promise<UserResponseDto[]>;
+  addStudentToTutor(tutorId: string, studentId: string): Promise<void>;
 }
