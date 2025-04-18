@@ -16,7 +16,7 @@ export const CreateUserSchema = Type.Object({
   email: Type.String({ format: 'email' }),
   password: Type.String(),
   age: Type.Number(),
-  type: UserTypeEnum,
+  userType: UserTypeEnum,
   // Campos opcionales para el usuario STUDENT
   locality: Type.Optional(Type.String()),
   school: Type.Optional(Type.String()),
@@ -42,7 +42,7 @@ export const UserResponseSchema = Type.Object({
   last_name: Type.String(),
   email: Type.String({ format: 'email' }),
   age: Type.Number(),
-  type: UserTypeEnum,
+  userType: UserTypeEnum,
   locality: Type.Optional(Type.String()),
   school: Type.Optional(Type.String()),
   preferences: Type.Optional(Type.Record(Type.String(), Type.Unknown())),

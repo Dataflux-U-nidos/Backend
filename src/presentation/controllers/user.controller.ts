@@ -18,7 +18,7 @@ import { UserType } from '../../domain';
 interface RequestWithUser extends Request {
   user: {
     id: string;
-    type: UserType;
+    userType: UserType;
   };
 }
 
@@ -87,16 +87,19 @@ export class UserController {
 
       // 3) Asignaciones automáticas según rol del autor y tipo creado
       const reqUser = reqWithUser.user;
-      if (reqUser?.type === 'TUTOR' && payload.type === 'STUDENT') {
+      if (reqUser?.userType === 'TUTOR' && payload.userType === 'STUDENT') {
         await this.addStudentToTutorUseCase.execute(reqUser.id, newUser.id);
       }
-      if (reqUser?.type === 'UNIVERSITY' && payload.type === 'INFOMANAGER') {
+      if (
+        reqUser?.userType === 'UNIVERSITY' &&
+        payload.userType === 'INFOMANAGER'
+      ) {
         await this.addInfoManagerToUniversityUseCase.execute(
           reqUser.id,
           newUser.id,
         );
       }
-      if (reqUser?.type === 'UNIVERSITY' && payload.type === 'VIEWER') {
+      if (reqUser?.userType === 'UNIVERSITY' && payload.userType === 'VIEWER') {
         await this.addViewerToUniversityUseCase.execute(reqUser.id, newUser.id);
       }
 

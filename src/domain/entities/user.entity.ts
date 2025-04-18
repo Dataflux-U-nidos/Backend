@@ -14,26 +14,26 @@ export interface BaseUser {
   email: string;
   password: string;
   age: number;
-  type: UserType;
+  userType: UserType;
   createdAt: Date;
   updatedAt: Date;
 }
 
 // Para el STUDENT, se agregan atributos específicos.
 export interface StudentUser extends BaseUser {
-  type: 'STUDENT';
+  userType: 'STUDENT';
   locality: string;
   school: string;
   preferences: Record<string, unknown>;
 }
 
 export interface TutorUser extends BaseUser {
-  type: 'TUTOR';
+  userType: 'TUTOR';
   students: string[];
 }
 
 export interface UniversityUser extends BaseUser {
-  type: 'UNIVERSITY';
+  userType: 'UNIVERSITY';
   infomanagers: string[];
   viewers: string[];
 }

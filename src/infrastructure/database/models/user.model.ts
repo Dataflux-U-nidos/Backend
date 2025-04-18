@@ -8,7 +8,7 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   age: number;
-  type: 'ADMIN' | 'STUDENT' | 'VIEWER' | 'TUTOR' | 'UNIVERSITY';
+  userType: 'ADMIN' | 'STUDENT' | 'VIEWER' | 'TUTOR' | 'UNIVERSITY';
   locality?: string;
   school?: string;
   preferences?: Record<string, unknown>;
@@ -26,7 +26,7 @@ const UserSchema = new Schema<UserDocument>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     age: { type: Number, required: true },
-    type: {
+    userType: {
       type: String,
       required: true,
       enum: [

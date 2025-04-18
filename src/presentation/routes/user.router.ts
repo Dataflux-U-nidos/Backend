@@ -87,6 +87,7 @@ router.post(
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
   userController.create,
 );
+router.post('/registry', userController.create);
 router.patch(
   '/:id',
   validateRoleMiddleware([
