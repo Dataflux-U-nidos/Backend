@@ -143,4 +143,72 @@ export class UserRepository implements IUserRepository {
       { new: true },
     ).exec();
   }
+
+  async addInfoManagerToUniversity(
+    universityId: string,
+    infomanagerId: string,
+  ): Promise<void> {
+    await UserModel.findByIdAndUpdate(
+      universityId,
+      { $addToSet: { infomanagers: infomanagerId } },
+      { new: true },
+    ).exec();
+  }
+
+  async addViewerToUniversity(
+    universityId: string,
+    viewerId: string,
+  ): Promise<void> {
+    await UserModel.findByIdAndUpdate(
+      universityId,
+      { $addToSet: { viewers: viewerId } },
+      { new: true },
+    ).exec();
+  }
+
+  public async findInfoManagersByUniversity(
+    universityId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await UserModel.findById(universityId)
+      .populate('infomanagers')
+      .exec();
+    if (!uniDoc || !uniDoc.infomanagers) return [];
+
+    return (uniDoc.infomanagers as UserDocument[]).map((doc) => ({
+      id: doc._id.toString(),
+      name: doc.name,
+      last_name: doc.last_name,
+      email: doc.email,
+      age: doc.age,
+      type: doc.type,
+      locality: doc.locality,
+      school: doc.school,
+      preferences: doc.preferences,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    }));
+  }
+
+  public async findViewersByUniversity(
+    universityId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await UserModel.findById(universityId)
+      .populate('viewers')
+      .exec();
+    if (!uniDoc || !uniDoc.viewers) return [];
+
+    return (uniDoc.viewers as UserDocument[]).map((doc) => ({
+      id: doc._id.toString(),
+      name: doc.name,
+      last_name: doc.last_name,
+      email: doc.email,
+      age: doc.age,
+      type: doc.type,
+      locality: doc.locality,
+      school: doc.school,
+      preferences: doc.preferences,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    }));
+  }
 }

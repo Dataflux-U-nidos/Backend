@@ -13,6 +13,8 @@ export interface UserDocument extends Document {
   school?: string;
   preferences?: Record<string, unknown>;
   students?: Types.ObjectId[] | UserDocument[];
+  infomanagers?: Types.ObjectId[] | UserDocument[];
+  viewers?: Types.ObjectId[] | UserDocument[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,7 +29,14 @@ const UserSchema = new Schema<UserDocument>(
     type: {
       type: String,
       required: true,
-      enum: ['ADMIN', 'STUDENT', 'VIEWER', 'TUTOR', 'UNIVERSITY'],
+      enum: [
+        'ADMIN',
+        'STUDENT',
+        'VIEWER',
+        'TUTOR',
+        'UNIVERSITY',
+        'INFOMANAGER',
+      ],
     },
     locality: { type: String },
     school: { type: String },
@@ -38,6 +47,8 @@ const UserSchema = new Schema<UserDocument>(
         ref: 'Users',
       },
     ],
+    infomanagers: [{ type: Schema.Types.ObjectId, ref: 'Users' }],
+    viewers: [{ type: Schema.Types.ObjectId, ref: 'Users' }],
   },
   {
     timestamps: true,

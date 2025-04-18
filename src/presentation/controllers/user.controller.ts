@@ -7,6 +7,10 @@ import {
   DeleteUserUseCase,
   GetStudentsByTutorUseCase,
   AddStudentToTutorUseCase,
+  AddInfoManagerToUniversityUseCase,
+  AddViewerToUniversityUseCase,
+  GetInfoManagersByUniversityUseCase,
+  GetViewersByUniversityUseCase,
   CreateUserDto,
 } from '../../application';
 import { UserType } from '../../domain';
@@ -27,6 +31,10 @@ export class UserController {
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly getStudentsByTutorUseCase: GetStudentsByTutorUseCase,
     private readonly addStudentToTutorUseCase: AddStudentToTutorUseCase,
+    private readonly addInfoManagerToUniversityUseCase: AddInfoManagerToUniversityUseCase,
+    private readonly addViewerToUniversityUseCase: AddViewerToUniversityUseCase,
+    private readonly getInfoManagersByUniversityUseCase: GetInfoManagersByUniversityUseCase,
+    private readonly getViewersByUniversityUseCase: GetViewersByUniversityUseCase,
   ) {}
 
   public getAll = async (
@@ -70,24 +78,29 @@ export class UserController {
 
   public create: RequestHandler = async (req, res, next) => {
     try {
-      // 1) convierto localmente a RequestWithUser
-      const tutorReq = req as RequestWithUser;
+      // 1) Interpretar req como RequestWithUser
+      const reqWithUser = req as RequestWithUser;
       const payload = req.body as CreateUserDto;
 
-      // 2) creamos el usuario
+      // 2) Crear el usuario (hash de password incluido)
       const newUser = await this.createUserUseCase.execute(payload);
 
-      console.log('request', tutorReq.user);
-
-      // 3) si viene de un tutor y es student, enlazamos
-      if (tutorReq.user.type === 'TUTOR' && payload.type === 'STUDENT') {
-        await this.addStudentToTutorUseCase.execute(
-          tutorReq.user.id,
+      // 3) Asignaciones automáticas según rol del autor y tipo creado
+      const reqUser = reqWithUser.user;
+      if (reqUser?.type === 'TUTOR' && payload.type === 'STUDENT') {
+        await this.addStudentToTutorUseCase.execute(reqUser.id, newUser.id);
+      }
+      if (reqUser?.type === 'UNIVERSITY' && payload.type === 'INFOMANAGER') {
+        await this.addInfoManagerToUniversityUseCase.execute(
+          reqUser.id,
           newUser.id,
         );
       }
+      if (reqUser?.type === 'UNIVERSITY' && payload.type === 'VIEWER') {
+        await this.addViewerToUniversityUseCase.execute(reqUser.id, newUser.id);
+      }
 
-      // 4) respondemos
+      // 4) Responder con el usuario creado
       res.status(201).json(newUser);
     } catch (error) {
       next(error);
@@ -139,6 +152,34 @@ export class UserController {
       const { id: tutorId } = req.params;
       const students = await this.getStudentsByTutorUseCase.execute(tutorId);
       res.status(200).json(students);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getInfoManagersByUniversity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const id = req.params.id;
+      const list = await this.getInfoManagersByUniversityUseCase.execute(id);
+      res.status(200).json(list);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getViewersByUniversity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const id = req.params.id;
+      const list = await this.getViewersByUniversityUseCase.execute(id);
+      res.status(200).json(list);
     } catch (err) {
       next(err);
     }
