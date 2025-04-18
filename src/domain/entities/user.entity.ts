@@ -30,6 +30,17 @@ export interface StudentUser extends BaseUser {
   preferences: Record<string, unknown>;
 }
 
+export interface TutorUser extends BaseUser {
+  userType: 'TUTOR';
+  students: string[];
+}
+
+export interface UniversityUser extends BaseUser {
+  userType: 'UNIVERSITY';
+  infomanagers: string[];
+  viewers: string[];
+}
+
 export interface ViewerUser extends BaseUser {
   userType: 'VIEWER';
   last_name: string;
