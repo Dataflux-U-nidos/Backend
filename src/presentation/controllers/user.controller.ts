@@ -1,3 +1,4 @@
+// src/presentation/controllers/user.controller.ts
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import {
   CreateUserUseCase,
@@ -11,15 +12,12 @@ import {
   AddViewerToUniversityUseCase,
   GetInfoManagersByUniversityUseCase,
   GetViewersByUniversityUseCase,
-  CreateUserDto,
 } from '../../application';
-import { UserType } from '../../domain';
+import { CreateUserDto, UpdateUserDto } from '../../application/dtos/user.dto';
+import { UserType } from '../../domain/entities/user.entity';
 
 interface RequestWithUser extends Request {
-  user: {
-    id: string;
-    userType: UserType;
-  };
+  user?: { id: string; userType: UserType };
 }
 
 export class UserController {
@@ -43,15 +41,15 @@ export class UserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { type, email } = req.query;
-      // Verifica que 'type' y 'email' sean strings, de lo contrario se ignoran (undefined)
-      const typeString = typeof type === 'string' ? type : undefined;
-      const emailString = typeof email === 'string' ? email : undefined;
-      // Se ejecuta el caso de uso, el cual ya mapea los timestamps
+      const { userType, email } = req.query;
+      const typeFilter = typeof userType === 'string' ? userType : undefined;
+      const emailFilter = typeof email === 'string' ? email : undefined;
+
       const users = await this.getAllUsersUseCase.execute({
-        type: typeString,
-        email: emailString,
+        type: typeFilter,
+        email: emailFilter,
       });
+
       res.status(200).json(users);
     } catch (error) {
       next(error);
@@ -67,43 +65,56 @@ export class UserController {
       const { id } = req.params;
       const user = await this.getUserByIdUseCase.execute(id);
       if (!user) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-      } else {
-        res.status(200).json(user);
+        res.status(404).json({ message: 'User not found' });
+        return;
       }
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }
   };
 
-  public create: RequestHandler = async (req, res, next) => {
+  public create: RequestHandler = async (req: RequestWithUser, res, next) => {
     try {
-      // 1) Interpretar req como RequestWithUser
-      const reqWithUser = req as RequestWithUser;
       const payload = req.body as CreateUserDto;
+      const actor = req.user;
+      let newUser;
 
-      // 2) Crear el usuario (hash de password incluido)
-      const newUser = await this.createUserUseCase.execute(payload);
+      console.log('req.body:', req.user);
+      console.log('Actor:', actor);
+      console.log('Payload:', payload);
 
-      // 3) Asignaciones automáticas según rol del autor y tipo creado
-      const reqUser = reqWithUser.user;
-      if (reqUser?.userType === 'TUTOR' && payload.userType === 'STUDENT') {
-        await this.addStudentToTutorUseCase.execute(reqUser.id, newUser.id);
-      }
-      if (
-        reqUser?.userType === 'UNIVERSITY' &&
+      if (actor?.userType === 'TUTOR' && payload.userType === 'STUDENT') {
+        // Tutor creates Student
+        console.log('Tutor creating student:', actor.id, payload);
+        newUser = await this.createUserUseCase.execute(payload);
+        await this.addStudentToTutorUseCase.execute(actor.id, newUser.id);
+      } else if (
+        actor?.userType === 'UNIVERSITY' &&
         payload.userType === 'INFOMANAGER'
       ) {
+        // University creates InfoManager: inject universityId
+        const withUniv = {
+          ...payload,
+          universityId: actor.id,
+        } as CreateUserDto & { universityId: string };
+        newUser = await this.createUserUseCase.execute(withUniv);
         await this.addInfoManagerToUniversityUseCase.execute(
-          reqUser.id,
+          actor.id,
           newUser.id,
         );
-      }
-      if (reqUser?.userType === 'UNIVERSITY' && payload.userType === 'VIEWER') {
-        await this.addViewerToUniversityUseCase.execute(reqUser.id, newUser.id);
+      } else if (
+        actor?.userType === 'UNIVERSITY' &&
+        payload.userType === 'VIEWER'
+      ) {
+        // University creates Viewer
+        newUser = await this.createUserUseCase.execute(payload);
+        await this.addViewerToUniversityUseCase.execute(actor.id, newUser.id);
+      } else {
+        // Other creations
+        newUser = await this.createUserUseCase.execute(payload);
       }
 
-      // 4) Responder con el usuario creado
       res.status(201).json(newUser);
     } catch (error) {
       next(error);
@@ -117,12 +128,13 @@ export class UserController {
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const updatedUser = await this.updateUserUseCase.execute(id, req.body);
-      if (!updatedUser) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-      } else {
-        res.status(200).json(updatedUser);
+      const payload = req.body as UpdateUserDto;
+      const updated = await this.updateUserUseCase.execute(id, payload);
+      if (!updated) {
+        res.status(404).json({ message: 'User not found' });
+        return;
       }
+      res.status(200).json(updated);
     } catch (error) {
       next(error);
     }
@@ -135,12 +147,12 @@ export class UserController {
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const wasDeleted = await this.deleteUserUseCase.execute(id);
-      if (!wasDeleted) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-      } else {
-        res.status(200).json({ message: 'Usuario eliminado correctamente' });
+      const deleted = await this.deleteUserUseCase.execute(id);
+      if (!deleted) {
+        res.status(404).json({ message: 'User not found' });
+        return;
       }
+      res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
       next(error);
     }
@@ -155,8 +167,8 @@ export class UserController {
       const { id: tutorId } = req.params;
       const students = await this.getStudentsByTutorUseCase.execute(tutorId);
       res.status(200).json(students);
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   };
 
@@ -164,13 +176,14 @@ export class UserController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ) => {
+  ): Promise<void> => {
     try {
-      const id = req.params.id;
-      const list = await this.getInfoManagersByUniversityUseCase.execute(id);
+      const { id: universityId } = req.params;
+      const list =
+        await this.getInfoManagersByUniversityUseCase.execute(universityId);
       res.status(200).json(list);
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   };
 
@@ -178,13 +191,14 @@ export class UserController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ) => {
+  ): Promise<void> => {
     try {
-      const id = req.params.id;
-      const list = await this.getViewersByUniversityUseCase.execute(id);
+      const { id: universityId } = req.params;
+      const list =
+        await this.getViewersByUniversityUseCase.execute(universityId);
       res.status(200).json(list);
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   };
 }
