@@ -42,7 +42,7 @@ router.get(
 );
 router.get(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER']),
+  validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER', 'TUTOR']),
   userController.getById,
 );
 router.get(
@@ -53,12 +53,12 @@ router.get(
 router.post('/', userController.create);
 router.patch(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT']),
+  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR']),
   userController.update,
 );
 router.delete(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT']),
+  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR']),
   userController.delete,
 );
 
