@@ -12,6 +12,7 @@ import {
   userRouter,
   JobOpportunityRouter,
   authRouter,
+  emailRouter,
 } from './presentation/routes';
 
 // Create express application
@@ -20,11 +21,9 @@ const app = express();
 // Use Middlewares
 configureMiddlewares(app);
 
-// Error handler
-app.use(errorHandlerMiddleware);
-
 // Routes
 app.use(`${config.api.conventionApi}/major`, majorRouter);
+app.use(`${config.api.conventionApi}/email`, emailRouter);
 app.use(`${config.api.conventionApi}/user`, userRouter);
 app.use(
   `${config.api.conventionApi}/educational-institution`,
@@ -33,6 +32,9 @@ app.use(
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 app.use(`${config.api.conventionApi}/auth`, authRouter);
+
+// Error handler
+app.use(errorHandlerMiddleware);
 
 // Testing routes
 app.get('/', (req, res) => {
