@@ -8,3 +8,4 @@ export * from './infomanager.model';
 export * from './viewer.model';
 export * from './university.model';
 export * from './student.model';
+export * from './admin.model';

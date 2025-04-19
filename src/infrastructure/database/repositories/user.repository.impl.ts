@@ -22,6 +22,8 @@ import {
   InfoManagerDocument,
   ViewerModel,
   ViewerDocument,
+  AdminModel,
+  AdminDocument,
 } from '../../../infrastructure';
 
 type UserDocument =
@@ -30,7 +32,8 @@ type UserDocument =
   | TutorDocument
   | UniversityDocument
   | InfoManagerDocument
-  | ViewerDocument;
+  | ViewerDocument
+  | AdminDocument;
 
 export class UserRepository implements IUserRepository {
   public async findAll(filter?: {
@@ -60,6 +63,9 @@ export class UserRepository implements IUserRepository {
   ): Promise<User> {
     let createdDoc: UserDocument;
     switch (data.userType) {
+      case 'ADMIN':
+        createdDoc = await AdminModel.create(data as AdminDocument);
+        break;
       case 'STUDENT':
         createdDoc = await StudentModel.create(data as StudentDocument);
         break;
