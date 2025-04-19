@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { validateEnv } from '../../shared/utils/index';
+import { validateEnv, formatUrl } from '../../shared/utils/index';
 import { parseTime } from '../../shared/utils/time.utils';
 
 dotenv.config();
@@ -9,16 +9,19 @@ const requiredEnvVars = [
   'CONVENTION_API',
   'JWT_SECRET',
   'JWT_SECRET_REFRESH',
-  'LAMBDA_URL',
 ];
 validateEnv(requiredEnvVars);
+
+const lambdaUrl = "https://sreiiipsy6eog7adotnk4tbbxm0mkuxi.lambda-url.us-east-2.on.aws/";
+
+
 
 const config = {
   database: {
     mongoUri: process.env.MONGO_URI as string,
   },
   lambda: {
-    lambdaUrl: process.env.LAMBDA_URL as string,
+    lambdaUrl: formatUrl(lambdaUrl, process.env.ENV ?? 'dev'),
   },
   server: {
     port: parseInt(process.env.PORT ?? ('3000' as string), 10),

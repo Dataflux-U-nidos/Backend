@@ -20,6 +20,7 @@ jobs:
       CONVENTION_API: ${{ secrets.CONVENTION_API }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       JWT_SECRET_REFRESH: ${{ secrets.JWT_SECRET_REFRESH }}
+      ENV: ${{ secrets.ENV }}
 
     steps:
       - name: 📥 Checkout repository
@@ -42,6 +43,8 @@ jobs:
           CONVENTION_API: ${{ secrets.CONVENTION_API }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_SECRET_REFRESH: ${{ secrets.JWT_SECRET_REFRESH }}
+          ENV: ${{ secrets.ENV }}
+
         run: bun run dev & echo $! > bun_dev_pid
 
       - name: ⏳ Wait for application startup
