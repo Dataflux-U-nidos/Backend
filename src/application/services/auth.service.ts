@@ -22,7 +22,7 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new Error('Credenciales inválidas');
     }
-    const payload = { id: user.id, type: user.type };
+    const payload = { id: user.id, type: user.userType };
     const accessToken = jwt.sign(payload, config.jwt.secret, {
       expiresIn: config.jwt.tokenExpiresIn,
     });
@@ -32,7 +32,7 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
-      userType: user.type,
+      userType: user.userType,
     };
   }
 

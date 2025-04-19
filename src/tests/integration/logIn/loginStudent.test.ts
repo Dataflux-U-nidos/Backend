@@ -9,24 +9,24 @@ beforeAll(async () => {
 describe('Integration tests Student - Login', () => {
   it('should login as student', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'andrea@example.com',
-      password: 'password123',
+      email: 'ana6.perez@example.com',
+      password: 'Pass123!',
     });
     expect(response.status).toBe(200); // Check if the request was successful
-    expect(response.body.userType).toBe('STUDENT'); // Validate user type
+    expect(response.body.userType).toBe('STUDENT');
   });
 
   it('should login as student and return the jwt', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'andrea@example.com',
-      password: 'password123',
+      email: 'ana6.perez@example.com',
+      password: 'Pass123!',
     });
     expect(response.status).toBe(200); // Ensure successful response
-    expect(response.body.userType).toBe('STUDENT'); // Verify correct user type
+    expect(response.body.userType).toBe('STUDENT');
     expect(response.headers['set-cookie']).toEqual(
       expect.arrayContaining([
-        expect.stringContaining('accessToken'), // Check if accessToken is set
-        expect.stringContaining('refreshToken'), // Check if refreshToken is set
+        expect.stringContaining('accessToken='),
+        expect.stringContaining('refreshToken='),
       ]),
     );
   });
