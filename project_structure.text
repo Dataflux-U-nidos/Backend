@@ -8,6 +8,7 @@
 - Dockerfile
 - eslint.config.js
 - package.json
+- project_structure.text
 - README.md
 - src
   - application
@@ -29,6 +30,7 @@
       - auth
         - getSession.useCase.ts
         - login.use-case.ts
+        - refreshToken.useCase.ts
       - comment
         - create-comment.use-case.ts
         - delete-comment.use-case.ts
@@ -132,11 +134,15 @@
     - utils
       - index.ts
       - jwt.utils.ts
+      - time.utils.ts
       - typebox-validator.ts
       - validateEnv.ts
   - tests
     - integration
-      - index.ts
+      - logIn
+        - logInAdministrator.test.ts
+        - loginStudent.test.ts
+        - logInViewer.test.ts
     - unit
       - index.ts
 - tsconfig.json

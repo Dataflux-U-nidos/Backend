@@ -1,4 +1,4 @@
-import { UserModel } from '../../../infrastructure';
+import { UserModel, UserDocument } from '../../../infrastructure';
 import { User, IUserRepository } from '../../../domain';
 import { UserResponseDto } from '../../../application';
 
@@ -11,35 +11,39 @@ export class UserRepository implements IUserRepository {
     if (filter?.type) query.type = filter.type;
     if (filter?.email) query.email = filter.email;
 
-    const results = await UserModel.find(query);
+    const results = await UserModel.find(query)
+      .populate('students', '_id') // solo para obtener el _id de cada student
+      .exec();
+
     return results.map((doc) => ({
-      id: doc._id as unknown as string,
+      id: doc._id.toString(),
       name: doc.name,
       last_name: doc.last_name,
       email: doc.email,
       age: doc.age,
-      type: doc.type,
+      userType: doc.userType,
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
+      students: doc.students?.map((s) => s._id.toString()),
       createdAt: doc.createdAt.toISOString(),
       updatedAt: doc.updatedAt.toISOString(),
     }));
   }
-
   public async findById(id: string): Promise<UserResponseDto | null> {
-    const doc = await UserModel.findById(id);
+    const doc = await UserModel.findById(id).populate('students', '_id').exec();
     if (!doc) return null;
     return {
-      id: doc._id as unknown as string,
+      id: doc._id.toString(),
       name: doc.name,
       last_name: doc.last_name,
       email: doc.email,
       age: doc.age,
-      type: doc.type,
+      userType: doc.userType,
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
+      students: doc.students?.map((s) => s._id.toString()),
       createdAt: doc.createdAt.toISOString(),
       updatedAt: doc.updatedAt.toISOString(),
     };
@@ -55,7 +59,7 @@ export class UserRepository implements IUserRepository {
       email: doc.email,
       password: doc.password,
       age: doc.age,
-      type: doc.type,
+      userType: doc.userType,
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
@@ -64,7 +68,9 @@ export class UserRepository implements IUserRepository {
     };
   }
 
-  public async create(data: Omit<User, 'id'>): Promise<User> {
+  public async create(
+    data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<User> {
     const doc = await UserModel.create(data);
     return {
       id: doc._id as unknown as string,
@@ -76,7 +82,7 @@ export class UserRepository implements IUserRepository {
 
   public async update(
     id: string,
-    data: Partial<Omit<User, 'id'>>,
+    data: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<User | null> {
     const doc = await UserModel.findByIdAndUpdate(id, data, { new: true });
     if (!doc) return null;
@@ -87,7 +93,7 @@ export class UserRepository implements IUserRepository {
       email: doc.email,
       password: doc.password,
       age: doc.age,
-      type: doc.type,
+      userType: doc.userType,
       locality: doc.locality,
       school: doc.school,
       preferences: doc.preferences,
@@ -124,5 +130,110 @@ export class UserRepository implements IUserRepository {
   public async delete(id: string): Promise<boolean> {
     const doc = await UserModel.findByIdAndDelete(id);
     return doc !== null;
+  }
+
+  public async findStudentsByTutor(
+    tutorId: string,
+  ): Promise<UserResponseDto[]> {
+    // Busca al tutor y "popula" completamente sus students
+    const tutorDoc = await UserModel.findById(tutorId)
+      .populate('students') // sin segundo argumento, trae todos los campos
+      .exec();
+    if (!tutorDoc || !tutorDoc.students) return [];
+
+    // Mapea cada student a nuestro DTO de respuesta
+    const students = (tutorDoc.students as UserDocument[]).map((doc) => ({
+      id: doc._id.toString(),
+      name: doc.name,
+      last_name: doc.last_name,
+      email: doc.email,
+      age: doc.age,
+      userType: doc.userType,
+      locality: doc.locality,
+      school: doc.school,
+      preferences: doc.preferences,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    }));
+    return students;
+  }
+
+  public async addStudentToTutor(
+    tutorId: string,
+    studentId: string,
+  ): Promise<void> {
+    await UserModel.findByIdAndUpdate(
+      tutorId,
+      { $addToSet: { students: studentId } }, // push único
+      { new: true },
+    ).exec();
+  }
+
+  async addInfoManagerToUniversity(
+    universityId: string,
+    infomanagerId: string,
+  ): Promise<void> {
+    await UserModel.findByIdAndUpdate(
+      universityId,
+      { $addToSet: { infomanagers: infomanagerId } },
+      { new: true },
+    ).exec();
+  }
+
+  async addViewerToUniversity(
+    universityId: string,
+    viewerId: string,
+  ): Promise<void> {
+    await UserModel.findByIdAndUpdate(
+      universityId,
+      { $addToSet: { viewers: viewerId } },
+      { new: true },
+    ).exec();
+  }
+
+  public async findInfoManagersByUniversity(
+    universityId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await UserModel.findById(universityId)
+      .populate('infomanagers')
+      .exec();
+    if (!uniDoc || !uniDoc.infomanagers) return [];
+
+    return (uniDoc.infomanagers as UserDocument[]).map((doc) => ({
+      id: doc._id.toString(),
+      name: doc.name,
+      last_name: doc.last_name,
+      email: doc.email,
+      age: doc.age,
+      userType: doc.userType,
+      locality: doc.locality,
+      school: doc.school,
+      preferences: doc.preferences,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    }));
+  }
+
+  public async findViewersByUniversity(
+    universityId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await UserModel.findById(universityId)
+      .populate('viewers')
+      .exec();
+    if (!uniDoc || !uniDoc.viewers) return [];
+
+    return (uniDoc.viewers as UserDocument[]).map((doc) => ({
+      id: doc._id.toString(),
+      name: doc.name,
+      last_name: doc.last_name,
+      email: doc.email,
+      age: doc.age,
+      userType: doc.userType,
+      locality: doc.locality,
+      school: doc.school,
+      preferences: doc.preferences,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    }));
   }
 }

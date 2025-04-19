@@ -8,10 +8,13 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   age: number;
-  type: 'ADMIN' | 'STUDENT' | 'VIEWER';
+  userType: 'ADMIN' | 'STUDENT' | 'VIEWER' | 'TUTOR' | 'UNIVERSITY';
   locality?: string;
   school?: string;
   preferences?: Record<string, unknown>;
+  students?: Types.ObjectId[] | UserDocument[];
+  infomanagers?: Types.ObjectId[] | UserDocument[];
+  viewers?: Types.ObjectId[] | UserDocument[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,17 +26,32 @@ const UserSchema = new Schema<UserDocument>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     age: { type: Number, required: true },
-    type: {
+    userType: {
       type: String,
       required: true,
-      enum: ['ADMIN', 'STUDENT', 'VIEWER'],
+      enum: [
+        'ADMIN',
+        'STUDENT',
+        'VIEWER',
+        'TUTOR',
+        'UNIVERSITY',
+        'INFOMANAGER',
+      ],
     },
     locality: { type: String },
     school: { type: String },
     preferences: { type: Schema.Types.Mixed },
+    students: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Users',
+      },
+    ],
+    infomanagers: [{ type: Schema.Types.ObjectId, ref: 'Users' }],
+    viewers: [{ type: Schema.Types.ObjectId, ref: 'Users' }],
   },
   {
-    timestamps: true, // Agrega createdAt y updatedAt automáticamente
+    timestamps: true,
   },
 );
 

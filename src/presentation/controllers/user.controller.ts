@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import {
   CreateUserUseCase,
   GetAllUsersUseCase,
@@ -6,7 +6,22 @@ import {
   UpdateUserUseCase,
   UpdateUserByEmailUseCase,
   DeleteUserUseCase,
+  GetStudentsByTutorUseCase,
+  AddStudentToTutorUseCase,
+  AddInfoManagerToUniversityUseCase,
+  AddViewerToUniversityUseCase,
+  GetInfoManagersByUniversityUseCase,
+  GetViewersByUniversityUseCase,
+  CreateUserDto,
 } from '../../application';
+import { UserType } from '../../domain';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    userType: UserType;
+  };
+}
 
 export class UserController {
   constructor(
@@ -16,6 +31,12 @@ export class UserController {
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly updateUserByEmailUseCase: UpdateUserByEmailUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
+    private readonly getStudentsByTutorUseCase: GetStudentsByTutorUseCase,
+    private readonly addStudentToTutorUseCase: AddStudentToTutorUseCase,
+    private readonly addInfoManagerToUniversityUseCase: AddInfoManagerToUniversityUseCase,
+    private readonly addViewerToUniversityUseCase: AddViewerToUniversityUseCase,
+    private readonly getInfoManagersByUniversityUseCase: GetInfoManagersByUniversityUseCase,
+    private readonly getViewersByUniversityUseCase: GetViewersByUniversityUseCase,
   ) {}
 
   public getAll = async (
@@ -57,14 +78,34 @@ export class UserController {
     }
   };
 
-  public create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public create: RequestHandler = async (req, res, next) => {
     try {
-      const newUser = await this.createUserUseCase.execute(req.body);
-      // La respuesta incluye ahora createdAt y updatedAt
+      // 1) Interpretar req como RequestWithUser
+      const reqWithUser = req as RequestWithUser;
+      const payload = req.body as CreateUserDto;
+
+      // 2) Crear el usuario (hash de password incluido)
+      const newUser = await this.createUserUseCase.execute(payload);
+
+      // 3) Asignaciones automáticas según rol del autor y tipo creado
+      const reqUser = reqWithUser.user;
+      if (reqUser?.userType === 'TUTOR' && payload.userType === 'STUDENT') {
+        await this.addStudentToTutorUseCase.execute(reqUser.id, newUser.id);
+      }
+      if (
+        reqUser?.userType === 'UNIVERSITY' &&
+        payload.userType === 'INFOMANAGER'
+      ) {
+        await this.addInfoManagerToUniversityUseCase.execute(
+          reqUser.id,
+          newUser.id,
+        );
+      }
+      if (reqUser?.userType === 'UNIVERSITY' && payload.userType === 'VIEWER') {
+        await this.addViewerToUniversityUseCase.execute(reqUser.id, newUser.id);
+      }
+
+      // 4) Responder con el usuario creado
       res.status(201).json(newUser);
     } catch (error) {
       next(error);
@@ -126,6 +167,48 @@ export class UserController {
       }
     } catch (error) {
       next(error);
+    }
+  };
+
+  public getStudentsByTutor = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id: tutorId } = req.params;
+      const students = await this.getStudentsByTutorUseCase.execute(tutorId);
+      res.status(200).json(students);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getInfoManagersByUniversity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const id = req.params.id;
+      const list = await this.getInfoManagersByUniversityUseCase.execute(id);
+      res.status(200).json(list);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getViewersByUniversity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const id = req.params.id;
+      const list = await this.getViewersByUniversityUseCase.execute(id);
+      res.status(200).json(list);
+    } catch (err) {
+      next(err);
     }
   };
 }
