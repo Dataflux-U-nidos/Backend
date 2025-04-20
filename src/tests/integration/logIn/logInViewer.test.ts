@@ -10,8 +10,8 @@ beforeAll(async () => {
 describe('Integration tests Viewer - Login', () => {
   it('should login as viewer', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'patricia.fernendez@example.com',
-      password: 'password123',
+      email: 'carlos.vw@example.com',
+      password: 'Pass123',
     });
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('VIEWER');
@@ -19,8 +19,8 @@ describe('Integration tests Viewer - Login', () => {
 
   it('should login as viewer and return the jwt', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'patricia.fernendez@example.com',
-      password: 'password123',
+      email: 'carlos.vw@example.com',
+      password: 'Pass123',
     });
 
     expect(response.status).toBe(200);
