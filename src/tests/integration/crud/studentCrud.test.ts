@@ -134,9 +134,7 @@ describe('Integration tests Student - CRUD', () => {
     expect(response.body);
   });
 
-  it('should recover password', async () => {
-    
-  })
+  it('should recover password', async () => {});
 
   it('should delete student acount', async () => {
     const response = await request(app)
