@@ -59,7 +59,7 @@ const userController = new UserController(
 // Defining routes with middleware validation and assigning controller methods
 router.get(
   '/',
-  validateRoleMiddleware(['ADMIN', 'VIEWER']),
+  validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
 );
 router.get(

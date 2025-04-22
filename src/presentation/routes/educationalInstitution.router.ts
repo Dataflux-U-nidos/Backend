@@ -41,22 +41,22 @@ router.get(
 );
 router.get(
   '/:id',
-  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   educationalInstitutionController.getById,
 );
 router.post(
   '/',
-  validateRoleMiddleware(['ADMIN']),
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   educationalInstitutionController.create,
 );
 router.patch(
   '/:id',
-  validateRoleMiddleware(['ADMIN']),
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   educationalInstitutionController.update,
 );
 router.delete(
   '/:id',
-  validateRoleMiddleware(['ADMIN']),
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   educationalInstitutionController.delete,
 );
 
