@@ -97,6 +97,31 @@ export class UserRepository implements IUserRepository {
     return doc ? this.mapEntity(doc) : null;
   }
 
+  public async updateByEmail(
+    email: string,
+    data: Partial<Omit<User, 'id'>>,
+  ): Promise<User | null> {
+    const doc = await UserModel.findOneAndUpdate({ email }, data, {
+      new: true,
+    });
+    if (!doc) return null;
+
+    return {
+      id: doc._id as unknown as string,
+      name: doc.name,
+      last_name: doc.last_name,
+      email: doc.email,
+      password: doc.password,
+      age: doc.age,
+      type: doc.type,
+      locality: doc.locality,
+      school: doc.school,
+      preferences: doc.preferences,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
+  }
+
   public async delete(id: string): Promise<boolean> {
     const doc = await UserBaseModel.findByIdAndDelete(id).exec();
     return doc !== null;

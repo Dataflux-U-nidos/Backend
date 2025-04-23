@@ -7,6 +7,7 @@ import {
   GetAllUsersUseCase,
   GetUserByIdUseCase,
   UpdateUserUseCase,
+  UpdateUserByEmailUseCase,
   DeleteUserUseCase,
   GetStudentsByTutorUseCase,
   AddStudentToTutorUseCase,
@@ -26,6 +27,7 @@ const createUserUseCase = new CreateUserUseCase(userRepository);
 const getAllUsersUseCase = new GetAllUsersUseCase(userRepository);
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
 const updateUserUseCase = new UpdateUserUseCase(userRepository);
+const updateUserByEmailUseCase = new UpdateUserByEmailUseCase(userRepository);
 const deleteUserUseCase = new DeleteUserUseCase(userRepository);
 const getStudentsByTutorUseCase = new GetStudentsByTutorUseCase(userRepository);
 const addStudentToTutorUseCase = new AddStudentToTutorUseCase(userRepository);
@@ -47,6 +49,7 @@ const userController = new UserController(
   getAllUsersUseCase,
   getUserByIdUseCase,
   updateUserUseCase,
+  updateUserByEmailUseCase,
   deleteUserUseCase,
   getStudentsByTutorUseCase,
   addStudentToTutorUseCase,
@@ -62,11 +65,17 @@ router.get(
   validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
 );
+
 router.get(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER', 'TUTOR', 'UNIVERSITY']),
   userController.getById,
 );
+
+
+router.post('/', userController.create);
+
+
 router.get(
   '/:id/students',
   validateRoleMiddleware(['ADMIN', 'TUTOR']),
@@ -88,6 +97,7 @@ router.post(
   userController.create,
 );
 router.post('/registry', userController.create);
+
 router.patch(
   '/:id',
   validateRoleMiddleware([
@@ -100,6 +110,8 @@ router.patch(
   ]),
   userController.update,
 );
+router.patch('/by-email/:email', userController.updateByEmail); 
+
 router.delete(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),

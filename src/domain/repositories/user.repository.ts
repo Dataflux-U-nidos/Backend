@@ -16,7 +16,7 @@ export interface IUserRepository {
   findById(id: string): Promise<UserResponseDto | null>;
 
   /** Retrieve a single user by email. */
-  findByEmail(email: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;  
 
   /** Create a new user. */
   create(data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User>;
@@ -30,7 +30,15 @@ export interface IUserRepository {
     data: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<User | null>;
 
+  /** Update a user by email. */
+  updateByEmail(
+    email: string,
+    data: Partial<Omit<User, 'id'>>,
+  ): Promise<User | null>;
+
+
   /** Delete a user by ID. */
+
   delete(id: string): Promise<boolean>;
 
   /** Get all students associated with a given tutor. */

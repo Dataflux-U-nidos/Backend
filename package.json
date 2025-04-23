@@ -30,6 +30,7 @@
   "type": "commonjs",
   "dependencies": {
     "@sinclair/typebox": "^0.34.30",
+    "@types/axios": "^0.14.4",
     "@types/cors": "^2.8.17",
     "@types/helmet": "^4.0.0",
     "@types/morgan": "^1.9.9",
