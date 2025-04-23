@@ -323,12 +323,16 @@ export class UserRepository implements IUserRepository {
       updatedAt: doc.updatedAt,
     };
     switch (doc.userType) {
-      case 'ADMIN':
+      case 'ADMIN': {
+        const d = doc as AdminDocument;
         return {
           ...base,
-          last_name: (doc as UserBaseDocument & { last_name: string })
-            .last_name,
+          last_name: d.last_name,
+          marketing: d.marketing.map((s) => s.toString()),
+          support: d.support.map((s) => s.toString()),
+          finances: d.finances.map((s) => s.toString()),
         } as AdminUser;
+      }
       case 'STUDENT': {
         const d = doc as StudentDocument;
         return {
@@ -375,7 +379,6 @@ export class UserRepository implements IUserRepository {
         return {
           ...base,
           last_name: d.last_name,
-          adminId: d.adminId.toString(),
         } as MarketingUser;
       }
       case 'SUPPORT': {
@@ -383,7 +386,6 @@ export class UserRepository implements IUserRepository {
         return {
           ...base,
           last_name: d.last_name,
-          adminId: d.adminId.toString(),
         } as SupportUser;
       }
       case 'FINANCES': {
@@ -391,7 +393,6 @@ export class UserRepository implements IUserRepository {
         return {
           ...base,
           last_name: d.last_name,
-          adminId: d.adminId.toString(),
         } as FinancesUser;
       }
       default:
