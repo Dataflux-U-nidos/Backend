@@ -8,6 +8,9 @@ import {
   UniversityUser,
   User,
   ViewerUser,
+  MarketingUser,
+  SupportUser,
+  FinancesUser,
 } from '../../../domain/entities/user.entity';
 import { UserResponseDto } from '../../../application/dtos/user.dto';
 import { UserBaseModel, UserBaseDocument } from '../../../infrastructure/';
@@ -24,7 +27,14 @@ import {
   ViewerDocument,
   AdminModel,
   AdminDocument,
+  MarketingModel,
+  MarketingDocument,
+  SupportModel,
+  SupportDocument,
+  FinancesModel,
+  FinancesDocument,
 } from '../../../infrastructure';
+
 
 type UserDocument =
   | UserBaseDocument
@@ -33,7 +43,10 @@ type UserDocument =
   | UniversityDocument
   | InfoManagerDocument
   | ViewerDocument
-  | AdminDocument;
+  | AdminDocument
+  | MarketingDocument
+  | SupportDocument
+  | FinancesDocument;
 
 export class UserRepository implements IUserRepository {
   public async findAll(filter?: {
@@ -80,6 +93,15 @@ export class UserRepository implements IUserRepository {
         break;
       case 'VIEWER':
         createdDoc = await ViewerModel.create(data as ViewerDocument);
+        break;
+      case 'MARKETING':
+        createdDoc = await MarketingModel.create(data as MarketingDocument);
+        break;
+      case 'SUPPORT':
+        createdDoc = await SupportModel.create(data as SupportDocument);
+        break;
+      case 'FINANCES':
+        createdDoc = await FinancesModel.create(data as FinancesDocument);
         break;
       default:
         createdDoc = await UserBaseModel.create(data as UserBaseDocument);
@@ -145,6 +167,75 @@ export class UserRepository implements IUserRepository {
     ).exec();
   }
 
+  // Add Marketing to Admin
+  public async addMarketingToAdmin(
+    adminId: string,
+    marketingId: string,
+  ): Promise<void> {
+    await AdminModel.findByIdAndUpdate(
+      adminId,
+      { $addToSet: { marketing: marketingId } },
+      { new: true },
+    ).exec();
+  }
+
+  // Add Support to Admin
+  public async addSupportToAdmin(
+    adminId: string,
+    supportId: string,
+  ): Promise<void> {
+    await AdminModel.findByIdAndUpdate(
+      adminId,
+      { $addToSet: { support: supportId } },
+      { new: true },
+    ).exec();
+  }
+
+  // Add Finances to Admin
+  public async addFinancesToAdmin(
+    adminId: string,
+    financesId: string,
+  ): Promise<void> {
+    await AdminModel.findByIdAndUpdate(
+      adminId,
+      { $addToSet: { finances: financesId } },
+      { new: true },
+    ).exec();
+  }
+
+  // find marketing by Admin
+  public async findMarketersByAdmin(
+    adminId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await AdminModel.findById(adminId)
+      .populate<{ marketing: MarketingDocument[] }>('marketing')
+      .exec();
+    if (!uniDoc || !uniDoc.marketing) return [];
+    return uniDoc.marketing.map((d) => this.mapDoc(d));
+  }
+
+  // find support by Admin
+  public async findSupportsByAdmin(
+    adminId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await AdminModel.findById(adminId)
+      .populate<{ support: SupportDocument[] }>('support')
+      .exec();
+    if (!uniDoc || !uniDoc.support) return [];
+    return uniDoc.support.map((d) => this.mapDoc(d));
+  }
+
+  // find finances by Admin
+  public async findFinancesByAdmin(
+    adminId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await AdminModel.findById(adminId)
+      .populate<{ finances: FinancesDocument[] }>('finances')
+      .exec();
+    if (!uniDoc || !uniDoc.finances) return [];
+    return uniDoc.finances.map((d) => this.mapDoc(d));
+  }
+
   public async findInfoManagersByUniversity(
     universityId: string,
   ): Promise<UserResponseDto[]> {
@@ -154,6 +245,7 @@ export class UserRepository implements IUserRepository {
     if (!uniDoc || !uniDoc.infomanagers) return [];
     return uniDoc.infomanagers.map((d) => this.mapDoc(d));
   }
+
   public async findViewersByUniversity(
     universityId: string,
   ): Promise<UserResponseDto[]> {
@@ -171,7 +263,11 @@ export class UserRepository implements IUserRepository {
       | TutorDocument
       | UniversityDocument
       | InfoManagerDocument
-      | ViewerDocument,
+      | ViewerDocument
+      | AdminDocument
+      | MarketingDocument
+      | SupportDocument
+      | FinancesDocument,
   ): UserResponseDto {
     const base: Partial<UserResponseDto> = {
       id: doc._id.toString(),
@@ -195,6 +291,12 @@ export class UserRepository implements IUserRepository {
       base.viewers = doc.viewers.map((s) => s.toString());
     if ('universityId' in doc && doc.universityId)
       base.universityId = doc.universityId.toString();
+    if ('marketing' in doc && Array.isArray(doc.marketing))
+      base.marketing = doc.marketing.map((s) => s.toString());
+    if ('support' in doc && Array.isArray(doc.support))
+      base.support = doc.support.map((s) => s.toString());
+    if ('finances' in doc && Array.isArray(doc.finances))
+      base.finances = doc.finances.map((s) => s.toString());
     return base as UserResponseDto;
   }
 
@@ -205,7 +307,11 @@ export class UserRepository implements IUserRepository {
       | TutorDocument
       | UniversityDocument
       | InfoManagerDocument
-      | ViewerDocument,
+      | ViewerDocument
+      | AdminDocument
+      | MarketingDocument
+      | SupportDocument
+      | FinancesDocument,
   ): User {
     const base = {
       id: doc._id.toString(),
@@ -263,6 +369,30 @@ export class UserRepository implements IUserRepository {
           last_name: d.last_name,
           universityId: d.universityId.toString(),
         } as InfoManagerUser;
+      }
+      case 'MARKETING': {
+        const d = doc as MarketingDocument;
+        return {
+          ...base,
+          last_name: d.last_name,
+          adminId: d.adminId.toString(),
+        } as MarketingUser;
+      }
+      case 'SUPPORT': {
+        const d = doc as SupportDocument;
+        return {
+          ...base,
+          last_name: d.last_name,
+          adminId: d.adminId.toString(),
+        } as SupportUser;
+      }
+      case 'FINANCES': {
+        const d = doc as FinancesDocument;
+        return {
+          ...base,
+          last_name: d.last_name,
+          adminId: d.adminId.toString(),
+        } as FinancesUser;
       }
       default:
         return base as User;

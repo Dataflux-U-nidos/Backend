@@ -14,6 +14,12 @@ import {
   AddViewerToUniversityUseCase,
   GetInfoManagersByUniversityUseCase,
   GetViewersByUniversityUseCase,
+  AddMarketingToAdminUseCase,
+  GetMarketingByAdminUseCase,
+  AddSupportToAdminUseCase,
+  GetSupportByAdminUseCase,
+  AddFinancesToAdminUseCase,
+  GetFinancesByAdminUseCase,
 } from '../../application';
 
 const router = Router();
@@ -30,7 +36,7 @@ const deleteUserUseCase = new DeleteUserUseCase(userRepository);
 const getStudentsByTutorUseCase = new GetStudentsByTutorUseCase(userRepository);
 const addStudentToTutorUseCase = new AddStudentToTutorUseCase(userRepository);
 const addInfoManagerToUniversityUseCase = new AddInfoManagerToUniversityUseCase(
-  userRepository,
+userRepository,
 );
 const addViewerToUniversityUseCase = new AddViewerToUniversityUseCase(
   userRepository,
@@ -38,6 +44,22 @@ const addViewerToUniversityUseCase = new AddViewerToUniversityUseCase(
 const getInfoManagersByUniversityUseCase =
   new GetInfoManagersByUniversityUseCase(userRepository);
 const getViewersByUniversityUseCase = new GetViewersByUniversityUseCase(
+  userRepository,
+);
+const addMarketingToAdminUseCase = new AddMarketingToAdminUseCase(
+  userRepository,
+);
+const getMarketingByAdminUseCase = new GetMarketingByAdminUseCase(
+  userRepository,
+);
+const addSupportToAdminUseCase = new AddSupportToAdminUseCase(userRepository);
+const getSupportByAdminUseCase = new GetSupportByAdminUseCase(
+  userRepository,
+);
+const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(
+  userRepository,
+);
+const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(
   userRepository,
 );
 
@@ -54,6 +76,12 @@ const userController = new UserController(
   addViewerToUniversityUseCase,
   getInfoManagersByUniversityUseCase,
   getViewersByUniversityUseCase,
+  addMarketingToAdminUseCase,
+  getMarketingByAdminUseCase,
+  addSupportToAdminUseCase,
+  getSupportByAdminUseCase,
+  addFinancesToAdminUseCase,
+  getFinancesByAdminUseCase,
 );
 
 // Defining routes with middleware validation and assigning controller methods
@@ -97,6 +125,9 @@ router.patch(
     'UNIVERSITY',
     'VIEWER',
     'INFOMANAGER',
+    'MARKETING',
+    'SUPPORT',
+    'FINANCES',
   ]),
   userController.update,
 );

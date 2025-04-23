@@ -12,6 +12,12 @@ import {
   AddViewerToUniversityUseCase,
   GetInfoManagersByUniversityUseCase,
   GetViewersByUniversityUseCase,
+  AddMarketingToAdminUseCase,
+  GetMarketingByAdminUseCase,
+  AddSupportToAdminUseCase,
+  GetSupportByAdminUseCase,
+  AddFinancesToAdminUseCase,
+  GetFinancesByAdminUseCase,
 } from '../../application';
 import { CreateUserDto, UpdateUserDto } from '../../application/dtos/user.dto';
 import { UserType } from '../../domain/entities/user.entity';
@@ -33,6 +39,12 @@ export class UserController {
     private readonly addViewerToUniversityUseCase: AddViewerToUniversityUseCase,
     private readonly getInfoManagersByUniversityUseCase: GetInfoManagersByUniversityUseCase,
     private readonly getViewersByUniversityUseCase: GetViewersByUniversityUseCase,
+    private readonly addMarketingToAdminUseCase: AddMarketingToAdminUseCase,
+    private readonly getMarketingByAdminUseCase: GetMarketingByAdminUseCase,
+    private readonly addSupportToAdminUseCase: AddSupportToAdminUseCase,
+    private readonly getSupportByAdminUseCase: GetSupportByAdminUseCase,
+    private readonly addFinancesToAdminUseCase: AddFinancesToAdminUseCase,
+    private readonly getFinancesByAdminUseCase: GetFinancesByAdminUseCase,
   ) {}
 
   public getAll = async (
@@ -201,4 +213,7 @@ export class UserController {
       next(error);
     }
   };
+
+
+
 }
