@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
-import { validateEnv, formatUrl } from '../../shared/utils/index';
+import { validateEnv } from '../../shared/utils/index';
+import { formatUrl } from '../../shared/utils/url-formatter';
 import { parseTime } from '../../shared/utils/time.utils';
 
 dotenv.config();
@@ -12,9 +13,8 @@ const requiredEnvVars = [
 ];
 validateEnv(requiredEnvVars);
 
-const lambdaUrl = "https://sreiiipsy6eog7adotnk4tbbxm0mkuxi.lambda-url.us-east-2.on.aws/";
-
-
+const lambdaUrl =
+  'https://sreiiipsy6eog7adotnk4tbbxm0mkuxi.lambda-url.us-east-2.on.aws/';
 
 const config = {
   database: {

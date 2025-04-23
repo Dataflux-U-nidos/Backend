@@ -72,9 +72,7 @@ router.get(
   userController.getById,
 );
 
-
 router.post('/', userController.create);
-
 
 router.get(
   '/:id/students',
@@ -110,7 +108,7 @@ router.patch(
   ]),
   userController.update,
 );
-router.patch('/by-email/:email', userController.updateByEmail); 
+router.patch('/by-email/:email', userController.updateByEmail);
 
 router.delete(
   '/:id',
