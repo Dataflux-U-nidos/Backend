@@ -30,7 +30,7 @@ const majorController = new MajorController(
 // Defining routes with middleware validation and assigning controller methods
 router.get(
   '/',
-  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER' ]),
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   majorController.getAll,
 );
 router.get(
@@ -38,8 +38,16 @@ router.get(
   validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   majorController.getById,
 );
-router.post('/', validateRoleMiddleware(['ADMIN', 'INFOMANAGER']), majorController.create);
-router.patch('/:id', validateRoleMiddleware(['ADMIN', 'INFOMANAGER']), majorController.update);
+router.post(
+  '/',
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
+  majorController.create,
+);
+router.patch(
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
+  majorController.update,
+);
 router.delete(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
