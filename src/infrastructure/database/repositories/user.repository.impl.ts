@@ -2,6 +2,7 @@
 import { IUserRepository } from '../../../domain/repositories/user.repository';
 import {
   AdminUser,
+  BaseUser,
   InfoManagerUser,
   StudentUser,
   TutorUser,
@@ -116,6 +117,26 @@ export class UserRepository implements IUserRepository {
       new: true,
     }).exec();
     return doc ? this.mapEntity(doc) : null;
+  }
+
+  public async updateByEmail(
+    email: string,
+    data: Partial<Omit<User, 'id'>>,
+  ): Promise<BaseUser | null> {
+    const doc = await UserBaseModel.findOneAndUpdate({ email }, data, {
+      new: true,
+    });
+    if (!doc) return null;
+
+    return {
+      id: doc._id as unknown as string,
+      name: doc.name,
+      email: doc.email,
+      password: doc.password,
+      userType: doc.userType as User['userType'],
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
   }
 
   public async delete(id: string): Promise<boolean> {

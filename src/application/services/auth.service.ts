@@ -33,6 +33,7 @@ export class AuthService {
       accessToken,
       refreshToken,
       userType: user.userType,
+      userId: user.id,
     };
   }
 
@@ -57,16 +58,19 @@ export class AuthService {
         accessToken: newAccessToken,
         refreshToken,
         userType: decoded.type,
+        userId: decoded.id,
       };
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
 
-  public async getSession(token: string): Promise<{ userType: string }> {
+  public async getSession(
+    token: string,
+  ): Promise<{ userType: string; userId: string }> {
     try {
       const decoded: any = jwt.verify(token, config.jwt.secret);
-      return { userType: decoded.type };
+      return { userType: decoded.type, userId: decoded.id };
     } catch {
       throw new Error('Token inválido o expirado');
     }

@@ -25,6 +25,7 @@ export * from '../use-cases/user/get-all-users.use-case';
 export * from '../use-cases/user/get-user-by-id.use-case';
 export * from '../use-cases/user/get-user-by-email.use-case';
 export * from '../use-cases/user/update-user.use-case';
+export * from '../use-cases/user/update-user-by-email.use-case';
 export * from '../use-cases/comment/create-comment.use-case';
 export * from '../use-cases/user/get-students-by-tutor.use-case';
 export * from '../use-cases/user/add-student-to-tutor.use-case';
@@ -47,3 +48,6 @@ export * from '../use-cases/comment/delete-comment.use-case';
 export * from './auth/login.use-case';
 export * from './auth/getSession.useCase';
 export * from './auth/refreshToken.useCase';
+
+// Use cases email
+export * from './email/sendRecoveryEmail.useCase';
