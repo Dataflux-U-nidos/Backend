@@ -59,43 +59,31 @@ const userController = new UserController(
   getViewersByUniversityUseCase,
 );
 
-// Defining routes with middleware validation and assigning controller methods
+// Create user
+router.post(
+  '/',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.create,
+);
+
+// Public registration (sin middleware)
+router.post('/registry', userController.create);
+
+// Get all users
 router.get(
   '/',
   validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
 );
 
+// Get user by ID
 router.get(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER', 'TUTOR', 'UNIVERSITY']),
   userController.getById,
 );
 
-router.post('/', userController.create);
-
-router.get(
-  '/:id/students',
-  validateRoleMiddleware(['ADMIN', 'TUTOR']),
-  userController.getStudentsByTutor,
-);
-router.get(
-  '/:id/infomanagers',
-  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
-  userController.getInfoManagersByUniversity,
-);
-router.get(
-  '/:id/viewers',
-  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
-  userController.getViewersByUniversity,
-);
-router.post(
-  '/',
-  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
-  userController.create,
-);
-router.post('/registry', userController.create);
-
+// Update user by ID
 router.patch(
   '/:id',
   validateRoleMiddleware([
@@ -108,12 +96,39 @@ router.patch(
   ]),
   userController.update,
 );
+
+// Update user by Email
 router.patch('/by-email/:email', userController.updateByEmail);
 
+// Delete user
 router.delete(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
   userController.delete,
 );
+
+// Get students by tutor ID
+router.get(
+  '/:id/students',
+  validateRoleMiddleware(['ADMIN', 'TUTOR']),
+  userController.getStudentsByTutor,
+);
+
+// Get info managers by university ID
+router.get(
+  '/:id/infomanagers',
+  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
+  userController.getInfoManagersByUniversity,
+);
+
+// Get viewers by university ID
+router.get(
+  '/:id/viewers',
+  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
+  userController.getViewersByUniversity,
+);
+
+// Optionally, here you could add POSTs to assign students or viewers if needed
+// router.post('/:id/students', ...) etc.
 
 export default router;

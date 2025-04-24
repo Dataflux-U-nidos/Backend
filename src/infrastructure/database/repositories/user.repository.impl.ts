@@ -2,6 +2,7 @@
 import { IUserRepository } from '../../../domain/repositories/user.repository';
 import {
   AdminUser,
+  BaseUser,
   InfoManagerUser,
   StudentUser,
   TutorUser,
@@ -100,8 +101,8 @@ export class UserRepository implements IUserRepository {
   public async updateByEmail(
     email: string,
     data: Partial<Omit<User, 'id'>>,
-  ): Promise<User | null> {
-    const doc = await UserModel.findOneAndUpdate({ email }, data, {
+  ): Promise<BaseUser | null> {
+    const doc = await UserBaseModel.findOneAndUpdate({ email }, data, {
       new: true,
     });
     if (!doc) return null;
@@ -109,14 +110,9 @@ export class UserRepository implements IUserRepository {
     return {
       id: doc._id as unknown as string,
       name: doc.name,
-      last_name: doc.last_name,
       email: doc.email,
       password: doc.password,
-      age: doc.age,
-      type: doc.type,
-      locality: doc.locality,
-      school: doc.school,
-      preferences: doc.preferences,
+      userType: doc.userType as User['userType'],
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };

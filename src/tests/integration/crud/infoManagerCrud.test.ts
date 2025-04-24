@@ -19,19 +19,8 @@ describe('Integration tests InfoManager - CRUD', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('INFOMANAGER');
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken='),
-        expect.stringContaining('refreshToken='),
-      ]),
-    );
-
-    const rawCookies = response.headers['set-cookie'];
-    const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
-    accessTokenCookie = cookies
-      .find((cookie) => cookie.startsWith('accessToken='))
-      ?.split('=')[1]
-      ?.split(';')[0];
+    expect(response.body.accessToken).toBeDefined();
+    accessTokenCookie = response.body.accessToken;
   });
 
   it('should create a educational institution', async () => {

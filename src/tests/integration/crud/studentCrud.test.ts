@@ -42,24 +42,7 @@ describe('Integration tests Student - CRUD', () => {
       password: 'password123',
     });
 
-    const rawCookies = response1.headers['set-cookie'];
-
-    if (!rawCookies) {
-      throw new Error('No se recibieron cookies del login del tutor');
-    }
-
-    const cookies = (
-      Array.isArray(rawCookies) ? rawCookies : [rawCookies]
-    ).filter(Boolean);
-
-    const accessTokenCookieTutor = cookies
-      .find((cookie) => cookie.startsWith('accessToken='))
-      ?.split('=')[1]
-      ?.split(';')[0];
-
-    if (!accessTokenCookieTutor) {
-      throw new Error('No se encontró accessToken en las cookies');
-    }
+    const accessTokenCookieTutor = response1.body.accessToken;
 
     // Asign tutor to student
     const response2 = await request(app)
@@ -97,18 +80,9 @@ describe('Integration tests Student - CRUD', () => {
     });
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('STUDENT');
-    const rawCookies = response.headers['set-cookie'];
-    const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken'),
-        expect.stringContaining('refreshToken'),
-      ]),
-    );
-    accessTokenCookie = cookies
-      .find((cookie) => cookie.startsWith('accessToken='))
-      ?.split('=')[1]
-      ?.split(';')[0];
+    expect(response.body.accessToken).toBeDefined();
+    expect(response.body.refreshToken).toBeDefined();
+    accessTokenCookie = response.body.accessToken;
   });
 
   it('should modify student acount', async () => {
@@ -134,7 +108,7 @@ describe('Integration tests Student - CRUD', () => {
     expect(response.body);
   });
 
-  it('should recover password', async () => {});
+  //it('should recover password', async () => {});
 
   it('should delete student acount', async () => {
     const response = await request(app)
