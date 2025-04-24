@@ -1,6 +1,6 @@
 // src/domain/repositories/user.repository.ts
 import { UserResponseDto } from '../../application/dtos/user.dto';
-import { User } from '../entities/user.entity';
+import { BaseUser, User } from '../entities/user.entity';
 
 export interface IUserRepository {
   /**
@@ -30,7 +30,14 @@ export interface IUserRepository {
     data: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<User | null>;
 
+  /** Update a user by email. */
+  updateByEmail(
+    email: string,
+    data: Partial<Omit<User, 'id'>>,
+  ): Promise<BaseUser | null>;
+
   /** Delete a user by ID. */
+
   delete(id: string): Promise<boolean>;
 
   /** Get all students associated with a given tutor. */

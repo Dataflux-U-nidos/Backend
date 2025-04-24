@@ -12,9 +12,9 @@ export interface StudentDocument extends UserBaseDocument {
 const StudentSchema = new Schema<Partial<StudentDocument>>({
   last_name: { type: String, required: true },
   age: { type: Number, required: true },
-  locality: { type: String, required: true },
-  school: { type: String, required: true },
-  preferences: { type: Schema.Types.Mixed, required: true },
+  locality: { type: String, required: false },
+  school: { type: String, required: false },
+  preferences: { type: Schema.Types.Mixed, required: false },
 });
 
 export const StudentModel = UserBaseModel.discriminator<StudentDocument>(
