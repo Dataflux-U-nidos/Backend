@@ -35,7 +35,6 @@ import {
   FinancesDocument,
 } from '../../../infrastructure';
 
-
 type UserDocument =
   | UserBaseDocument
   | StudentDocument

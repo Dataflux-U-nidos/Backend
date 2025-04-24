@@ -35,16 +35,27 @@ const updateUserUseCase = new UpdateUserUseCase(userRepository);
 const deleteUserUseCase = new DeleteUserUseCase(userRepository);
 const getStudentsByTutorUseCase = new GetStudentsByTutorUseCase(userRepository);
 const addStudentToTutorUseCase = new AddStudentToTutorUseCase(userRepository);
-const addInfoManagerToUniversityUseCase = new AddInfoManagerToUniversityUseCase(userRepository,);
-const addViewerToUniversityUseCase = new AddViewerToUniversityUseCase(userRepository,);
-const getInfoManagersByUniversityUseCase = new GetInfoManagersByUniversityUseCase(userRepository);
-const getViewersByUniversityUseCase = new GetViewersByUniversityUseCase(userRepository,);
-const addMarketingToAdminUseCase = new AddMarketingToAdminUseCase(userRepository,);
-const getMarketingByAdminUseCase = new GetMarketingByAdminUseCase(userRepository,);
+const addInfoManagerToUniversityUseCase = new AddInfoManagerToUniversityUseCase(
+  userRepository,
+);
+const addViewerToUniversityUseCase = new AddViewerToUniversityUseCase(
+  userRepository,
+);
+const getInfoManagersByUniversityUseCase =
+  new GetInfoManagersByUniversityUseCase(userRepository);
+const getViewersByUniversityUseCase = new GetViewersByUniversityUseCase(
+  userRepository,
+);
+const addMarketingToAdminUseCase = new AddMarketingToAdminUseCase(
+  userRepository,
+);
+const getMarketingByAdminUseCase = new GetMarketingByAdminUseCase(
+  userRepository,
+);
 const addSupportToAdminUseCase = new AddSupportToAdminUseCase(userRepository);
-const getSupportByAdminUseCase = new GetSupportByAdminUseCase(userRepository,);
-const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository,);
-const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository,);
+const getSupportByAdminUseCase = new GetSupportByAdminUseCase(userRepository);
+const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository);
+const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(

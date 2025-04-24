@@ -102,7 +102,7 @@ const InfoManagerSchema = Type.Intersect(
 const MarketingSchema = Type.Intersect(
   [
     Type.Object({ userType: Type.Literal('MARKETING') }),
-    Type.Object({...BaseFields, last_name: Type.String(),}),
+    Type.Object({ ...BaseFields, last_name: Type.String() }),
   ],
   { title: 'CreateMarketingDto' },
 );
@@ -110,7 +110,7 @@ const MarketingSchema = Type.Intersect(
 const SupportSchema = Type.Intersect(
   [
     Type.Object({ userType: Type.Literal('SUPPORT') }),
-    Type.Object({...BaseFields, last_name: Type.String(),}),
+    Type.Object({ ...BaseFields, last_name: Type.String() }),
   ],
   { title: 'CreateSupportDto' },
 );
@@ -118,7 +118,7 @@ const SupportSchema = Type.Intersect(
 const FinancesSchema = Type.Intersect(
   [
     Type.Object({ userType: Type.Literal('FINANCES') }),
-    Type.Object({...BaseFields, last_name: Type.String(),}),
+    Type.Object({ ...BaseFields, last_name: Type.String() }),
   ],
   { title: 'CreateFinancesDto' },
 );
