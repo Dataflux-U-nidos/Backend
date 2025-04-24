@@ -100,7 +100,6 @@ router.patch(
 // Update user by Email
 router.patch(
   '/by-email/:email',
-  validateRoleMiddleware(['ADMIN']),
   userController.updateByEmail,
 );
 
