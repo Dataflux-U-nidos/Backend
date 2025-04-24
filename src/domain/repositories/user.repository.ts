@@ -1,6 +1,6 @@
 // src/domain/repositories/user.repository.ts
 import { UserResponseDto } from '../../application/dtos/user.dto';
-import { User } from '../entities/user.entity';
+import { BaseUser, User } from '../entities/user.entity';
 
 export interface IUserRepository {
   /**
@@ -16,7 +16,7 @@ export interface IUserRepository {
   findById(id: string): Promise<UserResponseDto | null>;
 
   /** Retrieve a single user by email. */
-  findByEmail(email: string): Promise<User | null>;  
+  findByEmail(email: string): Promise<User | null>;
 
   /** Create a new user. */
   create(data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User>;
@@ -34,8 +34,7 @@ export interface IUserRepository {
   updateByEmail(
     email: string,
     data: Partial<Omit<User, 'id'>>,
-  ): Promise<User | null>;
-
+  ): Promise<BaseUser | null>;
 
   /** Delete a user by ID. */
 

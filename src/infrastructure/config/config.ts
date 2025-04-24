@@ -13,10 +13,6 @@ const requiredEnvVars = [
 ];
 validateEnv(requiredEnvVars);
 
-const lambdaUrl = "https://sreiiipsy6eog7adotnk4tbbxm0mkuxi.lambda-url.us-east-2.on.aws/";
-
-
-
 const lambdaUrl =
   'https://sreiiipsy6eog7adotnk4tbbxm0mkuxi.lambda-url.us-east-2.on.aws/';
 
