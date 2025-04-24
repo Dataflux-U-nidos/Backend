@@ -123,10 +123,7 @@ router.patch(
 );
 
 // Update user by Email
-router.patch(
-  '/by-email/:email',
-  userController.updateByEmail,
-);
+router.patch('/by-email/:email', userController.updateByEmail);
 
 // Delete user
 router.delete(
