@@ -125,7 +125,16 @@ router.get(
 // Para que cada usuario actualice su propio perfil
 router.patch(
   '/',
-  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY', 'STUDENT', 'VIEWER']),
+  validateRoleMiddleware([
+    'ADMIN',
+    'TUTOR',
+    'UNIVERSITY',
+    'STUDENT',
+    'VIEWER',
+    'MARKETING',
+    'SUPPORT',
+    'FINANCES',
+  ]),
   userController.update,
 );
 

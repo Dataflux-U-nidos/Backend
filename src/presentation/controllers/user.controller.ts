@@ -93,11 +93,6 @@ export class UserController {
       const payload = req.body as CreateUserDto;
       const actor = req.user;
       let newUser;
-
-      // console.log('req.body:', req.user);
-      // console.log('Actor:', actor);
-      // console.log('Payload:', payload);
-
       if (
         actor?.userType === 'ADMIN' &&
         ['MARKETING', 'SUPPORT', 'FINANCES'].includes(payload.userType)
