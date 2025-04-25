@@ -59,16 +59,18 @@ const userController = new UserController(
   getViewersByUniversityUseCase,
 );
 
-// Create user
+// —————— RUTAS DE CREACIÓN ——————
+// Public registration (sin middleware)
+router.post('/registry', userController.create);
+
+// Create user (requiere rol)
 router.post(
   '/',
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
   userController.create,
 );
 
-// Public registration (sin middleware)
-router.post('/registry', userController.create);
-
+// —————— RUTAS DE LECTURA ESTÁTICAS ——————
 // Get all users
 router.get(
   '/',
@@ -76,6 +78,39 @@ router.get(
   userController.getAll,
 );
 
+// Get students by tutor (usa el token, no recibe ID por URL)
+router.get(
+  '/students',
+  validateRoleMiddleware(['ADMIN', 'TUTOR']),
+  userController.getStudentsByTutor,
+);
+
+// Get info managers by university (usa el token o un param interno)
+router.get(
+  '/infomanagers',
+  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
+  userController.getInfoManagersByUniversity,
+);
+
+// Get viewers by university
+router.get(
+  '/viewers',
+  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
+  userController.getViewersByUniversity,
+);
+
+// —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
+// Para que cada usuario actualice su propio perfil
+router.patch(
+  '/',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY', 'STUDENT', 'VIEWER']),
+  userController.update,
+);
+
+// Update user by Email
+router.patch('/by-email/:email', userController.updateByEmail);
+
+// —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
 // Get user by ID
 router.get(
   '/:id',
@@ -83,55 +118,18 @@ router.get(
   userController.getById,
 );
 
-// Update user by ID
+// Update user by ID - Para que los usuarios raiz modifiquen la info de sus usuarios creados
 router.patch(
   '/:id',
-  validateRoleMiddleware([
-    'ADMIN',
-    'STUDENT',
-    'TUTOR',
-    'UNIVERSITY',
-    'VIEWER',
-    'INFOMANAGER',
-  ]),
-  userController.update,
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.updateById,
 );
 
-// Update user by Email
-router.patch(
-  '/by-email/:email',
-  userController.updateByEmail,
-);
-
-// Delete user
+// Delete user by ID
 router.delete(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
   userController.delete,
 );
-
-// Get students by tutor ID
-router.get(
-  '/:id/students',
-  validateRoleMiddleware(['ADMIN', 'TUTOR']),
-  userController.getStudentsByTutor,
-);
-
-// Get info managers by university ID
-router.get(
-  '/:id/infomanagers',
-  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
-  userController.getInfoManagersByUniversity,
-);
-
-// Get viewers by university ID
-router.get(
-  '/:id/viewers',
-  validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
-  userController.getViewersByUniversity,
-);
-
-// Optionally, here you could add POSTs to assign students or viewers if needed
-// router.post('/:id/students', ...) etc.
 
 export default router;

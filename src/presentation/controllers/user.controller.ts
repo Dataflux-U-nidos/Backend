@@ -82,9 +82,9 @@ export class UserController {
       const actor = req.user;
       let newUser;
 
-      console.log('req.body:', req.user);
-      console.log('Actor:', actor);
-      console.log('Payload:', payload);
+      // console.log('req.body:', req.user);
+      // console.log('Actor:', actor);
+      // console.log('Payload:', payload);
 
       if (actor?.userType === 'TUTOR' && payload.userType === 'STUDENT') {
         // Tutor creates Student
@@ -123,7 +123,8 @@ export class UserController {
     }
   };
 
-  public update = async (
+  // Actualizar usuario por ID
+  public updateById = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -132,6 +133,30 @@ export class UserController {
       const { id } = req.params;
       const payload = req.body as UpdateUserDto;
       const updated = await this.updateUserUseCase.execute(id, payload);
+      if (!updated) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+      res.status(200).json(updated);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // Actualizar la información del usuario logeado
+  public update = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const payload = req.body as UpdateUserDto;
+      const updated = await this.updateUserUseCase.execute(userId, payload);
       if (!updated) {
         res.status(404).json({ message: 'User not found' });
         return;
@@ -183,12 +208,16 @@ export class UserController {
   };
 
   public getStudentsByTutor = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id: tutorId } = req.params;
+      const tutorId = req.user?.id;
+      if (!tutorId) {
+        res.status(400).json({ message: 'Tutor ID is missing' });
+        return;
+      }
       const students = await this.getStudentsByTutorUseCase.execute(tutorId);
       res.status(200).json(students);
     } catch (error) {
@@ -197,12 +226,16 @@ export class UserController {
   };
 
   public getInfoManagersByUniversity = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id: universityId } = req.params;
+      const universityId = req.user?.id;
+      if (!universityId) {
+        res.status(400).json({ message: 'Tutor ID is missing' });
+        return;
+      }
       const list =
         await this.getInfoManagersByUniversityUseCase.execute(universityId);
       res.status(200).json(list);
@@ -212,12 +245,16 @@ export class UserController {
   };
 
   public getViewersByUniversity = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id: universityId } = req.params;
+      const universityId = req.user?.id;
+      if (!universityId) {
+        res.status(400).json({ message: 'Tutor ID is missing' });
+        return;
+      }
       const list =
         await this.getViewersByUniversityUseCase.execute(universityId);
       res.status(200).json(list);
