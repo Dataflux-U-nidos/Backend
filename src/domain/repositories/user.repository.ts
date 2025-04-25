@@ -62,4 +62,24 @@ export interface IUserRepository {
 
   /** Get all viewers associated with a university. */
   findViewersByUniversity(universityId: string): Promise<UserResponseDto[]>;
+
+  /** ------------new----------- */
+
+  /** Add a marketer ID to an admin's marketer list. */
+  addMarketingToAdmin(adminId: string, marketingId: string): Promise<void>;
+
+  /** Add a support ID to an admin's support list. */
+  addSupportToAdmin(adminId: string, supportId: string): Promise<void>;
+
+  /** Add a finances ID to an admin's finances list. */
+  addFinancesToAdmin(adminId: string, financesId: string): Promise<void>;
+
+  /** Get all marketers associated with a admin. */
+  findMarketersByAdmin(adminId: string): Promise<UserResponseDto[]>;
+
+  /** Get all supports associated with a admin. */
+  findSupportsByAdmin(adminId: string): Promise<UserResponseDto[]>;
+
+  /** Get all finances associated with a admin. */
+  findFinancesByAdmin(adminId: string): Promise<UserResponseDto[]>;
 }
