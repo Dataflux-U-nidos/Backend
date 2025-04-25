@@ -15,6 +15,12 @@ import {
   AddViewerToUniversityUseCase,
   GetInfoManagersByUniversityUseCase,
   GetViewersByUniversityUseCase,
+  AddMarketingToAdminUseCase,
+  GetMarketingByAdminUseCase,
+  AddSupportToAdminUseCase,
+  GetSupportByAdminUseCase,
+  AddFinancesToAdminUseCase,
+  GetFinancesByAdminUseCase,
 } from '../../application';
 
 const router = Router();
@@ -42,6 +48,16 @@ const getInfoManagersByUniversityUseCase =
 const getViewersByUniversityUseCase = new GetViewersByUniversityUseCase(
   userRepository,
 );
+const addMarketingToAdminUseCase = new AddMarketingToAdminUseCase(
+  userRepository,
+);
+const getMarketingByAdminUseCase = new GetMarketingByAdminUseCase(
+  userRepository,
+);
+const addSupportToAdminUseCase = new AddSupportToAdminUseCase(userRepository);
+const getSupportByAdminUseCase = new GetSupportByAdminUseCase(userRepository);
+const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository);
+const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -57,13 +73,19 @@ const userController = new UserController(
   addViewerToUniversityUseCase,
   getInfoManagersByUniversityUseCase,
   getViewersByUniversityUseCase,
+  addMarketingToAdminUseCase,
+  getMarketingByAdminUseCase,
+  addSupportToAdminUseCase,
+  getSupportByAdminUseCase,
+  addFinancesToAdminUseCase,
+  getFinancesByAdminUseCase,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
 // Public registration (sin middleware)
 router.post('/registry', userController.create);
 
-// Create user (requiere rol)
+// Create user
 router.post(
   '/',
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
@@ -126,6 +148,7 @@ router.patch(
 );
 
 // Delete user by ID
+
 router.delete(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),

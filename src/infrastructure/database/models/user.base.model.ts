@@ -12,6 +12,9 @@ export interface UserBaseDocument extends Document {
     | 'TUTOR'
     | 'UNIVERSITY'
     | 'INFOMANAGER'
+    | 'MARKETING'
+    | 'SUPPORT'
+    | 'FINANCES'
     | undefined;
   createdAt: Date;
   updatedAt: Date;
@@ -32,6 +35,9 @@ const BaseSchema = new Schema<UserBaseDocument>(
         'TUTOR',
         'UNIVERSITY',
         'INFOMANAGER',
+        'MARKETING',
+        'SUPPORT',
+        'FINANCES',
       ],
     },
   },
