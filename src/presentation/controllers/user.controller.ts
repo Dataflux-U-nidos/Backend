@@ -13,6 +13,12 @@ import {
   AddViewerToUniversityUseCase,
   GetInfoManagersByUniversityUseCase,
   GetViewersByUniversityUseCase,
+  AddMarketingToAdminUseCase,
+  GetMarketingByAdminUseCase,
+  AddSupportToAdminUseCase,
+  GetSupportByAdminUseCase,
+  AddFinancesToAdminUseCase,
+  GetFinancesByAdminUseCase,
 } from '../../application';
 import { CreateUserDto, UpdateUserDto } from '../../application/dtos/user.dto';
 import { UserType } from '../../domain/entities/user.entity';
@@ -35,6 +41,12 @@ export class UserController {
     private readonly addViewerToUniversityUseCase: AddViewerToUniversityUseCase,
     private readonly getInfoManagersByUniversityUseCase: GetInfoManagersByUniversityUseCase,
     private readonly getViewersByUniversityUseCase: GetViewersByUniversityUseCase,
+    private readonly addMarketingToAdminUseCase: AddMarketingToAdminUseCase,
+    private readonly getMarketingByAdminUseCase: GetMarketingByAdminUseCase,
+    private readonly addSupportToAdminUseCase: AddSupportToAdminUseCase,
+    private readonly getSupportByAdminUseCase: GetSupportByAdminUseCase,
+    private readonly addFinancesToAdminUseCase: AddFinancesToAdminUseCase,
+    private readonly getFinancesByAdminUseCase: GetFinancesByAdminUseCase,
   ) {}
 
   public getAll = async (
@@ -82,20 +94,39 @@ export class UserController {
       const actor = req.user;
       let newUser;
 
-      console.log('req.body:', req.user);
       console.log('Actor:', actor);
       console.log('Payload:', payload);
 
-      if (actor?.userType === 'TUTOR' && payload.userType === 'STUDENT') {
+      if (
+        actor?.userType === 'ADMIN' &&
+        ['MARKETING', 'SUPPORT', 'FINANCES'].includes(payload.userType)
+      ) {
+        // Admin creates Marketing / Support / Finances
+        newUser = await this.createUserUseCase.execute(payload);
+
+        switch (payload.userType) {
+          case 'MARKETING':
+            await this.addMarketingToAdminUseCase.execute(actor.id, newUser.id);
+            break;
+          case 'SUPPORT':
+            await this.addSupportToAdminUseCase.execute(actor.id, newUser.id);
+            break;
+          case 'FINANCES':
+            await this.addFinancesToAdminUseCase.execute(actor.id, newUser.id);
+            break;
+        }
+      } else if (
+        actor?.userType === 'TUTOR' &&
+        payload.userType === 'STUDENT'
+      ) {
         // Tutor creates Student
-        console.log('Tutor creating student:', actor.id, payload);
         newUser = await this.createUserUseCase.execute(payload);
         await this.addStudentToTutorUseCase.execute(actor.id, newUser.id);
       } else if (
         actor?.userType === 'UNIVERSITY' &&
         payload.userType === 'INFOMANAGER'
       ) {
-        // University creates InfoManager: inject universityId
+        // University creates InfoManager
         const withUniv = {
           ...payload,
           universityId: actor.id,
