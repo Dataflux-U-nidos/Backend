@@ -7,6 +7,7 @@ import {
   GetMajorByIdUseCase,
   UpdateMajorUseCase,
   DeleteMajorUseCase,
+  GetMajorsByInstitutionUseCase,
 } from '../../application';
 
 const router = Router();
@@ -18,6 +19,9 @@ const getAllMajorsUseCase = new GetAllMajorsUseCase(majorRepository);
 const getMajorByIdUseCase = new GetMajorByIdUseCase(majorRepository);
 const updateMajorUseCase = new UpdateMajorUseCase(majorRepository);
 const deleteMajorUseCase = new DeleteMajorUseCase(majorRepository);
+const getMajorsByUniversityUseCase = new GetMajorsByInstitutionUseCase(
+  majorRepository,
+);
 
 const majorController = new MajorController(
   createMajorUseCase,
@@ -25,6 +29,7 @@ const majorController = new MajorController(
   getMajorByIdUseCase,
   updateMajorUseCase,
   deleteMajorUseCase,
+  getMajorsByUniversityUseCase,
 );
 
 // Defining routes with middleware validation and assigning controller methods
@@ -38,6 +43,9 @@ router.get(
   validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   majorController.getById,
 );
+
+router.get('/university/:institutionId', majorController.getByInstitution);
+
 router.post(
   '/',
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),

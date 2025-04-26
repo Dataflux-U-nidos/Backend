@@ -5,6 +5,7 @@ import {
   GetMajorByIdUseCase,
   UpdateMajorUseCase,
   DeleteMajorUseCase,
+  GetMajorsByInstitutionUseCase,
 } from '../../application';
 
 export class MajorController {
@@ -14,6 +15,7 @@ export class MajorController {
     private readonly getMajorByIdUseCase: GetMajorByIdUseCase,
     private readonly updateMajorUseCase: UpdateMajorUseCase,
     private readonly deleteMajorUseCase: DeleteMajorUseCase,
+    private readonly getMajorsByInstitutionUseCase: GetMajorsByInstitutionUseCase,
   ) {}
 
   public getAll = async (
@@ -94,6 +96,21 @@ export class MajorController {
       }
     } catch (error) {
       next(error);
+    }
+  };
+
+  public getByInstitution = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { institutionId } = req.params;
+      const majors =
+        await this.getMajorsByInstitutionUseCase.execute(institutionId);
+      res.status(200).json(majors);
+    } catch (err) {
+      next(err);
     }
   };
 }
