@@ -1,4 +1,4 @@
-/*import request from 'supertest';
+import request from 'supertest';
 import { database } from '../../../infrastructure';
 import { app } from '../../../server';
 
@@ -7,31 +7,31 @@ beforeAll(async () => {
 });
 
 let accessTokenCookie: string;
-let financeId: string;
-let financeId2: string;
+let fincencesId: string;
+let fincencesId2: string;
 
-describe('Integration tests finance - CRUD', () => {
-  it('should create a finance account', async () => {
+describe('Integration tests fincences - CRUD', () => {
+  it('should create a fincences account', async () => {
     const response = await request(app).post('/api/v1/user/registry').send({
       name: 'Gustavo',
       last_name: 'Olarte',
       email: 'gustavo.olarte@example.com',
       password: 'password123',
       age: 30,
-      userType: 'finance',
+      userType: 'FINANCES',
     });
 
     expect(response.status).toBe(201);
-    expect(response.body.userType).toBe('finance');
-    financeId2 = response.body.id;
+    expect(response.body.userType).toBe('FINANCES');
+    fincencesId2 = response.body.id;
   });
 
-  it('should create a finance user by an admin', async () => {
-    const response = await request(app).post('/api/v1/user/auth/login').send({
+  it('should create a fincences user by an admin', async () => {
+    const response = await request(app).post('/api/v1/auth/login')
+    .send({
       email: 'tesis@gmail.com',
       password: 'password123',
     });
-
     accessTokenCookie = response.body.accessToken;
 
     const response2 = await request(app)
@@ -43,33 +43,33 @@ describe('Integration tests finance - CRUD', () => {
         email: 'marcela.valencia@gmail.com',
         password: 'password123',
         age: 29,
-        userType: 'finance',
+        userType: 'FINANCES',
       });
+      console.log("\nEste es el segundo body de la respuesta: \n")
+      console.log(response2.body);
 
     expect(response2.status).toBe(201);
-    expect(response2.body.userType).toBe('finance');
-    financeId = response2.body.id;
+    expect(response2.body.userType).toBe('FINANCES');
+    fincencesId = response2.body.id;
   });
 
-  it('should modify a finance user', async () => {
+  it('should modify a fincences user', async () => {
     const response = await request(app)
-      .patch(`/api/v1/user/${financeId}`)
+      .patch(`/api/v1/user/${fincencesId}`)
       .send({
         name: 'Mario',
-        last_name: 'Duarte',
-        email: 'mario.duarte@example.com',
+        email: 'mario.valencia@example.com',
       })
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
     expect(response.body.name).toBe('Mario');
-    expect(response.body.last_name).toBe('Duarte');
-    expect(response.body.email).toBe('mario.duarte@example.com');
+    expect(response.body.email).toBe('mario.valencia@example.com');
   });
 
-  it('should delete a finance user', async () => {
+  it('should delete a fincences user', async () => {
     const response = await request(app)
-      .delete(`/api/v1/user/${financeId}`)
+      .delete(`/api/v1/user/${fincencesId}`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
@@ -79,9 +79,8 @@ describe('Integration tests finance - CRUD', () => {
 
 afterAll(async () => {
   const response = await request(app)
-    .delete(`/api/v1/user/${financeId2}`)
+    .delete(`/api/v1/user/${fincencesId2}`)
     .set('Authorization', `Bearer ${accessTokenCookie}`);
   expect(response.status).toBe(200);
   await database.disconnect();
 });
-*/

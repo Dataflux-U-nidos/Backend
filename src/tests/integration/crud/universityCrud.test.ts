@@ -1,7 +1,6 @@
 import request from 'supertest';
 import { database } from '../../../infrastructure';
 import { app } from '../../../server';
-import { log } from 'console';
 
 beforeAll(async () => {
   await database.connect();
@@ -89,7 +88,11 @@ describe('Integration tests Universiry - CRUD', () => {
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.some((infoManager: any) => infoManager.id === infoManagerId)).toBe(true);
+    expect(
+      response.body.some(
+        (infoManager: any) => infoManager.id === infoManagerId,
+      ),
+    ).toBe(true);
   });
 
   it('should delete a info manager user', async () => {
@@ -124,9 +127,10 @@ describe('Integration tests Universiry - CRUD', () => {
       .get(`/api/v1/user/${universityId}/viewers`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
-    
     expect(response.status).toBe(200);
-    expect(response.body.some((viewer: any) => viewer.id === viewerId)).toBe(true);
+    expect(response.body.some((viewer: any) => viewer.id === viewerId)).toBe(
+      true,
+    );
   });
 
   it('should modify a viewer user', async () => {

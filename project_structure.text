@@ -43,6 +43,8 @@
         - getAllEducationalInstitution.useCase.ts
         - getEducationalInstitutionById.useCase.ts
         - updateEducationalInstitution.useCase.ts
+      - email
+        - sendRecoveryEmail.useCase.ts
       - index.ts
       - jobOpportunity
         - createJobOpportunity.useCase.ts
@@ -57,11 +59,18 @@
         - get-major-by-id.use-case.ts
         - update-major.use-case.ts
       - user
+        - add-infomanager-to-university.use-case.ts
+        - add-student-to-tutor.use-case.ts
+        - add-viewer-to-university.use-case.ts
         - create-user.use-case.ts
         - delete-user.use-case.ts
         - get-all-users.use-case.ts
+        - get-infomanagers-by-university.use-case.ts
+        - get-students-by-tutor.use-case.ts
         - get-user-by-email.use-case.ts
         - get-user-by-id.use-case.ts
+        - get-viewers-by-university.use-case.ts
+        - update-user-by-email.use-case.ts
         - update-user.use-case.ts
   - domain
     - entities
@@ -87,12 +96,18 @@
       - database.ts
       - index.ts
       - models
+        - admin.model.ts
         - comment.model.ts
         - educationalInstitution.model.ts
         - index.ts
+        - infomanager.model.ts
         - jobOpportunity.model.ts
         - major.model.ts
-        - user.model.ts
+        - student.model.ts
+        - tutor.model.ts
+        - university.model.ts
+        - user.base.model.ts
+        - viewer.model.ts
       - repositories
         - comment.repository.impl.ts
         - educationalInstitution.repository.impl.ts
@@ -108,6 +123,7 @@
       - auth.controller.ts
       - comment.controller.ts
       - educationalInstitution.controller.ts
+      - email.controller.ts
       - index.ts
       - jobOpportunity.controller.ts
       - major.controller.ts
@@ -122,6 +138,7 @@
       - auth.router.ts
       - comment.router.ts
       - educationalInstitution.router.ts
+      - email.router.ts
       - index.ts
       - jobOpportunity.router.ts
       - major.router.ts
@@ -136,9 +153,15 @@
       - jwt.utils.ts
       - time.utils.ts
       - typebox-validator.ts
+      - url-formatter.ts
       - validateEnv.ts
   - tests
     - integration
+      - crud
+        - infoManagerCrud.test.ts
+        - studentCrud.test.ts
+        - tutorCrud.test.ts
+        - universityCrud.test.ts
       - logIn
         - logInAdministrator.test.ts
         - loginStudent.test.ts
