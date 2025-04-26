@@ -73,4 +73,21 @@ export class MajorRepository implements IMajorRepository {
     const result = await MajorModel.findByIdAndDelete(id);
     return result !== null;
   }
+
+  public async findByInstitution(institutionId: string): Promise<Major[]> {
+    const results = await MajorModel.find({ institutionId });
+    return results.map((doc) => ({
+      id: doc._id.toString(),
+      name: doc.name,
+      institutionId: doc.institutionId.toString(),
+      difficulty: doc.difficulty,
+      price: doc.price,
+      description: doc.description,
+      pensumLink: doc.pensumLink,
+      jobId: doc.jobId.toString(),
+      focus: doc.focus,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    }));
+  }
 }

@@ -13,6 +13,7 @@ import {
   JobOpportunityRouter,
   authRouter,
   emailRouter,
+  campaignRouter,
 } from './presentation/routes';
 
 // Create express application
@@ -32,6 +33,7 @@ app.use(
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 app.use(`${config.api.conventionApi}/auth`, authRouter);
+app.use(`${config.api.conventionApi}/campaign`, campaignRouter);
 
 // Error handler
 app.use(errorHandlerMiddleware);
