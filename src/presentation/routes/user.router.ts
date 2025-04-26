@@ -121,6 +121,27 @@ router.get(
   userController.getViewersByUniversity,
 );
 
+// Get marketing by admin (usa el token, no recibe ID por URL)
+router.get(
+  '/marketing',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getMarketingByAdmin,
+);
+
+// Get support by admin (usa el token, no recibe ID por URL)
+router.get(
+  '/support',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getSupportByAdmin,
+);
+
+// Get finances by admin (usa el token, no recibe ID por URL)
+router.get(
+  '/finances',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getFinancesByAdmin,
+);
+
 // —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
 // Para que cada usuario actualice su propio perfil
 router.patch(
