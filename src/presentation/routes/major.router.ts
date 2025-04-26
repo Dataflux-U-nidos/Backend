@@ -68,6 +68,7 @@ router.patch(
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   majorController.update,
 );
+
 router.delete(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
