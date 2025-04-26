@@ -6,7 +6,14 @@ import {
   UpdateMajorUseCase,
   DeleteMajorUseCase,
   GetMajorsByInstitutionUseCase,
+  GetUserByIdUseCase,
+  CreateMajorDto,
 } from '../../application';
+import { UserType } from '../../domain/entities/user.entity';
+
+interface RequestWithUser extends Request {
+  user?: { id: string; userType: UserType };
+}
 
 export class MajorController {
   constructor(
@@ -16,6 +23,7 @@ export class MajorController {
     private readonly updateMajorUseCase: UpdateMajorUseCase,
     private readonly deleteMajorUseCase: DeleteMajorUseCase,
     private readonly getMajorsByInstitutionUseCase: GetMajorsByInstitutionUseCase,
+    private readonly getUserByIdUseCase: GetUserByIdUseCase,
   ) {}
 
   public getAll = async (
@@ -50,13 +58,30 @@ export class MajorController {
   };
 
   public create = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const newMajor = await this.createMajorUseCase.execute(req.body);
-      // La respuesta incluirá createdAt y updatedAt
+      // A partir del ID del usuario, se obtiene la institución
+      // y se asigna a la carrera que se va a crear
+      const userId = req.user?.id;
+      // 2) Recuperamos al usuario para obtener su institutionId
+      if (!userId) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+
+      console.log('userId', userId);
+
+      const user = await this.getUserByIdUseCase.execute(userId);
+
+      const dto: CreateMajorDto = {
+        ...req.body,
+        institutionId: user?.universityId, // aquí inyectamos la institución del user
+      };
+
+      const newMajor = await this.createMajorUseCase.execute(dto);
       res.status(201).json(newMajor);
     } catch (error) {
       next(error);
