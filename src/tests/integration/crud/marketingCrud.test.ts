@@ -27,8 +27,7 @@ describe('Integration tests fincences - CRUD', () => {
   });
 
   it('should create a fincences user by an admin', async () => {
-    const response = await request(app).post('/api/v1/auth/login')
-    .send({
+    const response = await request(app).post('/api/v1/auth/login').send({
       email: 'tesis@gmail.com',
       password: 'password123',
     });
@@ -45,8 +44,8 @@ describe('Integration tests fincences - CRUD', () => {
         age: 29,
         userType: 'MARKETING',
       });
-      console.log("\nEste es el segundo body de la respuesta: \n")
-      console.log(response2.body);
+    console.log('\nEste es el segundo body de la respuesta: \n');
+    console.log(response2.body);
 
     expect(response2.status).toBe(201);
     expect(response2.body.userType).toBe('MARKETING');

@@ -84,7 +84,7 @@ describe('Integration tests Universiry - CRUD', () => {
 
   it('should view a info manager users by id', async () => {
     const response = await request(app)
-      .get(`/api/v1/user/${universityId}/infomanagers`)
+      .get(`/api/v1/user/infomanagers`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
@@ -124,7 +124,7 @@ describe('Integration tests Universiry - CRUD', () => {
 
   it('should view all viewer users by university id', async () => {
     const response = await request(app)
-      .get(`/api/v1/user/${universityId}/viewers`)
+      .get(`/api/v1/user/viewers`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);

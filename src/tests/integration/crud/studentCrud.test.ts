@@ -87,7 +87,7 @@ describe('Integration tests Student - CRUD', () => {
 
   it('should modify student acount', async () => {
     const response = await request(app)
-      .patch(`/api/v1/user/${studentId}`)
+      .patch(`/api/v1/user/`)
       .set('Authorization', `Bearer ${accessTokenCookie}`)
       .send({
         name: 'Alejandro',

@@ -6,7 +6,6 @@ beforeAll(async () => {
   await database.connect();
 });
 
-
 describe('Integration tests Viewer - Login', () => {
   it('should login as viewer', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({

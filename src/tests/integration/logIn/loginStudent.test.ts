@@ -3,7 +3,7 @@ import { database } from '../../../infrastructure';
 import { app } from '../../../server';
 
 beforeAll(async () => {
-  await database.connect(); 
+  await database.connect();
 });
 
 describe('Integration tests Student - Login', () => {
@@ -12,7 +12,7 @@ describe('Integration tests Student - Login', () => {
       email: 'ana6.perez@example.com',
       password: 'Pass123!',
     });
-    expect(response.status).toBe(200); 
+    expect(response.status).toBe(200);
     expect(response.body.userType).toBe('STUDENT');
   });
 
@@ -21,9 +21,9 @@ describe('Integration tests Student - Login', () => {
       email: 'ana6.perez@example.com',
       password: 'Pass123!',
     });
-    expect(response.status).toBe(200); 
+    expect(response.status).toBe(200);
     expect(response.body.userType).toBe('STUDENT');
-    expect(response.body.accessToken).toBeDefined(); 
+    expect(response.body.accessToken).toBeDefined();
   });
 
   it('should deny login using nonexisting student credentials', async () => {
@@ -31,10 +31,10 @@ describe('Integration tests Student - Login', () => {
       email: 'mario.calderon@example.com',
       password: 'password123',
     });
-    expect(response.status).toBe(401); 
+    expect(response.status).toBe(401);
   });
 });
 
 afterAll(async () => {
-  await database.disconnect(); 
+  await database.disconnect();
 });
