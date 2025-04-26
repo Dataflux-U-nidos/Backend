@@ -109,14 +109,28 @@ export class UserRepository implements IUserRepository {
     return this.mapEntity(createdDoc);
   }
 
+  // user.repository.impl.ts (o donde tengas tu update)
   public async update(
     id: string,
     data: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<User | null> {
-    const doc = await UserBaseModel.findByIdAndUpdate(id, data, {
-      new: true,
-    }).exec();
-    return doc ? this.mapEntity(doc) : null;
+    // 1. Cargo el doc “base” solo para saber el tipo
+    const baseDoc = await UserBaseModel.findById(id).select('userType').exec();
+    if (!baseDoc) return null;
+
+    // 2. Elijo el Model correcto (VIEWER, TUTOR, etc.) según lo que ya está guardado
+    const Model = this.getUserModelByType(baseDoc.userType ?? ''); // Provide a default value or handle undefined
+
+    // 3. Cargo de nuevo (o reutiliza baseDoc con lean=false) el documento completo usando el discriminator
+    const doc = await (Model as typeof UserBaseModel).findById(id).exec();
+    if (!doc) return null;
+
+    // 4. Asigno los campos entrantes
+    Object.assign(doc, data);
+
+    // 5. Salvo la instancia: aquí Mongoose usa el esquema hijo y mete last_name, department, lo que toque
+    const updated = await doc.save();
+    return this.mapEntity(updated);
   }
 
   public async updateByEmail(
@@ -274,6 +288,25 @@ export class UserRepository implements IUserRepository {
       .exec();
     if (!uniDoc || !uniDoc.viewers) return [];
     return uniDoc.viewers.map((d) => this.mapDoc(d));
+  }
+
+  private getUserModelByType(userType: string) {
+    switch (userType) {
+      case 'VIEWER':
+        return ViewerModel;
+      case 'TUTOR':
+        return TutorModel;
+      case 'INFOMANAGER':
+        return InfoManagerModel;
+      case 'STUDENT':
+        return StudentModel;
+      case 'UNIVERSITY':
+        return UniversityModel;
+      case 'ADMIN':
+        return AdminModel;
+      default:
+        return UserBaseModel;
+    }
   }
 
   private mapDoc(
