@@ -34,6 +34,7 @@ describe('Integration tests Universiry - CRUD', () => {
       email: universityEmail,
       password: 'password123',
     });
+    
 
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('UNIVERSITY');
