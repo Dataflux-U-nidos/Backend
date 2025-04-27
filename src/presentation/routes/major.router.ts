@@ -1,23 +1,33 @@
 import { Router } from 'express';
 import { MajorController, validateRoleMiddleware } from '../../presentation';
-import { MajorRepository } from '../../infrastructure/database/repositories';
+import {
+  MajorRepository,
+  UserRepository,
+} from '../../infrastructure/database/repositories';
 import {
   CreateMajorUseCase,
   GetAllMajorsUseCase,
   GetMajorByIdUseCase,
   UpdateMajorUseCase,
   DeleteMajorUseCase,
+  GetMajorsByInstitutionUseCase,
+  GetUserByIdUseCase,
 } from '../../application';
 
 const router = Router();
 
 const majorRepository = new MajorRepository();
+const userRepository = new UserRepository(); // Assuming you have a UserRepository
 
 const createMajorUseCase = new CreateMajorUseCase(majorRepository);
 const getAllMajorsUseCase = new GetAllMajorsUseCase(majorRepository);
 const getMajorByIdUseCase = new GetMajorByIdUseCase(majorRepository);
 const updateMajorUseCase = new UpdateMajorUseCase(majorRepository);
 const deleteMajorUseCase = new DeleteMajorUseCase(majorRepository);
+const getMajorsByUniversityUseCase = new GetMajorsByInstitutionUseCase(
+  majorRepository,
+);
+const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
 
 const majorController = new MajorController(
   createMajorUseCase,
@@ -25,24 +35,43 @@ const majorController = new MajorController(
   getMajorByIdUseCase,
   updateMajorUseCase,
   deleteMajorUseCase,
+  getMajorsByUniversityUseCase,
+  getUserByIdUseCase,
 );
 
 // Defining routes with middleware validation and assigning controller methods
 router.get(
   '/',
-  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   majorController.getAll,
 );
 router.get(
   '/:id',
-  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   majorController.getById,
 );
-router.post('/', validateRoleMiddleware(['ADMIN']), majorController.create);
-router.patch('/:id', validateRoleMiddleware(['ADMIN']), majorController.update);
+
+router.get(
+  '/university/:institutionId',
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
+  majorController.getByInstitution,
+);
+
+router.post(
+  '/',
+  validateRoleMiddleware(['INFOMANAGER']),
+  majorController.create,
+);
+
+router.patch(
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
+  majorController.update,
+);
+
 router.delete(
   '/:id',
-  validateRoleMiddleware(['ADMIN']),
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   majorController.delete,
 );
 
