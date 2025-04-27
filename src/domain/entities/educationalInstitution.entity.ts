@@ -14,6 +14,8 @@ export interface EducationalInstitution {
   description: string;
   link: string;
   events: Event[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default EducationalInstitution;
