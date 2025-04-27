@@ -7,4 +7,5 @@ export interface IMajorRepository {
   create(data: Omit<Major, 'id'>): Promise<Major>;
   update(id: string, data: Partial<Omit<Major, 'id'>>): Promise<Major | null>;
   delete(id: string): Promise<boolean>;
+  findByInstitution(institutionId: string): Promise<Major[]>;
 }

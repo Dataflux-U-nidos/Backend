@@ -289,4 +289,58 @@ export class UserController {
       next(error);
     }
   };
+
+  public getMarketingByAdmin = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const adminId = req.user?.id;
+      if (!adminId) {
+        res.status(400).json({ message: 'Admin ID is missing' });
+        return;
+      }
+      const list = await this.getMarketingByAdminUseCase.execute(adminId);
+      res.status(200).json(list);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getSupportByAdmin = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const adminId = req.user?.id;
+      if (!adminId) {
+        res.status(400).json({ message: 'Admin ID is missing' });
+        return;
+      }
+      const list = await this.getSupportByAdminUseCase.execute(adminId);
+      res.status(200).json(list);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getFinancesByAdmin = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const adminId = req.user?.id;
+      if (!adminId) {
+        res.status(400).json({ message: 'Admin ID is missing' });
+        return;
+      }
+      const list = await this.getFinancesByAdminUseCase.execute(adminId);
+      res.status(200).json(list);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

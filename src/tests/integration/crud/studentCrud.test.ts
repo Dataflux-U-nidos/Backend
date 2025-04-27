@@ -7,6 +7,7 @@ beforeAll(async () => {
 });
 
 let accessTokenCookie: string;
+let accessTokenCookie2: string;
 let studentId: string;
 let studentId2: string;
 let studentEmail: string;
@@ -43,6 +44,7 @@ describe('Integration tests Student - CRUD', () => {
     });
 
     const accessTokenCookieTutor = response1.body.accessToken;
+    accessTokenCookie2 = accessTokenCookieTutor;
 
     // Asign tutor to student
     const response2 = await request(app)
@@ -87,8 +89,8 @@ describe('Integration tests Student - CRUD', () => {
 
   it('should modify student acount', async () => {
     const response = await request(app)
-      .patch(`/api/v1/user/`)
-      .set('Authorization', `Bearer ${accessTokenCookie}`)
+      .patch(`/api/v1/user/${studentId}`)
+      .set('Authorization', `Bearer ${accessTokenCookie2}`)
       .send({
         name: 'Alejandro',
         email: 'alejandro.hernandez@example.com',

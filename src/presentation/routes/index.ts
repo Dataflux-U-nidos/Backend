@@ -6,6 +6,7 @@ import JobOpportunityRouter from './jobOpportunity.router';
 import commentRouter from './comment.router';
 import authRouter from './auth.router';
 import emailRouter from './email.router';
+import campaignRouter from './campaign.router';
 
 export {
   educationalInstitutionRouter,
@@ -15,4 +16,5 @@ export {
   commentRouter,
   authRouter,
   emailRouter,
+  campaignRouter,
 };

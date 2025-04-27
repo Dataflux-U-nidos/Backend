@@ -9,8 +9,8 @@ beforeAll(async () => {
 describe('Integration tests Student - Login', () => {
   it('should login as student', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'ana6.perez@example.com',
-      password: 'Pass123!',
+      email: 'nicolas.mora@example.com',
+      password: 'password123',
     });
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('STUDENT');
@@ -18,8 +18,8 @@ describe('Integration tests Student - Login', () => {
 
   it('should login as student and return the jwt', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'ana6.perez@example.com',
-      password: 'Pass123!',
+      email: 'nicolas.mora@example.com',
+      password: 'password123',
     });
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('STUDENT');

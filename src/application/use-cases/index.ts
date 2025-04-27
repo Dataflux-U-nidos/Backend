@@ -12,6 +12,7 @@ export * from '../use-cases/major/get-all-majors.use-case';
 export * from '../use-cases/major/get-major-by-id.use-case';
 export * from '../use-cases/major/update-major.use-case';
 export * from '../use-cases/major/delete-major.use-case';
+export * from './major/get-majors-by-institution.use-case';
 //Use cases job opportunity
 export * from './jobOpportunity/createJobOpportunity.useCase';
 export * from './jobOpportunity/deleteJobOpportunity.useCase';
@@ -51,3 +52,11 @@ export * from './auth/refreshToken.useCase';
 
 // Use cases email
 export * from './email/sendRecoveryEmail.useCase';
+
+// Use cases campaign
+export * from './campaign/create-campaign.use-case';
+export * from './campaign/delete-campaign.use-case';
+export * from './campaign/get-all-campaigns.use-case';
+export * from './campaign/get-campaigns-by-id.use-case';
+export * from './campaign/get-campaigns-by-user.use-case';
+export * from './campaign/update-campaign.use-case';
