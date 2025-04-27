@@ -10,7 +10,7 @@ beforeAll(async () => {
 describe('Integration tests Admin - Login', () => {
   it('should login as admin', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'jose.rodriguez@example.com',
+      email: 'tesis@gmail.com',
       password: 'password123',
     });
     expect(response.status).toBe(200);
@@ -19,19 +19,12 @@ describe('Integration tests Admin - Login', () => {
 
   it('should login as admin and return the jwt', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'jose.rodriguez@example.com',
+      email: 'tesis@gmail.com',
       password: 'password123',
     });
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('ADMIN');
-
-    //Checks for de access and refresh tokens in the response headers
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken'),
-        expect.stringContaining('refreshToken'),
-      ]),
-    );
+    expect(response.body.accessToken).toBeDefined();
   });
 
   it('should deny login using nonexisting admin credentials', async () => {

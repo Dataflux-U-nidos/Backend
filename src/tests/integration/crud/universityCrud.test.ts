@@ -34,22 +34,13 @@ describe('Integration tests Universiry - CRUD', () => {
       email: universityEmail,
       password: 'password123',
     });
+    
 
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('UNIVERSITY');
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken'),
-        expect.stringContaining('refreshToken'),
-      ]),
-    );
-
-    const rawCookies = response.headers['set-cookie'];
-    const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
-    accessTokenCookie = cookies
-      .find((cookie) => cookie.startsWith('accessToken='))
-      ?.split('=')[1]
-      ?.split(';')[0];
+    expect(response.body.accessToken).toBeDefined();
+    expect(response.body.refreshToken).toBeDefined();
+    accessTokenCookie = response.body.accessToken;
   });
 
   it('should create a info manager user', async () => {
@@ -62,6 +53,7 @@ describe('Integration tests Universiry - CRUD', () => {
         email: 'luis.lee@example.com',
         password: 'password123',
         userType: 'INFOMANAGER',
+        universityId: universityId,
       });
 
     expect(response.status).toBe(201);
@@ -91,12 +83,17 @@ describe('Integration tests Universiry - CRUD', () => {
     expect(response.body.email).toBe('micheal.lee@example.com');
   });
 
-  it('should view a info manager users', async () => {
+  it('should view a info manager users by id', async () => {
     const response = await request(app)
-      .get(`/`)
+      .get(`/api/v1/user/infomanagers`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
+    expect(
+      response.body.some(
+        (infoManager: any) => infoManager.id === infoManagerId,
+      ),
+    ).toBe(true);
   });
 
   it('should delete a info manager user', async () => {
@@ -126,12 +123,15 @@ describe('Integration tests Universiry - CRUD', () => {
     viewerId = response.body.id;
   });
 
-  it('should view all viewer users', async () => {
+  it('should view all viewer users by university id', async () => {
     const response = await request(app)
-      .get(`/`)
+      .get(`/api/v1/user/viewers`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
+    expect(response.body.some((viewer: any) => viewer.id === viewerId)).toBe(
+      true,
+    );
   });
 
   it('should modify a viewer user', async () => {
