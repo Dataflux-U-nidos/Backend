@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Major } from '../../domain/';
 import {
   CreateMajorUseCase,
   GetAllMajorsUseCase,
@@ -7,7 +8,6 @@ import {
   DeleteMajorUseCase,
   GetMajorsByInstitutionUseCase,
   GetUserByIdUseCase,
-  CreateMajorDto,
 } from '../../application';
 import { UserType } from '../../domain/entities/user.entity';
 
@@ -76,7 +76,7 @@ export class MajorController {
 
       const user = await this.getUserByIdUseCase.execute(userId);
 
-      const dto: CreateMajorDto = {
+      const dto: Major = {
         ...req.body,
         institutionId: user?.universityId, // aquí inyectamos la institución del user
       };
