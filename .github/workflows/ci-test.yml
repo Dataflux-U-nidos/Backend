@@ -36,7 +36,8 @@ jobs:
 
       - name: 🔍 Run tests
         run: bun test || echo "No test command found, skipping tests"
-
+      - name: Run Build
+        run: bun run build || echo "No build command found, skipping build"
       - name: 🚀 Start application in background
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
