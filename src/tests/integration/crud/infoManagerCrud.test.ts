@@ -135,3 +135,7 @@ describe('Integration tests InfoManager - CRUD', () => {
     expect(response.status).toBe(200);
   });
 });
+
+afterAll(async () => {
+  await database.disconnect();
+});

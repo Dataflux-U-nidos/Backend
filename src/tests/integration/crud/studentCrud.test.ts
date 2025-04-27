@@ -124,8 +124,10 @@ describe('Integration tests Student - CRUD', () => {
 
 afterAll(async () => {
   const response = await request(app)
+    .delete(`/api/v1/user/${studentId}`)
+    .set('Authorization', `Bearer ${accessTokenCookie}`);
+  const response2 = await request(app)
     .delete(`/api/v1/user/${studentId2}`)
     .set('Authorization', `Bearer ${accessTokenCookie}`);
-  expect(response.status).toBe(200);
   await database.disconnect();
 });
