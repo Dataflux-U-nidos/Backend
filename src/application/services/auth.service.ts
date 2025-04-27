@@ -22,7 +22,7 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new Error('Credenciales inválidas');
     }
-    const payload = { id: user.id, type: user.type };
+    const payload = { id: user.id, type: user.userType };
     const accessToken = jwt.sign(payload, config.jwt.secret, {
       expiresIn: config.jwt.tokenExpiresIn,
     });
@@ -32,7 +32,8 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
-      userType: user.type,
+      userType: user.userType,
+      userId: user.id,
     };
   }
 
@@ -57,16 +58,19 @@ export class AuthService {
         accessToken: newAccessToken,
         refreshToken,
         userType: decoded.type,
+        userId: decoded.id,
       };
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
 
-  public async getSession(token: string): Promise<{ userType: string }> {
+  public async getSession(
+    token: string,
+  ): Promise<{ userType: string; userId: string }> {
     try {
       const decoded: any = jwt.verify(token, config.jwt.secret);
-      return { userType: decoded.type };
+      return { userType: decoded.type, userId: decoded.id };
     } catch {
       throw new Error('Token inválido o expirado');
     }

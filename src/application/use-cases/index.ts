@@ -12,6 +12,7 @@ export * from '../use-cases/major/get-all-majors.use-case';
 export * from '../use-cases/major/get-major-by-id.use-case';
 export * from '../use-cases/major/update-major.use-case';
 export * from '../use-cases/major/delete-major.use-case';
+export * from './major/get-majors-by-institution.use-case';
 //Use cases job opportunity
 export * from './jobOpportunity/createJobOpportunity.useCase';
 export * from './jobOpportunity/deleteJobOpportunity.useCase';
@@ -25,7 +26,20 @@ export * from '../use-cases/user/get-all-users.use-case';
 export * from '../use-cases/user/get-user-by-id.use-case';
 export * from '../use-cases/user/get-user-by-email.use-case';
 export * from '../use-cases/user/update-user.use-case';
+export * from '../use-cases/user/update-user-by-email.use-case';
 export * from '../use-cases/comment/create-comment.use-case';
+export * from '../use-cases/user/get-students-by-tutor.use-case';
+export * from '../use-cases/user/add-student-to-tutor.use-case';
+export * from '../use-cases/user/add-infomanager-to-university.use-case';
+export * from '../use-cases/user/add-viewer-to-university.use-case';
+export * from '../use-cases/user/get-viewers-by-university.use-case';
+export * from '../use-cases/user/get-infomanagers-by-university.use-case';
+export * from '../use-cases/user/add-finances-to-admin.use-case';
+export * from './user/get-finances-by-admin.use-case';
+export * from '../use-cases/user/add-marketing-to-admin.use-case';
+export * from '../use-cases/user/get-marketing-by-admin.use-case';
+export * from '../use-cases/user/add-support-to-admin.use-case';
+export * from '../use-cases/user/get-support-by-admin.use-case';
 // Use cases comment
 export * from './comment/get-all-comments.use-case';
 export * from '../use-cases/comment/get-comment-by-id.use-case';
@@ -35,3 +49,14 @@ export * from '../use-cases/comment/delete-comment.use-case';
 export * from './auth/login.use-case';
 export * from './auth/getSession.useCase';
 export * from './auth/refreshToken.useCase';
+
+// Use cases email
+export * from './email/sendRecoveryEmail.useCase';
+
+// Use cases campaign
+export * from './campaign/create-campaign.use-case';
+export * from './campaign/delete-campaign.use-case';
+export * from './campaign/get-all-campaigns.use-case';
+export * from './campaign/get-campaigns-by-id.use-case';
+export * from './campaign/get-campaigns-by-user.use-case';
+export * from './campaign/update-campaign.use-case';

@@ -28,5 +28,7 @@ RUN bun install
 EXPOSE 3000
 
 # Comando por defecto para ejecutar el servidor
+
 CMD ["bun", "run", "start"]
+
 

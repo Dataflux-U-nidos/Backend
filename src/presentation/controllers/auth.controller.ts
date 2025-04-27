@@ -7,51 +7,28 @@ import {
 import { LoginDto } from '../../application/dtos/auth.dto';
 import { AuthService } from '../../application/services/auth.service';
 import { UserRepository } from '../../infrastructure';
-import config from '../../infrastructure/config';
 
 export class AuthController {
-  private authService: AuthService;
-  private loginUseCase: LoginUseCase;
-  private refreshTokenUseCase: RefreshTokenUseCase;
-  private getSessionUseCase: GetSessionUseCase;
+  private readonly loginUseCase: LoginUseCase;
+  private readonly refreshTokenUseCase: RefreshTokenUseCase;
+  private readonly getSessionUseCase: GetSessionUseCase;
 
   constructor() {
-    this.authService = new AuthService(new UserRepository());
-    this.loginUseCase = new LoginUseCase(this.authService);
-    this.refreshTokenUseCase = new RefreshTokenUseCase(this.authService);
-    this.getSessionUseCase = new GetSessionUseCase(this.authService);
-  }
-
-  private setAuthCookies(
-    res: Response,
-    accessToken: string,
-    refreshToken: string,
-  ): void {
-    const accessTokenMaxAge = config.jwt.tokenExpiresIn * 1000;
-    const refreshTokenMaxAge = config.jwt.refreshExpiresTokenIn * 1000;
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: accessTokenMaxAge,
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: refreshTokenMaxAge,
-    });
+    const authService = new AuthService(new UserRepository());
+    this.loginUseCase = new LoginUseCase(authService);
+    this.refreshTokenUseCase = new RefreshTokenUseCase(authService);
+    this.getSessionUseCase = new GetSessionUseCase(authService);
   }
 
   public async login(req: Request, res: Response): Promise<void> {
     const loginDto: LoginDto = req.body;
     try {
       const tokens = await this.loginUseCase.execute(loginDto);
-      this.setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
+      // Devolvemos ambos tokens en el body
       res.status(200).json({
         message: 'Inicio de sesión exitoso',
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
         userType: tokens.userType,
       });
     } catch (error: unknown) {
@@ -63,20 +40,22 @@ export class AuthController {
     }
   }
 
-  //para produccion
   public async refreshToken(req: Request, res: Response): Promise<void> {
     try {
-      const refreshToken = req.cookies.refreshToken;
-      if (!refreshToken) {
+      const authHeader = req.headers.authorization;
+      if (!authHeader?.startsWith('Bearer ')) {
         res
           .status(401)
-          .json({ message: 'No se encontró el token de actualización' });
+          .json({ message: 'No se proporcionó un token Bearer válido' });
         return;
       }
+      const refreshToken = authHeader.slice(7).trim();
       const tokens = await this.refreshTokenUseCase.execute({ refreshToken });
-      this.setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
+      // Devolvemos los nuevos tokens
       res.status(200).json({
         message: 'Tokens renovados correctamente',
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
         userType: tokens.userType,
       });
     } catch (error: unknown) {
@@ -90,16 +69,20 @@ export class AuthController {
 
   public async getSession(req: Request, res: Response): Promise<void> {
     try {
-      const token = req.cookies.accessToken;
-      if (!token) {
-        res.status(401).json({ message: 'No se encontró token de acceso' });
+      const authHeader = req.headers.authorization;
+      if (!authHeader?.startsWith('Bearer ')) {
+        res
+          .status(401)
+          .json({ message: 'No se encontró token de acceso en Authorization' });
         return;
       }
-      const session = await this.getSessionUseCase.execute(token);
+      const accessToken = authHeader.slice(7).trim();
+      const session = await this.getSessionUseCase.execute(accessToken);
       res.status(200).json({ userType: session.userType });
     } catch (error: unknown) {
       if (error instanceof Error) {
         res.status(401).json({ message: error.message });
+        console.log('Error en getSession:', error.message);
       } else {
         res.status(500).json({ message: 'Error desconocido' });
       }
@@ -107,8 +90,7 @@ export class AuthController {
   }
 
   public async logout(req: Request, res: Response): Promise<void> {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    // Como no hay cookies, el cliente debe borrar sus tokens localmente
     res.status(200).json({ message: 'Sesión cerrada correctamente' });
   }
 }

@@ -8,8 +8,6 @@ export interface Major {
   pensumLink: string;
   jobId: string;
   focus: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export default Major;

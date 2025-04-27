@@ -1,25 +1,98 @@
-// src/domain/entities/user.entity.ts
-export type UserType = 'ADMIN' | 'STUDENT' | 'VIEWER';
+export type UserType =
+  | 'ADMIN'
+  | 'STUDENT'
+  | 'VIEWER'
+  | 'TUTOR'
+  | 'UNIVERSITY'
+  | 'INFOMANAGER'
+  | 'MARKETING'
+  | 'SUPPORT'
+  | 'FINANCES';
 
 export interface BaseUser {
   id: string;
   name: string;
-  last_name: string;
   email: string;
   password: string;
-  age: number;
-  type: UserType;
+  userType: UserType;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Para el STUDENT, se agregan atributos específicos.
+export interface AdminUser extends BaseUser {
+  userType: 'ADMIN';
+  last_name: string;
+  marketing: string[];
+  support: string[];
+  finances: string[];
+}
+
 export interface StudentUser extends BaseUser {
-  type: 'STUDENT';
+  userType: 'STUDENT';
+  last_name: string;
+  age: number;
   locality: string;
   school: string;
   preferences: Record<string, unknown>;
 }
 
-// Si los tipos "ADMIN" y "VIEWER" tienen la misma estructura, se usa BaseUser
-export type User = BaseUser | StudentUser;
+export interface TutorUser extends BaseUser {
+  userType: 'TUTOR';
+  students: string[];
+}
+
+export interface UniversityUser extends BaseUser {
+  userType: 'UNIVERSITY';
+  infomanagers: string[];
+  viewers: string[];
+}
+
+export interface ViewerUser extends BaseUser {
+  userType: 'VIEWER';
+  last_name: string;
+}
+
+export interface TutorUser extends BaseUser {
+  userType: 'TUTOR';
+  last_name: string;
+  students: string[];
+}
+
+export interface UniversityUser extends BaseUser {
+  userType: 'UNIVERSITY';
+  address: string;
+  infomanagers: string[];
+  viewers: string[];
+}
+
+export interface InfoManagerUser extends BaseUser {
+  userType: 'INFOMANAGER';
+  last_name: string;
+  universityId: string;
+}
+
+export interface MarketingUser extends BaseUser {
+  userType: 'MARKETING';
+  last_name: string;
+}
+
+export interface SupportUser extends BaseUser {
+  userType: 'SUPPORT';
+  last_name: string;
+}
+
+export interface FinancesUser extends BaseUser {
+  userType: 'FINANCES';
+  last_name: string;
+}
+
+export type User =
+  | AdminUser
+  | StudentUser
+  | ViewerUser
+  | TutorUser
+  | UniversityUser
+  | InfoManagerUser
+  | MarketingUser
+  | SupportUser
+  | FinancesUser;

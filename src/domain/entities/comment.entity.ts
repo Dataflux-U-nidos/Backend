@@ -3,8 +3,6 @@ export interface Comment {
   userId: string; // se asocia con institution
   text: string;
   date: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export default Comment;

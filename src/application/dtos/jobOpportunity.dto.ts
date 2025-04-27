@@ -28,5 +28,6 @@ export const JobOpportunityResponseSchema = Type.Intersect([
     updatedAt: Type.String({ format: 'date-time' }),
   }),
 ]);
-export type JobOpportunityResponseDto = Static<typeof JobOpportunityResponseSchema>;
-
+export type JobOpportunityResponseDto = Static<
+  typeof JobOpportunityResponseSchema
+>;
