@@ -7,6 +7,7 @@ import {
   GetCampaignsByUserUseCase,
   UpdateCampaignUseCase,
   DeleteCampaignUseCase,
+  GetTotalInvestmentUseCase,
 } from '../../application';
 import {
   CreateCampaignDto,
@@ -26,6 +27,7 @@ export class CampaignController {
     private readonly updateUC: UpdateCampaignUseCase,
     private readonly deleteUC: DeleteCampaignUseCase,
     private readonly getByUserUC: GetCampaignsByUserUseCase,
+    private readonly getTotalInvestmentUC: GetTotalInvestmentUseCase,
   ) {}
 
   public getAll = async (_: Request, res: Response, next: NextFunction) => {
@@ -119,6 +121,19 @@ export class CampaignController {
       }
       // Tampoco aquí
       res.status(200).json({ message: 'Deleted' });
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public getTotalInvestment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const totals = await this.getTotalInvestmentUC.execute();
+      res.status(200).json(totals);
     } catch (e) {
       next(e);
     }

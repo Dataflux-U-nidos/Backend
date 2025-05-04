@@ -60,3 +60,4 @@ export * from './campaign/get-all-campaigns.use-case';
 export * from './campaign/get-campaigns-by-id.use-case';
 export * from './campaign/get-campaigns-by-user.use-case';
 export * from './campaign/update-campaign.use-case';
+export * from './campaign/get-total-investment.use-case';
