@@ -166,7 +166,16 @@ router.patch('/by-email/:email', userController.updateByEmail);
 // Get user by ID
 router.get(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER', 'TUTOR', 'UNIVERSITY']),
+  validateRoleMiddleware([
+    'ADMIN',
+    'STUDENT',
+    'VIEWER',
+    'TUTOR',
+    'UNIVERSITY',
+    'MARKETING',
+    'SUPPORT',
+    'FINANCES',
+  ]),
   userController.getById,
 );
 
