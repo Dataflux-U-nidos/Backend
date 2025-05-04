@@ -14,6 +14,7 @@ export const MajorBaseSchema = Type.Object({
   pensumLink: Type.String({ format: 'uri' }),
   jobId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   focus: Type.String(),
+  createdBy: Type.Optional(Type.String({ pattern: '^[0-9a-fA-F]{24}$' })),
 });
 export type MajorBaseDto = Static<typeof MajorBaseSchema>;
 
@@ -32,6 +33,7 @@ export const MajorResponseSchema = Type.Intersect([
     id: Type.String(),
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' }),
+    createdBy: Type.String(),
   }),
 ]);
 export type MajorResponseDto = Static<typeof MajorResponseSchema>;

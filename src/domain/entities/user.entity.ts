@@ -45,6 +45,7 @@ export interface UniversityUser extends BaseUser {
   userType: 'UNIVERSITY';
   infomanagers: string[];
   viewers: string[];
+  subscriptionPlanId: string;
 }
 
 export interface ViewerUser extends BaseUser {

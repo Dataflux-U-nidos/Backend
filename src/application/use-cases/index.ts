@@ -61,3 +61,12 @@ export * from './campaign/get-campaigns-by-id.use-case';
 export * from './campaign/get-campaigns-by-user.use-case';
 export * from './campaign/update-campaign.use-case';
 export * from './campaign/get-total-investment.use-case';
+
+// Use cases subscription plan
+export * from './suscriptionPlan/create-subscription-plan.use-case';
+export * from './suscriptionPlan/delete-subscription-plan.use-case';
+export * from './suscriptionPlan/get-all-subscription-plans.use-case';
+export * from './suscriptionPlan/get-subscription-plan-by-id.use-case';
+export * from './suscriptionPlan/update-subscription-plan.use-case';
+export * from './suscriptionPlan/get-revenue-by-plan.use-case';
+export * from './suscriptionPlan/get-total-revenue.use-case';
