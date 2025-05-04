@@ -180,8 +180,8 @@ router.patch(
 // Delete user by ID
 
 router.delete(
-  '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
+  '/',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
   userController.delete,
 );
 
