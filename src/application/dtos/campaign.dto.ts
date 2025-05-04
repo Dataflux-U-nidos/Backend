@@ -34,3 +34,12 @@ export const CampaignResponseSchema = Type.Object({
   updatedAt: Type.String({ format: 'date-time' }),
 });
 export type CampaignResponseDto = Static<typeof CampaignResponseSchema>;
+
+export const TotalInvestmentResponseSchema = Type.Object({
+  scholarTotal: Type.Number(),
+  universityTotal: Type.Number(),
+  total: Type.Number(),
+});
+export type TotalInvestmentResponseDto = Static<
+  typeof TotalInvestmentResponseSchema
+>;

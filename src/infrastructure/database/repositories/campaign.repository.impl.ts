@@ -5,6 +5,7 @@ import {
   CreateCampaignDto,
   UpdateCampaignDto,
   CampaignResponseDto,
+  TotalInvestmentResponseDto,
 } from '../../../application/dtos/campaign.dto';
 
 export class CampaignRepository implements ICampaignRepository {
@@ -98,5 +99,18 @@ export class CampaignRepository implements ICampaignRepository {
   public async delete(id: string): Promise<boolean> {
     const result = await CampaignModel.findByIdAndDelete(id);
     return result !== null;
+  }
+
+  public async getTotalInvestment(): Promise<TotalInvestmentResponseDto> {
+    const agg = await CampaignModel.aggregate<{ _id: string; total: number }>([
+      { $group: { _id: '$type', total: { $sum: '$cost' } } },
+    ]);
+    const scholarTotal = agg.find((g) => g._id === 'scholar')?.total ?? 0;
+    const universityTotal = agg.find((g) => g._id === 'university')?.total ?? 0;
+    return {
+      scholarTotal,
+      universityTotal,
+      total: scholarTotal + universityTotal,
+    };
   }
 }

@@ -7,7 +7,8 @@ import {
   GetCampaignByIdUseCase,
   UpdateCampaignUseCase,
   DeleteCampaignUseCase,
-  GetCampaignsByUserUseCase, // ← importar
+  GetCampaignsByUserUseCase,
+  GetTotalInvestmentUseCase,
 } from '../../application';
 import { validateRoleMiddleware } from '../middleware';
 
@@ -19,7 +20,8 @@ const getAllUC = new GetAllCampaignsUseCase(repo);
 const getByIdUC = new GetCampaignByIdUseCase(repo);
 const updateUC = new UpdateCampaignUseCase(repo);
 const deleteUC = new DeleteCampaignUseCase(repo);
-const getByUserUC = new GetCampaignsByUserUseCase(repo); // ← instanciar
+const getByUserUC = new GetCampaignsByUserUseCase(repo);
+const getTotalInvestmentUC = new GetTotalInvestmentUseCase(repo);
 
 const ctrl = new CampaignController(
   createUC,
@@ -27,7 +29,8 @@ const ctrl = new CampaignController(
   getByIdUC,
   updateUC,
   deleteUC,
-  getByUserUC, // ← pasar al controlador
+  getByUserUC,
+  getTotalInvestmentUC,
 );
 
 router.get(
@@ -36,15 +39,20 @@ router.get(
   ctrl.getAll,
 );
 router.get(
-  '/:id',
-  validateRoleMiddleware(['STUDENT', 'ADMIN', 'MARKETING']),
-  ctrl.getById,
+  '/total',
+  validateRoleMiddleware(['FINANCES']),
+  ctrl.getTotalInvestment,
 );
 router.get(
   '/user/:userId',
   validateRoleMiddleware(['MARKETING']),
   ctrl.getByUser,
-); // ← nueva ruta
+);
+router.get(
+  '/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'MARKETING']),
+  ctrl.getById,
+);
 router.post('/', validateRoleMiddleware(['ADMIN', 'MARKETING']), ctrl.create);
 router.patch(
   '/:id',
