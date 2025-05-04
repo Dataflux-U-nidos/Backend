@@ -14,6 +14,7 @@ import {
   authRouter,
   emailRouter,
   campaignRouter,
+  studentTestRouter,
 } from './presentation/routes';
 
 // Create express application
@@ -34,6 +35,7 @@ app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 app.use(`${config.api.conventionApi}/auth`, authRouter);
 app.use(`${config.api.conventionApi}/campaign`, campaignRouter);
+app.use(`${config.api.conventionApi}/student-test`, studentTestRouter);
 
 // Error handler
 app.use(errorHandlerMiddleware);

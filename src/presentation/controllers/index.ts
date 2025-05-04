@@ -7,4 +7,4 @@ export * from './comment.controller';
 export * from './auth.controller';
 export * from './email.controller';
 export * from './campaign.controller';
-export * from './test.controller';
+export * from './studentTest.controller';

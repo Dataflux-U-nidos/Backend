@@ -22,6 +22,12 @@ const config = {
   },
   lambda: {
     lambdaUrl: formatUrl(lambdaUrl, process.env.ENV ?? 'dev'),
+    psychometricUrl:
+      'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/psychometric?version=1',
+    vocationalUrl:
+      'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/vocational?version=1',
+    vocationalPartialUrl:
+      'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/vocational-partial?version=1',
   },
   server: {
     port: parseInt(process.env.PORT ?? ('3000' as string), 10),

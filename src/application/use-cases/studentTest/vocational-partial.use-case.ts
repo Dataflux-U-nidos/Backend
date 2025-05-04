@@ -1,1 +1,11 @@
-export class VocationalPartialUseCase {}
+// src/application/PsychometricUseCase.ts
+import axios from 'axios';
+import config from '../../../infrastructure/config';
+
+export class VocationalPartialUseCase {
+  /** Llama a la Lambda de psicométrico sin parámetros */
+  public async execute(): Promise<any> {
+    const response = await axios.get(config.lambda.vocationalPartialUrl);
+    return response.data;
+  }
+}
