@@ -61,3 +61,8 @@ export * from './campaign/get-campaigns-by-id.use-case';
 export * from './campaign/get-campaigns-by-user.use-case';
 export * from './campaign/update-campaign.use-case';
 export * from './campaign/get-total-investment.use-case';
+
+// Use cases test
+export * from './studentTest/psychometric.use-case';
+export * from './studentTest/vocational.use-case';
+export * from './studentTest/vocational-partial.use-case';
