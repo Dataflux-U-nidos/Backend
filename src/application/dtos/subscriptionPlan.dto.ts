@@ -37,3 +37,24 @@ export const SubscriptionPlanResponseSchema = Type.Object({
 export type SubscriptionPlanResponseDto = Static<
   typeof SubscriptionPlanResponseSchema
 >;
+
+export const RevenueByPlanResponseSchema = Type.Object({
+  planType: Type.String(),
+  costPerUnit: Type.Number(),
+  count: Type.Number(),
+  revenue: Type.Number(),
+  universities: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      name: Type.String(),
+    }),
+  ),
+});
+export type RevenueByPlanResponseDto = Static<
+  typeof RevenueByPlanResponseSchema
+>;
+
+export const TotalRevenueResponseSchema = Type.Object({
+  totalRevenue: Type.Number(),
+});
+export type TotalRevenueResponseDto = Static<typeof TotalRevenueResponseSchema>;

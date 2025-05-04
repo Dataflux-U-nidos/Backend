@@ -5,6 +5,8 @@ import {
   GetSubscriptionPlanByIdUseCase,
   UpdateSubscriptionPlanUseCase,
   DeleteSubscriptionPlanUseCase,
+  GetRevenueByPlanTypeUseCase,
+  GetTotalRevenueByPeriodUseCase,
 } from '../../application';
 import {
   CreateSubscriptionPlanDto,
@@ -18,6 +20,8 @@ export class SubscriptionPlanController {
     private readonly getByIdUC: GetSubscriptionPlanByIdUseCase,
     private readonly updateUC: UpdateSubscriptionPlanUseCase,
     private readonly deleteUC: DeleteSubscriptionPlanUseCase,
+    private readonly revByPlanUC: GetRevenueByPlanTypeUseCase,
+    private readonly totRevUC: GetTotalRevenueByPeriodUseCase,
   ) {}
 
   public getAll = async (_: Request, res: Response, next: NextFunction) => {
@@ -74,6 +78,37 @@ export class SubscriptionPlanController {
         return;
       }
       res.status(200).json({ message: 'Deleted' });
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public getRevenueByPlanType = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { type } = req.params;
+      const data = await this.revByPlanUC.execute(type);
+      res.status(200).json(data);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public getTotalRevenueByPeriod = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { start, end } = req.query;
+      const data = await this.totRevUC.execute(
+        new Date(start as string),
+        new Date(end as string),
+      );
+      res.status(200).json(data);
     } catch (e) {
       next(e);
     }

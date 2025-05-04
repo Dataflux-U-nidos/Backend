@@ -11,6 +11,8 @@ import {
   GetSubscriptionPlanByIdUseCase,
   UpdateSubscriptionPlanUseCase,
   DeleteSubscriptionPlanUseCase,
+  GetRevenueByPlanTypeUseCase,
+  GetTotalRevenueByPeriodUseCase,
 } from '../../application';
 
 const router = Router();
@@ -22,6 +24,8 @@ const getAllPlansUC = new GetAllSubscriptionPlansUseCase(repo);
 const getPlanByIdUC = new GetSubscriptionPlanByIdUseCase(repo);
 const updatePlanUC = new UpdateSubscriptionPlanUseCase(repo);
 const deletePlanUC = new DeleteSubscriptionPlanUseCase(repo);
+const getRevenueByPlanTypeUC = new GetRevenueByPlanTypeUseCase(repo);
+const getTotalRevenueByPeriodUC = new GetTotalRevenueByPeriodUseCase(repo);
 
 const planController = new SubscriptionPlanController(
   createPlanUC,
@@ -29,6 +33,8 @@ const planController = new SubscriptionPlanController(
   getPlanByIdUC,
   updatePlanUC,
   deletePlanUC,
+  getRevenueByPlanTypeUC,
+  getTotalRevenueByPeriodUC,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
@@ -51,8 +57,20 @@ router.get(
   planController.getAll,
 );
 
+router.get(
+  '/revenue',
+  validateRoleMiddleware(['FINANCES']),
+  planController.getTotalRevenueByPeriod,
+);
+
 // —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
 // Get plan by ID
+router.get(
+  '/revenue/:type',
+  validateRoleMiddleware(['FINANCES']),
+  planController.getRevenueByPlanType,
+);
+
 router.get(
   '/:id',
   validateRoleMiddleware([

@@ -7,7 +7,10 @@ import {
   CreateSubscriptionPlanDto,
   UpdateSubscriptionPlanDto,
   SubscriptionPlanResponseDto,
+  TotalRevenueResponseDto,
+  RevenueByPlanResponseDto,
 } from '../../../application/dtos/subscriptionPlan.dto';
+import { UniversityModel } from '../models';
 
 export class SubscriptionPlanRepository implements ISubscriptionPlanRepository {
   public async findAll(): Promise<SubscriptionPlanResponseDto[]> {
@@ -42,6 +45,60 @@ export class SubscriptionPlanRepository implements ISubscriptionPlanRepository {
   public async delete(id: string): Promise<boolean> {
     const d = await SubscriptionPlanModel.findByIdAndDelete(id).exec();
     return d !== null;
+  }
+
+  public async getRevenueByPlanType(
+    planType: string,
+  ): Promise<RevenueByPlanResponseDto> {
+    // Usamos el virtual “universities”
+    const plan = await SubscriptionPlanModel.findOne({ type: planType })
+      .populate<{
+        universities: { _id: string; name: string }[];
+      }>('universities', 'name')
+      .exec();
+    if (!plan) throw new Error('Plan not found');
+
+    const unis = plan.universities || [];
+    return {
+      planType,
+      costPerUnit: plan.cost,
+      count: unis.length,
+      revenue: plan.cost * unis.length,
+      universities: unis.map((u) => ({
+        id: u._id.toString(),
+        name: u.name,
+      })),
+    };
+  }
+
+  public async getTotalRevenueByPeriod(
+    start: Date,
+    end: Date,
+  ): Promise<TotalRevenueResponseDto> {
+    const agg = await UniversityModel.aggregate<{ total: number }>([
+      {
+        $match: {
+          subscriptionPlanId: { $exists: true },
+          updatedAt: { $gte: start, $lte: end },
+        },
+      },
+      {
+        $lookup: {
+          from: 'subscriptionplans',
+          localField: 'subscriptionPlanId',
+          foreignField: '_id',
+          as: 'plan',
+        },
+      },
+      { $unwind: '$plan' },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$plan.cost' },
+        },
+      },
+    ]);
+    return { totalRevenue: agg[0]?.total ?? 0 };
   }
 
   private toDto(d: SubscriptionPlanDocument): SubscriptionPlanResponseDto {

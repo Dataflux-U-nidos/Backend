@@ -26,6 +26,12 @@ const SubscriptionPlanSchema = new Schema<SubscriptionPlanDocument>(
   { timestamps: true },
 );
 
+SubscriptionPlanSchema.virtual('universities', {
+  ref: 'Users', // nombre de la colección de universidades
+  localField: '_id',
+  foreignField: 'subscriptionPlanId', // el campo en UniversityDocument
+});
+
 export const SubscriptionPlanModel = model<SubscriptionPlanDocument>(
   'SubscriptionPlan',
   SubscriptionPlanSchema,

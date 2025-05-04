@@ -2,6 +2,8 @@ import {
   CreateSubscriptionPlanDto,
   UpdateSubscriptionPlanDto,
   SubscriptionPlanResponseDto,
+  RevenueByPlanResponseDto,
+  TotalRevenueResponseDto,
 } from '../../application/dtos/subscriptionPlan.dto';
 
 export interface ISubscriptionPlanRepository {
@@ -13,4 +15,9 @@ export interface ISubscriptionPlanRepository {
     data: UpdateSubscriptionPlanDto,
   ): Promise<SubscriptionPlanResponseDto | null>;
   delete(id: string): Promise<boolean>;
+  getRevenueByPlanType(planType: string): Promise<RevenueByPlanResponseDto>;
+  getTotalRevenueByPeriod(
+    start: Date,
+    end: Date,
+  ): Promise<TotalRevenueResponseDto>;
 }
