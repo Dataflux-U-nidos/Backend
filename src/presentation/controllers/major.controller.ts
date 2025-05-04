@@ -63,26 +63,26 @@ export class MajorController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      // A partir del ID del usuario, se obtiene la institución
-      // y se asigna a la carrera que se va a crear
       const userId = req.user?.id;
-      // 2) Recuperamos al usuario para obtener su institutionId
       if (!userId) {
-        res.status(404).json({ message: 'User not found' });
+        res.status(401).json({ message: 'Not authenticated' });
         return;
       }
 
-      console.log('userId', userId);
-
+      // 1) Recuperamos al usuario para extraer su universityId
       const user = await this.getUserByIdUseCase.execute(userId);
+      if (user) {
+        const dto: Omit<Major, 'id'> & { createdBy: string } = {
+          ...(req.body as Omit<Major, 'id'>),
+          institutionId: user.universityId ?? '',
+          createdBy: userId,
+        };
 
-      const dto: Major = {
-        ...req.body,
-        institutionId: user?.universityId, // aquí inyectamos la institución del user
-      };
-
-      const newMajor = await this.createMajorUseCase.execute(dto);
-      res.status(201).json(newMajor);
+        const newMajor = await this.createMajorUseCase.execute(dto);
+        res.status(201).json(newMajor);
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
     } catch (error) {
       next(error);
     }
