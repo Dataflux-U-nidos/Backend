@@ -162,7 +162,15 @@ router.patch(
 // Update user by Email
 router.patch('/by-email/:email', userController.updateByEmail);
 
+// —————— RUTA DE DELETE “ESPECIAL” ——————
+router.delete(
+  '/',
+  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
+  userController.delete,
+);
+
 // —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
+
 // Get user by ID
 router.get(
   '/:id',
@@ -184,14 +192,6 @@ router.patch(
   '/:id',
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
   userController.updateById,
-);
-
-// Delete user by ID
-
-router.delete(
-  '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
-  userController.delete,
 );
 
 export default router;
