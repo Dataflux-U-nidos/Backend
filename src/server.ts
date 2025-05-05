@@ -15,6 +15,7 @@ import {
   emailRouter,
   campaignRouter,
   subscriptionPlanRouter,
+  studentTestRouter,
 } from './presentation/routes';
 
 // Create express application
@@ -39,6 +40,7 @@ app.use(
   `${config.api.conventionApi}/subscription-plan`,
   subscriptionPlanRouter,
 );
+app.use(`${config.api.conventionApi}/student-test`, studentTestRouter);
 
 // Error handler
 app.use(errorHandlerMiddleware);
