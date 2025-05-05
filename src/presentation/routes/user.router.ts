@@ -166,7 +166,16 @@ router.patch('/by-email/:email', userController.updateByEmail);
 // Get user by ID
 router.get(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER', 'TUTOR', 'UNIVERSITY']),
+  validateRoleMiddleware([
+    'ADMIN',
+    'STUDENT',
+    'VIEWER',
+    'TUTOR',
+    'UNIVERSITY',
+    'MARKETING',
+    'SUPPORT',
+    'FINANCES',
+  ]),
   userController.getById,
 );
 
@@ -180,8 +189,8 @@ router.patch(
 // Delete user by ID
 
 router.delete(
-  '/',
-  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
   userController.delete,
 );
 

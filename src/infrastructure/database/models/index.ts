@@ -12,3 +12,4 @@ export * from './admin.model';
 export * from './marketing.model';
 export * from './support.model';
 export * from './finances.model';
+export * from './subscriptionPlan.model';
