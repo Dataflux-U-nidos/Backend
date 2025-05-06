@@ -5,7 +5,12 @@ import {
   GetCommentByIdUseCase,
   UpdateCommentUseCase,
   DeleteCommentUseCase,
+  UserType,
 } from '../../application';
+
+interface RequestWithUser extends Request {
+  user?: { id: string; userType: UserType };
+}
 
 export class CommentController {
   constructor(
@@ -48,12 +53,20 @@ export class CommentController {
   };
 
   public create = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const newComment = await this.createCommentUseCase.execute(req.body);
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const newComment = await this.createCommentUseCase.execute(
+        userId,
+        req.body,
+      );
       res.status(201).json(newComment);
     } catch (error) {
       next(error);

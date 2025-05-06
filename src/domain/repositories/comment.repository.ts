@@ -1,13 +1,19 @@
-import { CommentResponseDto } from '../../application/dtos'; // Asegúrate de importar desde la ruta correcta
-import { Comment } from '../../domain';
+// src/domain/ICommentRepository.ts
+import { CommentResponseDto } from '../../application/dtos';
+import { Comment } from '../entities/comment.entity';
 
 export interface ICommentRepository {
-  findAll(): Promise<CommentResponseDto[]>; // 🔹 Devuelve DTOs en lugar de Comment[]
-  findById(id: string): Promise<CommentResponseDto | null>; // 🔹 También usa DTO
-  create(data: Omit<Comment, 'id'>): Promise<Comment>;
+  findAll(): Promise<CommentResponseDto[]>;
+  findById(id: string): Promise<CommentResponseDto | null>;
+
+  // ← CAMBIO: ahora devuelve el DTO, no el domain Comment
+  create(data: Omit<Comment, 'id'>): Promise<CommentResponseDto>;
+
+  // Si quieres, haz lo mismo en update:
   update(
     id: string,
     data: Partial<Omit<Comment, 'id'>>,
-  ): Promise<Comment | null>;
+  ): Promise<CommentResponseDto | null>;
+
   delete(id: string): Promise<boolean>;
 }
