@@ -30,7 +30,7 @@ export type UpdateMajorDto = Static<typeof UpdateMajorSchema>;
 // Esquema para la respuesta de un Major (salida)
 // Clave: mantenemos createdBy como opcional aquí también
 export const MajorResponseSchema = Type.Intersect([
-  MajorBaseSchema,  // Este ya tiene createdBy como opcional
+  MajorBaseSchema, // Este ya tiene createdBy como opcional
   Type.Object({
     id: Type.String(),
     createdAt: Type.String({ format: 'date-time' }),

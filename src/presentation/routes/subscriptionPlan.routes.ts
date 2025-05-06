@@ -43,10 +43,7 @@ router.post('/', validateRoleMiddleware(['ADMIN']), planController.create);
 
 // —————— RUTAS DE LECTURA ESTÁTICAS ——————
 // List all plans (any authenticated role)
-router.get(
-  '/',
-  planController.getAll,
-);
+router.get('/', planController.getAll);
 
 router.get(
   '/revenue',

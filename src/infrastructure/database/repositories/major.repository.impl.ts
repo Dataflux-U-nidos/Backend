@@ -18,7 +18,7 @@ export class MajorRepository implements IMajorRepository {
 
       //createdBy: doc.createdBy.toString(),
       createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
-      
+
       createdAt: doc.createdAt.toISOString(),
       updatedAt: doc.updatedAt.toISOString(),
     }));
