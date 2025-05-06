@@ -217,13 +217,17 @@ export class UserController {
   };
 
   public delete = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { id } = req.params;
-      const deleted = await this.deleteUserUseCase.execute(id);
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const deleted = await this.deleteUserUseCase.execute(userId);
       if (!deleted) {
         res.status(404).json({ message: 'User not found' });
         return;

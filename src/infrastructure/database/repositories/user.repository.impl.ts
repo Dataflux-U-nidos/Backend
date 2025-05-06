@@ -342,6 +342,9 @@ export class UserRepository implements IUserRepository {
       base.infomanagers = doc.infomanagers.map((s) => s.toString());
     if ('viewers' in doc && Array.isArray(doc.viewers))
       base.viewers = doc.viewers.map((s) => s.toString());
+    if ('subscriptionPlanId' in doc && doc.subscriptionPlanId) {
+      base.subscriptionPlanId = doc.subscriptionPlanId.toHexString();
+    }
     if ('universityId' in doc && doc.universityId)
       base.universityId = doc.universityId.toString();
     if ('marketing' in doc && Array.isArray(doc.marketing))
@@ -417,6 +420,7 @@ export class UserRepository implements IUserRepository {
           address: d.address,
           infomanagers: d.infomanagers.map((s) => s.toString()),
           viewers: d.viewers.map((s) => s.toString()),
+          subscriptionPlanId: d.subscriptionPlanId.toString(),
         } as UniversityUser;
       }
       case 'INFOMANAGER': {
