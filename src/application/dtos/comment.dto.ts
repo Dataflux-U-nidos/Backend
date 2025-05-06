@@ -3,9 +3,9 @@ import { Type, Static } from '@sinclair/typebox';
 
 // Esquema base de Comment
 export const CommentBaseSchema = Type.Object({
-  userId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
+  majorId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   text: Type.String({ minLength: 1, maxLength: 500 }),
-  date: Type.String({ format: 'date-time' }),
+  //date: Type.String({ format: 'date-time' }),
 });
 export type CommentBaseDto = Static<typeof CommentBaseSchema>;
 
@@ -23,6 +23,8 @@ export const CommentResponseSchema = Type.Intersect([
   CommentBaseSchema,
   Type.Object({
     id: Type.String(),
+    userId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
+    majorId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' }),
   }),
