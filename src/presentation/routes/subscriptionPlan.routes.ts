@@ -45,15 +45,6 @@ router.post('/', validateRoleMiddleware(['ADMIN']), planController.create);
 // List all plans (any authenticated role)
 router.get(
   '/',
-  validateRoleMiddleware([
-    'ADMIN',
-    'MARKETING',
-    'FINANCES',
-    'STUDENT',
-    'VIEWER',
-    'TUTOR',
-    'UNIVERSITY',
-  ]),
   planController.getAll,
 );
 
