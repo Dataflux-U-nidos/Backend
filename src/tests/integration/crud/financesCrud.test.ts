@@ -4,31 +4,24 @@ import { app } from '../../../server';
 
 beforeAll(async () => {
   await database.connect();
+  const response = await request(app).post('/api/v1/user/registry/').send({
+    name: 'Juan',
+    last_name: 'Granada',
+    email: 'juan.granada@example.com',
+    password: 'password123',
+    age: 22,
+    userType: 'ADMIN',
+  });
+  expect(response.status).toBe(201);
 });
 
 let accessTokenCookie: string;
 let fincencesId: string;
-let fincencesId2: string;
 
 describe('Integration tests fincences - CRUD', () => {
-  it('should create a fincences account', async () => {
-    const response = await request(app).post('/api/v1/user/registry').send({
-      name: 'Gustavo',
-      last_name: 'Olarte',
-      email: 'gustavo.olarte@example.com',
-      password: 'password123',
-      age: 30,
-      userType: 'FINANCES',
-    });
-
-    expect(response.status).toBe(201);
-    expect(response.body.userType).toBe('FINANCES');
-    fincencesId2 = response.body.id;
-  });
-
   it('should create a fincences user by an admin', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'tesis@gmail.com',
+      email: 'juan.granada@example.com',
       password: 'password123',
     });
     accessTokenCookie = response.body.accessToken;
@@ -37,16 +30,13 @@ describe('Integration tests fincences - CRUD', () => {
       .post('/api/v1/user/')
       .set('Authorization', `Bearer ${accessTokenCookie}`)
       .send({
-        name: 'Marcela',
-        last_name: 'Valencia',
-        email: 'marcela.valencia@gmail.com',
+        name: 'Luis',
+        last_name: 'Diaz',
+        email: 'luis.diaz@gmail.com',
         password: 'password123',
         age: 29,
         userType: 'FINANCES',
       });
-    console.log('\nEste es el segundo body de la respuesta: \n');
-    console.log(response2.body);
-
     expect(response2.status).toBe(201);
     expect(response2.body.userType).toBe('FINANCES');
     fincencesId = response2.body.id;
@@ -56,19 +46,19 @@ describe('Integration tests fincences - CRUD', () => {
     const response = await request(app)
       .patch(`/api/v1/user/${fincencesId}`)
       .send({
-        name: 'Mario',
-        email: 'mario.valencia@example.com',
+        name: 'Claudio',
+        email: 'claudio.valencia@example.com',
       })
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.name).toBe('Mario');
-    expect(response.body.email).toBe('mario.valencia@example.com');
+    expect(response.body.name).toBe('Claudio');
+    expect(response.body.email).toBe('claudio.valencia@example.com');
   });
 
   it('should delete a fincences user', async () => {
     const response = await request(app)
-      .delete(`/api/v1/user/${fincencesId}`)
+      .delete(`/api/v1/user/`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
@@ -77,9 +67,5 @@ describe('Integration tests fincences - CRUD', () => {
 });
 
 afterAll(async () => {
-  const response = await request(app)
-    .delete(`/api/v1/user/${fincencesId2}`)
-    .set('Authorization', `Bearer ${accessTokenCookie}`);
-  expect(response.status).toBe(200);
   await database.disconnect();
 });
