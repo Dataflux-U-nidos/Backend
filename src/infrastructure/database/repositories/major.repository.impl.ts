@@ -15,7 +15,10 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId as unknown as string,
       focus: doc.focus,
-      createdBy: doc.createdBy.toString(),
+
+      //createdBy: doc.createdBy.toString(),
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
+
       createdAt: doc.createdAt.toISOString(),
       updatedAt: doc.updatedAt.toISOString(),
     }));
@@ -45,7 +48,7 @@ export class MajorRepository implements IMajorRepository {
     return {
       id: doc._id as unknown as string,
       ...data,
-      createdBy: data.createdBy,
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
@@ -67,7 +70,7 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId as unknown as string,
       focus: doc.focus,
-      createdBy: doc.createdBy.toString(),
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
@@ -90,7 +93,7 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId.toString(),
       focus: doc.focus,
-      createdBy: doc.createdBy.toString(),
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     }));
