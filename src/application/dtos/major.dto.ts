@@ -36,6 +36,7 @@ export const MajorResponseSchema = Type.Intersect([
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' }),
     // Ya no definimos createdBy aquí, para que se use el del MajorBaseSchema que es opcional
+
   }),
 ]);
 
