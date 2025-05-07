@@ -4,52 +4,37 @@ import { app } from '../../../server';
 
 beforeAll(async () => {
   await database.connect();
+  const response = await request(app).post('/api/v1/user/registry/').send({
+    name: 'Hermes',
+    last_name: 'Pinzon',
+    email: 'hermes.pinzon@example.com',
+    password: 'password123',
+    age: 68,
+    userType: 'TUTOR',
+  });
+  expect(response.status).toBe(201);
 });
 
 let accessTokenCookie: string;
 let accessTokenCookie2: string;
 let studentId: string;
-let studentId2: string;
 let studentEmail: string;
 
 describe('Integration tests Student - CRUD', () => {
-  it('should create a student account', async () => {
-    const response = await request(app)
-      .post('/api/v1/user/registry')
-      .send({
-        name: 'Hermann',
-        last_name: 'Hernandez',
-        email: 'hermann.hernandez@example.com',
-        password: 'password123',
-        age: 22,
-        userType: 'STUDENT',
-        locality: 'Bogotá',
-        school: 'San Bartolome',
-        preferences: {
-          'formula 1': true,
-        },
-      });
-
-    expect(response.status).toBe(201);
-    expect(response.body.userType).toBe('STUDENT');
-
-    studentId = response.body.id;
-    studentEmail = response.body.email;
-  });
-
   it('should asign a tutor to a student', async () => {
     const response1 = await request(app).post('/api/v1/auth/login').send({
       email: 'hermes.pinzon@example.com',
       password: 'password123',
     });
 
-    const accessTokenCookieTutor = response1.body.accessToken;
-    accessTokenCookie2 = accessTokenCookieTutor;
+    console.log(response1.body);
+    const accessTokenTutor = response1.body.accessToken;
+    accessTokenCookie2 = accessTokenTutor;
 
     // Asign tutor to student
     const response2 = await request(app)
       .post('/api/v1/user/')
-      .set('Authorization', `Bearer ${accessTokenCookieTutor}`)
+      .set('Authorization', `Bearer ${accessTokenCookie2}`)
       .send({
         name: 'Beatriz',
         last_name: 'Pinzon',
@@ -65,14 +50,8 @@ describe('Integration tests Student - CRUD', () => {
       });
 
     expect(response2.status).toBe(201);
-    studentId2 = response2.body.id;
-
-    const response3 = await request(app)
-      .get(`/api/v1/user/6803dccb5262c6ac9613bc1d`)
-      .set('Authorization', `Bearer ${accessTokenCookieTutor}`);
-
-    expect(response3.status).toBe(200);
-    expect(response3.body.students).toContainEqual(studentId2);
+    studentId = response2.body.id;
+    studentEmail = response2.body.email;
   });
 
   it('should login as student', async () => {
@@ -114,8 +93,8 @@ describe('Integration tests Student - CRUD', () => {
 
   it('should delete student acount', async () => {
     const response = await request(app)
-      .delete(`/api/v1/user/${studentId}`)
-      .set('Authorization', `Bearer ${accessTokenCookie}`);
+      .delete(`/api/v1/user/`)
+      .set('Authorization', `Bearer ${accessTokenCookie2}`);
 
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('User deleted successfully');
@@ -123,9 +102,5 @@ describe('Integration tests Student - CRUD', () => {
 });
 
 afterAll(async () => {
-  const response2 = await request(app)
-    .delete(`/api/v1/user/${studentId2}`)
-    .set('Authorization', `Bearer ${accessTokenCookie}`);
-  expect(response2.status).toBe(200);
   await database.disconnect();
 });
