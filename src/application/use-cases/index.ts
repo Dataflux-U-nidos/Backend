@@ -45,6 +45,7 @@ export * from './comment/get-all-comments.use-case';
 export * from '../use-cases/comment/get-comment-by-id.use-case';
 export * from '../use-cases/comment/update-comment.use-case';
 export * from '../use-cases/comment/delete-comment.use-case';
+export * from '../use-cases/comment/get-comments-by-major.use-case';
 // Use cases auth
 export * from './auth/login.use-case';
 export * from './auth/getSession.useCase';
