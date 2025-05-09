@@ -40,6 +40,7 @@ export * from '../use-cases/user/add-marketing-to-admin.use-case';
 export * from '../use-cases/user/get-marketing-by-admin.use-case';
 export * from '../use-cases/user/add-support-to-admin.use-case';
 export * from '../use-cases/user/get-support-by-admin.use-case';
+export * from '../use-cases/user/impersonate-user.use-case';
 // Use cases comment
 export * from './comment/get-all-comments.use-case';
 export * from '../use-cases/comment/get-comment-by-id.use-case';
