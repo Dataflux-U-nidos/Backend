@@ -8,8 +8,11 @@ import {
 import { LoginDto } from '../../application/dtos/auth.dto';
 import { AuthService } from '../../application/services/auth.service';
 import { UserRepository } from '../../infrastructure';
-import { decodeJWT } from '../../shared/utils/jwt.utils';
 import { ImpersonateUserDto } from '../../application/dtos/impersonate.dto';
+
+interface RequestWithUser extends Request {
+  user: { id: string };
+}
 
 export class AuthController {
   private readonly loginUseCase: LoginUseCase;
@@ -94,33 +97,16 @@ export class AuthController {
     }
   }
 
-  public async impersonate(req: Request, res: Response): Promise<void> {
+  public async impersonate(req: RequestWithUser, res: Response): Promise<void> {
     try {
-      // 1. Extract & decode the caller’s token
-      const authHeader = req.headers.authorization;
-      if (!authHeader?.startsWith('Bearer ')) {
-        res.status(401).json({ message: 'Token no proporcionado' });
-        return;
-      }
-      const bearer = authHeader.slice(7).trim();
-      const decoded = decodeJWT(bearer);
-
-      // 2. Only SUPPORT may impersonate
-      if (decoded.type !== 'SUPPORT') {
-        res.status(403).json({ message: 'No autorizado' });
-        return;
-      }
-
-      // 3. Grab the targetUserId from body
+      const impersonaterId = req.user.id;
       const { targetUserId } = req.body as ImpersonateUserDto;
 
-      // 4. Generate the spoofed tokens
       const tokens = await this.impersonateUseCase.execute(
-        decoded.id,
+        impersonaterId,
         targetUserId,
       );
 
-      // 5. Return them
       res.status(200).json({
         message: 'Impersonación exitosa',
         accessToken: tokens.accessToken,
