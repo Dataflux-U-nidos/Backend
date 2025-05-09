@@ -9,3 +9,7 @@ export * from './viewer.model';
 export * from './university.model';
 export * from './student.model';
 export * from './admin.model';
+export * from './marketing.model';
+export * from './support.model';
+export * from './finances.model';
+export * from './subscriptionPlan.model';

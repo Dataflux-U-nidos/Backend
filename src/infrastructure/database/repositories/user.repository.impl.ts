@@ -2,12 +2,16 @@
 import { IUserRepository } from '../../../domain/repositories/user.repository';
 import {
   AdminUser,
+  BaseUser,
   InfoManagerUser,
   StudentUser,
   TutorUser,
   UniversityUser,
   User,
   ViewerUser,
+  MarketingUser,
+  SupportUser,
+  FinancesUser,
 } from '../../../domain/entities/user.entity';
 import { UserResponseDto } from '../../../application/dtos/user.dto';
 import { UserBaseModel, UserBaseDocument } from '../../../infrastructure/';
@@ -24,6 +28,12 @@ import {
   ViewerDocument,
   AdminModel,
   AdminDocument,
+  MarketingModel,
+  MarketingDocument,
+  SupportModel,
+  SupportDocument,
+  FinancesModel,
+  FinancesDocument,
 } from '../../../infrastructure';
 
 type UserDocument =
@@ -33,7 +43,10 @@ type UserDocument =
   | UniversityDocument
   | InfoManagerDocument
   | ViewerDocument
-  | AdminDocument;
+  | AdminDocument
+  | MarketingDocument
+  | SupportDocument
+  | FinancesDocument;
 
 export class UserRepository implements IUserRepository {
   public async findAll(filter?: {
@@ -81,20 +94,63 @@ export class UserRepository implements IUserRepository {
       case 'VIEWER':
         createdDoc = await ViewerModel.create(data as ViewerDocument);
         break;
+      case 'MARKETING':
+        createdDoc = await MarketingModel.create(data as MarketingDocument);
+        break;
+      case 'SUPPORT':
+        createdDoc = await SupportModel.create(data as SupportDocument);
+        break;
+      case 'FINANCES':
+        createdDoc = await FinancesModel.create(data as FinancesDocument);
+        break;
       default:
         createdDoc = await UserBaseModel.create(data as UserBaseDocument);
     }
     return this.mapEntity(createdDoc);
   }
 
+  // user.repository.impl.ts (o donde tengas tu update)
   public async update(
     id: string,
     data: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<User | null> {
-    const doc = await UserBaseModel.findByIdAndUpdate(id, data, {
+    // 1. Cargo el doc “base” solo para saber el tipo
+    const baseDoc = await UserBaseModel.findById(id).select('userType').exec();
+    if (!baseDoc) return null;
+
+    // 2. Elijo el Model correcto (VIEWER, TUTOR, etc.) según lo que ya está guardado
+    const Model = this.getUserModelByType(baseDoc.userType ?? ''); // Provide a default value or handle undefined
+
+    // 3. Cargo de nuevo (o reutiliza baseDoc con lean=false) el documento completo usando el discriminator
+    const doc = await (Model as typeof UserBaseModel).findById(id).exec();
+    if (!doc) return null;
+
+    // 4. Asigno los campos entrantes
+    Object.assign(doc, data);
+
+    // 5. Salvo la instancia: aquí Mongoose usa el esquema hijo y mete last_name, department, lo que toque
+    const updated = await doc.save();
+    return this.mapEntity(updated);
+  }
+
+  public async updateByEmail(
+    email: string,
+    data: Partial<Omit<User, 'id'>>,
+  ): Promise<BaseUser | null> {
+    const doc = await UserBaseModel.findOneAndUpdate({ email }, data, {
       new: true,
-    }).exec();
-    return doc ? this.mapEntity(doc) : null;
+    });
+    if (!doc) return null;
+
+    return {
+      id: doc._id as unknown as string,
+      name: doc.name,
+      email: doc.email,
+      password: doc.password,
+      userType: doc.userType as User['userType'],
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
   }
 
   public async updateByEmail(
@@ -170,6 +226,75 @@ export class UserRepository implements IUserRepository {
     ).exec();
   }
 
+  // Add Marketing to Admin
+  public async addMarketingToAdmin(
+    adminId: string,
+    marketingId: string,
+  ): Promise<void> {
+    await AdminModel.findByIdAndUpdate(
+      adminId,
+      { $addToSet: { marketing: marketingId } },
+      { new: true },
+    ).exec();
+  }
+
+  // Add Support to Admin
+  public async addSupportToAdmin(
+    adminId: string,
+    supportId: string,
+  ): Promise<void> {
+    await AdminModel.findByIdAndUpdate(
+      adminId,
+      { $addToSet: { support: supportId } },
+      { new: true },
+    ).exec();
+  }
+
+  // Add Finances to Admin
+  public async addFinancesToAdmin(
+    adminId: string,
+    financesId: string,
+  ): Promise<void> {
+    await AdminModel.findByIdAndUpdate(
+      adminId,
+      { $addToSet: { finances: financesId } },
+      { new: true },
+    ).exec();
+  }
+
+  // find marketing by Admin
+  public async findMarketersByAdmin(
+    adminId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await AdminModel.findById(adminId)
+      .populate<{ marketing: MarketingDocument[] }>('marketing')
+      .exec();
+    if (!uniDoc || !uniDoc.marketing) return [];
+    return uniDoc.marketing.map((d) => this.mapDoc(d));
+  }
+
+  // find support by Admin
+  public async findSupportsByAdmin(
+    adminId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await AdminModel.findById(adminId)
+      .populate<{ support: SupportDocument[] }>('support')
+      .exec();
+    if (!uniDoc || !uniDoc.support) return [];
+    return uniDoc.support.map((d) => this.mapDoc(d));
+  }
+
+  // find finances by Admin
+  public async findFinancesByAdmin(
+    adminId: string,
+  ): Promise<UserResponseDto[]> {
+    const uniDoc = await AdminModel.findById(adminId)
+      .populate<{ finances: FinancesDocument[] }>('finances')
+      .exec();
+    if (!uniDoc || !uniDoc.finances) return [];
+    return uniDoc.finances.map((d) => this.mapDoc(d));
+  }
+
   public async findInfoManagersByUniversity(
     universityId: string,
   ): Promise<UserResponseDto[]> {
@@ -179,6 +304,7 @@ export class UserRepository implements IUserRepository {
     if (!uniDoc || !uniDoc.infomanagers) return [];
     return uniDoc.infomanagers.map((d) => this.mapDoc(d));
   }
+
   public async findViewersByUniversity(
     universityId: string,
   ): Promise<UserResponseDto[]> {
@@ -189,6 +315,25 @@ export class UserRepository implements IUserRepository {
     return uniDoc.viewers.map((d) => this.mapDoc(d));
   }
 
+  private getUserModelByType(userType: string) {
+    switch (userType) {
+      case 'VIEWER':
+        return ViewerModel;
+      case 'TUTOR':
+        return TutorModel;
+      case 'INFOMANAGER':
+        return InfoManagerModel;
+      case 'STUDENT':
+        return StudentModel;
+      case 'UNIVERSITY':
+        return UniversityModel;
+      case 'ADMIN':
+        return AdminModel;
+      default:
+        return UserBaseModel;
+    }
+  }
+
   private mapDoc(
     doc:
       | UserBaseDocument
@@ -196,7 +341,11 @@ export class UserRepository implements IUserRepository {
       | TutorDocument
       | UniversityDocument
       | InfoManagerDocument
-      | ViewerDocument,
+      | ViewerDocument
+      | AdminDocument
+      | MarketingDocument
+      | SupportDocument
+      | FinancesDocument,
   ): UserResponseDto {
     const base: Partial<UserResponseDto> = {
       id: doc._id.toString(),
@@ -218,8 +367,17 @@ export class UserRepository implements IUserRepository {
       base.infomanagers = doc.infomanagers.map((s) => s.toString());
     if ('viewers' in doc && Array.isArray(doc.viewers))
       base.viewers = doc.viewers.map((s) => s.toString());
+    if ('subscriptionPlanId' in doc && doc.subscriptionPlanId) {
+      base.subscriptionPlanId = doc.subscriptionPlanId.toHexString();
+    }
     if ('universityId' in doc && doc.universityId)
       base.universityId = doc.universityId.toString();
+    if ('marketing' in doc && Array.isArray(doc.marketing))
+      base.marketing = doc.marketing.map((s) => s.toString());
+    if ('support' in doc && Array.isArray(doc.support))
+      base.support = doc.support.map((s) => s.toString());
+    if ('finances' in doc && Array.isArray(doc.finances))
+      base.finances = doc.finances.map((s) => s.toString());
     return base as UserResponseDto;
   }
 
@@ -230,7 +388,11 @@ export class UserRepository implements IUserRepository {
       | TutorDocument
       | UniversityDocument
       | InfoManagerDocument
-      | ViewerDocument,
+      | ViewerDocument
+      | AdminDocument
+      | MarketingDocument
+      | SupportDocument
+      | FinancesDocument,
   ): User {
     const base = {
       id: doc._id.toString(),
@@ -242,12 +404,16 @@ export class UserRepository implements IUserRepository {
       updatedAt: doc.updatedAt,
     };
     switch (doc.userType) {
-      case 'ADMIN':
+      case 'ADMIN': {
+        const d = doc as AdminDocument;
         return {
           ...base,
-          last_name: (doc as UserBaseDocument & { last_name: string })
-            .last_name,
+          last_name: d.last_name,
+          marketing: d.marketing.map((s) => s.toString()),
+          support: d.support.map((s) => s.toString()),
+          finances: d.finances.map((s) => s.toString()),
         } as AdminUser;
+      }
       case 'STUDENT': {
         const d = doc as StudentDocument;
         return {
@@ -279,6 +445,7 @@ export class UserRepository implements IUserRepository {
           address: d.address,
           infomanagers: d.infomanagers.map((s) => s.toString()),
           viewers: d.viewers.map((s) => s.toString()),
+          subscriptionPlanId: d.subscriptionPlanId.toString(),
         } as UniversityUser;
       }
       case 'INFOMANAGER': {
@@ -288,6 +455,27 @@ export class UserRepository implements IUserRepository {
           last_name: d.last_name,
           universityId: d.universityId.toString(),
         } as InfoManagerUser;
+      }
+      case 'MARKETING': {
+        const d = doc as MarketingDocument;
+        return {
+          ...base,
+          last_name: d.last_name,
+        } as MarketingUser;
+      }
+      case 'SUPPORT': {
+        const d = doc as SupportDocument;
+        return {
+          ...base,
+          last_name: d.last_name,
+        } as SupportUser;
+      }
+      case 'FINANCES': {
+        const d = doc as FinancesDocument;
+        return {
+          ...base,
+          last_name: d.last_name,
+        } as FinancesUser;
       }
       default:
         return base as User;

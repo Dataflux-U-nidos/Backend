@@ -13,6 +13,7 @@ export class UpdateUserByEmailUseCase {
       data.password = await argon2.hash(data.password);
     }
 
-    return this.userRepository.updateByEmail(email, data);
+    const updatedUser = await this.userRepository.updateByEmail(email, data);
+    return updatedUser as unknown as User | null;
   }
 }

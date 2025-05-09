@@ -3,32 +3,27 @@ import { database } from '../../../infrastructure';
 import { app } from '../../../server';
 
 beforeAll(async () => {
-  await database.connect(); // Ensure database connection before running tests
+  await database.connect();
 });
 
 describe('Integration tests Student - Login', () => {
   it('should login as student', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'ana6.perez@example.com',
-      password: 'Pass123!',
+      email: 'nicolas.mora@example.com',
+      password: 'password123',
     });
-    expect(response.status).toBe(200); // Check if the request was successful
+    expect(response.status).toBe(200);
     expect(response.body.userType).toBe('STUDENT');
   });
 
   it('should login as student and return the jwt', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'ana6.perez@example.com',
-      password: 'Pass123!',
+      email: 'nicolas.mora@example.com',
+      password: 'password123',
     });
-    expect(response.status).toBe(200); // Ensure successful response
+    expect(response.status).toBe(200);
     expect(response.body.userType).toBe('STUDENT');
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken='),
-        expect.stringContaining('refreshToken='),
-      ]),
-    );
+    expect(response.body.accessToken).toBeDefined();
   });
 
   it('should deny login using nonexisting student credentials', async () => {
@@ -36,10 +31,10 @@ describe('Integration tests Student - Login', () => {
       email: 'mario.calderon@example.com',
       password: 'password123',
     });
-    expect(response.status).toBe(401); // Expect unauthorized status for invalid credentials
+    expect(response.status).toBe(401);
   });
 });
 
 afterAll(async () => {
-  await database.disconnect(); // Close database connection after tests
+  await database.disconnect();
 });

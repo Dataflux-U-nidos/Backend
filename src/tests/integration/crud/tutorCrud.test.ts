@@ -2,12 +2,23 @@ import request from 'supertest';
 import { database } from '../../../infrastructure';
 import { app } from '../../../server';
 
-beforeAll(async () => {
-  await database.connect();
-});
-
 let accessTokenCookie: string;
 let tutorId: string;
+
+beforeAll(async () => {
+  await database.connect();
+  // Create a test user (tutor) to use for the tests
+  const response = await request(app).post('/api/v1/user/registry/').send({
+    name: 'Hermes',
+    last_name: 'Pinzon',
+    email: 'hermes.pinzon@example.com',
+    password: 'password123',
+    age: 68,
+    userType: 'TUTOR',
+  });
+  expect(response.status).toBe(201);
+  tutorId = response.body.id;
+});
 
 describe('Integration tests tutor - CRUD', () => {
   it('should login as a tutor', async () => {
@@ -18,42 +29,8 @@ describe('Integration tests tutor - CRUD', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.userType).toBe('TUTOR');
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken='),
-        expect.stringContaining('refreshToken='),
-      ]),
-    );
-
-    const rawCookies = response.headers['set-cookie'];
-    const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
-    expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken'),
-        expect.stringContaining('refreshToken'),
-      ]),
-    );
-    accessTokenCookie = cookies
-      .find((cookie) => cookie.startsWith('accessToken='))
-      ?.split('=')[1]
-      ?.split(';')[0];
-  });
-
-  it('should create a tutor account', async () => {
-    const response = await request(app)
-      .post('/api/v1/user/')
-      .set('Authorization', `Bearer ${accessTokenCookie}`)
-      .send({
-        name: 'Roberto',
-        last_name: 'Mendoza',
-        email: 'roberto.mendoza@example.com',
-        password: 'password123',
-        age: 70,
-        userType: 'TUTOR',
-      });
-
-    expect(response.status).toBe(201);
-    tutorId = response.body.id;
+    expect(response.body.accessToken).toBeDefined();
+    accessTokenCookie = response.body.accessToken;
   });
 
   it('should view a tutor acount', async () => {
@@ -62,31 +39,27 @@ describe('Integration tests tutor - CRUD', () => {
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.name).toBe('Roberto');
-    expect(response.body.last_name).toBe('Mendoza');
+    expect(response.body.name).toBe('Hermes');
+    expect(response.body.last_name).toBe('Pinzon');
   });
 
   it('should modify a tutor account', async () => {
-    const response = await request(app)
-      .patch(`/api/v1/user/${tutorId}`)
+    const response2 = await request(app)
+      .patch(`/api/v1/user/`)
       .set('Authorization', `Bearer ${accessTokenCookie}`)
       .send({
-        name: 'Margarita',
-        last_name: 'Mendoza',
-        email: 'margarita.mendoza@example.com',
+        name: 'Julia',
+        email: 'julia.pinzon@example.com',
       });
-
-    expect(response.status).toBe(200);
-    expect(response.body.name).toBe('Margarita');
-    expect(response.body.last_name).toBe('Mendoza');
-    expect(response.body.email).toBe('margarita.mendoza@example.com');
+    expect(response2.status).toBe(200);
+    expect(response2.body.name).toBe('Julia');
+    expect(response2.body.last_name).toBe('Pinzon');
+    expect(response2.body.email).toBe('julia.pinzon@example.com');
   });
-
-  //it should view related users
 
   it('should delete tutor account', async () => {
     const response = await request(app)
-      .delete(`/api/v1/user/${tutorId}`)
+      .delete(`/api/v1/user/`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);

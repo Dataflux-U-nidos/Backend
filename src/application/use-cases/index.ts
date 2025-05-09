@@ -12,6 +12,7 @@ export * from '../use-cases/major/get-all-majors.use-case';
 export * from '../use-cases/major/get-major-by-id.use-case';
 export * from '../use-cases/major/update-major.use-case';
 export * from '../use-cases/major/delete-major.use-case';
+export * from './major/get-majors-by-institution.use-case';
 //Use cases job opportunity
 export * from './jobOpportunity/createJobOpportunity.useCase';
 export * from './jobOpportunity/deleteJobOpportunity.useCase';
@@ -33,6 +34,12 @@ export * from '../use-cases/user/add-infomanager-to-university.use-case';
 export * from '../use-cases/user/add-viewer-to-university.use-case';
 export * from '../use-cases/user/get-viewers-by-university.use-case';
 export * from '../use-cases/user/get-infomanagers-by-university.use-case';
+export * from '../use-cases/user/add-finances-to-admin.use-case';
+export * from './user/get-finances-by-admin.use-case';
+export * from '../use-cases/user/add-marketing-to-admin.use-case';
+export * from '../use-cases/user/get-marketing-by-admin.use-case';
+export * from '../use-cases/user/add-support-to-admin.use-case';
+export * from '../use-cases/user/get-support-by-admin.use-case';
 // Use cases comment
 export * from './comment/get-all-comments.use-case';
 export * from '../use-cases/comment/get-comment-by-id.use-case';
@@ -45,3 +52,26 @@ export * from './auth/refreshToken.useCase';
 
 // Use cases email
 export * from './email/sendRecoveryEmail.useCase';
+
+// Use cases campaign
+export * from './campaign/create-campaign.use-case';
+export * from './campaign/delete-campaign.use-case';
+export * from './campaign/get-all-campaigns.use-case';
+export * from './campaign/get-campaigns-by-id.use-case';
+export * from './campaign/get-campaigns-by-user.use-case';
+export * from './campaign/update-campaign.use-case';
+export * from './campaign/get-total-investment.use-case';
+
+// Use cases subscription plan
+export * from './suscriptionPlan/create-subscription-plan.use-case';
+export * from './suscriptionPlan/delete-subscription-plan.use-case';
+export * from './suscriptionPlan/get-all-subscription-plans.use-case';
+export * from './suscriptionPlan/get-subscription-plan-by-id.use-case';
+export * from './suscriptionPlan/update-subscription-plan.use-case';
+export * from './suscriptionPlan/get-revenue-by-plan.use-case';
+export * from './suscriptionPlan/get-total-revenue.use-case';
+
+// Use cases test
+export * from './studentTest/psychometric.use-case';
+export * from './studentTest/vocational.use-case';
+export * from './studentTest/vocational-partial.use-case';

@@ -4,7 +4,10 @@ export type UserType =
   | 'VIEWER'
   | 'TUTOR'
   | 'UNIVERSITY'
-  | 'INFOMANAGER';
+  | 'INFOMANAGER'
+  | 'MARKETING'
+  | 'SUPPORT'
+  | 'FINANCES';
 
 export interface BaseUser {
   id: string;
@@ -19,6 +22,9 @@ export interface BaseUser {
 export interface AdminUser extends BaseUser {
   userType: 'ADMIN';
   last_name: string;
+  marketing: string[];
+  support: string[];
+  finances: string[];
 }
 
 export interface StudentUser extends BaseUser {
@@ -39,6 +45,7 @@ export interface UniversityUser extends BaseUser {
   userType: 'UNIVERSITY';
   infomanagers: string[];
   viewers: string[];
+  subscriptionPlanId: string;
 }
 
 export interface ViewerUser extends BaseUser {
@@ -65,10 +72,28 @@ export interface InfoManagerUser extends BaseUser {
   universityId: string;
 }
 
+export interface MarketingUser extends BaseUser {
+  userType: 'MARKETING';
+  last_name: string;
+}
+
+export interface SupportUser extends BaseUser {
+  userType: 'SUPPORT';
+  last_name: string;
+}
+
+export interface FinancesUser extends BaseUser {
+  userType: 'FINANCES';
+  last_name: string;
+}
+
 export type User =
   | AdminUser
   | StudentUser
   | ViewerUser
   | TutorUser
   | UniversityUser
-  | InfoManagerUser;
+  | InfoManagerUser
+  | MarketingUser
+  | SupportUser
+  | FinancesUser;

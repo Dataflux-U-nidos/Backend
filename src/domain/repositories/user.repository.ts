@@ -1,6 +1,6 @@
 // src/domain/repositories/user.repository.ts
 import { UserResponseDto } from '../../application/dtos/user.dto';
-import { User } from '../entities/user.entity';
+import { BaseUser, User } from '../entities/user.entity';
 
 export interface IUserRepository {
   /**
@@ -34,7 +34,7 @@ export interface IUserRepository {
   updateByEmail(
     email: string,
     data: Partial<Omit<User, 'id'>>,
-  ): Promise<User | null>;
+  ): Promise<BaseUser | null>;
 
   /** Delete a user by ID. */
 
@@ -62,4 +62,24 @@ export interface IUserRepository {
 
   /** Get all viewers associated with a university. */
   findViewersByUniversity(universityId: string): Promise<UserResponseDto[]>;
+
+  /** ------------new----------- */
+
+  /** Add a marketer ID to an admin's marketer list. */
+  addMarketingToAdmin(adminId: string, marketingId: string): Promise<void>;
+
+  /** Add a support ID to an admin's support list. */
+  addSupportToAdmin(adminId: string, supportId: string): Promise<void>;
+
+  /** Add a finances ID to an admin's finances list. */
+  addFinancesToAdmin(adminId: string, financesId: string): Promise<void>;
+
+  /** Get all marketers associated with a admin. */
+  findMarketersByAdmin(adminId: string): Promise<UserResponseDto[]>;
+
+  /** Get all supports associated with a admin. */
+  findSupportsByAdmin(adminId: string): Promise<UserResponseDto[]>;
+
+  /** Get all finances associated with a admin. */
+  findFinancesByAdmin(adminId: string): Promise<UserResponseDto[]>;
 }

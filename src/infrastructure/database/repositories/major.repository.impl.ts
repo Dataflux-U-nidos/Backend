@@ -15,6 +15,8 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId as unknown as string,
       focus: doc.focus,
+      //createdBy: doc.createdBy.toString(),
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt.toISOString(),
       updatedAt: doc.updatedAt.toISOString(),
     }));
@@ -33,6 +35,7 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId as unknown as string,
       focus: doc.focus,
+      createdBy: doc.createdBy.toString(),
       createdAt: doc.createdAt.toISOString(),
       updatedAt: doc.updatedAt.toISOString(),
     };
@@ -43,6 +46,7 @@ export class MajorRepository implements IMajorRepository {
     return {
       id: doc._id as unknown as string,
       ...data,
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
@@ -64,6 +68,7 @@ export class MajorRepository implements IMajorRepository {
       pensumLink: doc.pensumLink,
       jobId: doc.jobId as unknown as string,
       focus: doc.focus,
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
@@ -72,5 +77,23 @@ export class MajorRepository implements IMajorRepository {
   public async delete(id: string): Promise<boolean> {
     const result = await MajorModel.findByIdAndDelete(id);
     return result !== null;
+  }
+
+  public async findByInstitution(institutionId: string): Promise<Major[]> {
+    const results = await MajorModel.find({ institutionId });
+    return results.map((doc) => ({
+      id: doc._id.toString(),
+      name: doc.name,
+      institutionId: doc.institutionId.toString(),
+      difficulty: doc.difficulty,
+      price: doc.price,
+      description: doc.description,
+      pensumLink: doc.pensumLink,
+      jobId: doc.jobId.toString(),
+      focus: doc.focus,
+      createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    }));
   }
 }

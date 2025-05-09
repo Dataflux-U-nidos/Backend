@@ -1,11 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
+import { Major } from '../../domain/';
 import {
   CreateMajorUseCase,
   GetAllMajorsUseCase,
   GetMajorByIdUseCase,
   UpdateMajorUseCase,
   DeleteMajorUseCase,
+  GetMajorsByInstitutionUseCase,
+  GetUserByIdUseCase,
 } from '../../application';
+import { UserType } from '../../domain/entities/user.entity';
+
+interface RequestWithUser extends Request {
+  user?: { id: string; userType: UserType };
+}
 
 export class MajorController {
   constructor(
@@ -14,6 +22,8 @@ export class MajorController {
     private readonly getMajorByIdUseCase: GetMajorByIdUseCase,
     private readonly updateMajorUseCase: UpdateMajorUseCase,
     private readonly deleteMajorUseCase: DeleteMajorUseCase,
+    private readonly getMajorsByInstitutionUseCase: GetMajorsByInstitutionUseCase,
+    private readonly getUserByIdUseCase: GetUserByIdUseCase,
   ) {}
 
   public getAll = async (
@@ -48,14 +58,31 @@ export class MajorController {
   };
 
   public create = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const newMajor = await this.createMajorUseCase.execute(req.body);
-      // La respuesta incluirá createdAt y updatedAt
-      res.status(201).json(newMajor);
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(401).json({ message: 'Not authenticated' });
+        return;
+      }
+
+      // 1) Recuperamos al usuario para extraer su universityId
+      const user = await this.getUserByIdUseCase.execute(userId);
+      if (user) {
+        const dto: Omit<Major, 'id'> & { createdBy: string } = {
+          ...(req.body as Omit<Major, 'id'>),
+          institutionId: user.universityId ?? '',
+          createdBy: userId,
+        };
+
+        const newMajor = await this.createMajorUseCase.execute(dto);
+        res.status(201).json(newMajor);
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
     } catch (error) {
       next(error);
     }
@@ -94,6 +121,21 @@ export class MajorController {
       }
     } catch (error) {
       next(error);
+    }
+  };
+
+  public getByInstitution = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { institutionId } = req.params;
+      const majors =
+        await this.getMajorsByInstitutionUseCase.execute(institutionId);
+      res.status(200).json(majors);
+    } catch (err) {
+      next(err);
     }
   };
 }

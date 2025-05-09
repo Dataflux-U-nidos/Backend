@@ -9,6 +9,9 @@ export const UserTypeEnum = Type.Union(
     Type.Literal('TUTOR'),
     Type.Literal('UNIVERSITY'),
     Type.Literal('INFOMANAGER'),
+    Type.Literal('MARKETING'),
+    Type.Literal('SUPPORT'),
+    Type.Literal('FINANCES'),
   ],
   { title: 'UserTypeEnum' },
 );
@@ -21,10 +24,16 @@ const BaseFields = {
   password: Type.String(),
 };
 
-const AdminSchema = Type.Intersect(
+export const AdminSchema = Type.Intersect(
   [
     Type.Object({ userType: Type.Literal('ADMIN') }),
-    Type.Object({ ...BaseFields, last_name: Type.String() }),
+    Type.Object({
+      ...BaseFields,
+      last_name: Type.String(),
+      marketing: Type.Array(Type.String({ format: 'uuid' })),
+      support: Type.Array(Type.String({ format: 'uuid' })),
+      finances: Type.Array(Type.String({ format: 'uuid' })),
+    }),
   ],
   { title: 'CreateAdminDto' },
 );
@@ -72,6 +81,7 @@ const UniversitySchema = Type.Intersect(
       address: Type.String(),
       infomanagers: Type.Array(Type.String({ format: 'uuid' })),
       viewers: Type.Array(Type.String({ format: 'uuid' })),
+      subscriptionPlanId: Type.Optional(Type.String({ format: 'uuid' })),
     }),
   ],
   { title: 'CreateUniversityDto' },
@@ -89,6 +99,31 @@ const InfoManagerSchema = Type.Intersect(
   { title: 'CreateInfoManagerDto' },
 );
 
+// Marketing Schema
+const MarketingSchema = Type.Intersect(
+  [
+    Type.Object({ userType: Type.Literal('MARKETING') }),
+    Type.Object({ ...BaseFields, last_name: Type.String() }),
+  ],
+  { title: 'CreateMarketingDto' },
+);
+
+const SupportSchema = Type.Intersect(
+  [
+    Type.Object({ userType: Type.Literal('SUPPORT') }),
+    Type.Object({ ...BaseFields, last_name: Type.String() }),
+  ],
+  { title: 'CreateSupportDto' },
+);
+
+const FinancesSchema = Type.Intersect(
+  [
+    Type.Object({ userType: Type.Literal('FINANCES') }),
+    Type.Object({ ...BaseFields, last_name: Type.String() }),
+  ],
+  { title: 'CreateFinancesDto' },
+);
+
 // Unión discriminada por 'userType'
 export const CreateUserSchema = Type.Union(
   [
@@ -98,6 +133,9 @@ export const CreateUserSchema = Type.Union(
     TutorSchema,
     UniversitySchema,
     InfoManagerSchema,
+    MarketingSchema,
+    SupportSchema,
+    FinancesSchema,
   ],
   { discriminator: 'userType', title: 'CreateUserDto' },
 );
@@ -123,6 +161,10 @@ export const UserResponseSchema = Type.Object(
     address: Type.Optional(Type.String()),
     infomanagers: Type.Optional(Type.Array(Type.String())),
     viewers: Type.Optional(Type.Array(Type.String())),
+    subscriptionPlanId: Type.Optional(Type.String()),
+    marketing: Type.Optional(Type.Array(Type.String())),
+    support: Type.Optional(Type.Array(Type.String())),
+    finances: Type.Optional(Type.Array(Type.String())),
     universityId: Type.Optional(Type.String()),
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' }),

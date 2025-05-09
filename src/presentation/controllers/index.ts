@@ -6,3 +6,6 @@ export * from './jobOpportunity.controller';
 export * from './comment.controller';
 export * from './auth.controller';
 export * from './email.controller';
+export * from './campaign.controller';
+export * from './subscriptionPlan.controller';
+export * from './studentTest.controller';

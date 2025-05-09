@@ -15,6 +15,12 @@ import {
   AddViewerToUniversityUseCase,
   GetInfoManagersByUniversityUseCase,
   GetViewersByUniversityUseCase,
+  AddMarketingToAdminUseCase,
+  GetMarketingByAdminUseCase,
+  AddSupportToAdminUseCase,
+  GetSupportByAdminUseCase,
+  AddFinancesToAdminUseCase,
+  GetFinancesByAdminUseCase,
 } from '../../application';
 
 const router = Router();
@@ -42,6 +48,16 @@ const getInfoManagersByUniversityUseCase =
 const getViewersByUniversityUseCase = new GetViewersByUniversityUseCase(
   userRepository,
 );
+const addMarketingToAdminUseCase = new AddMarketingToAdminUseCase(
+  userRepository,
+);
+const getMarketingByAdminUseCase = new GetMarketingByAdminUseCase(
+  userRepository,
+);
+const addSupportToAdminUseCase = new AddSupportToAdminUseCase(userRepository);
+const getSupportByAdminUseCase = new GetSupportByAdminUseCase(userRepository);
+const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository);
+const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -57,63 +73,125 @@ const userController = new UserController(
   addViewerToUniversityUseCase,
   getInfoManagersByUniversityUseCase,
   getViewersByUniversityUseCase,
+  addMarketingToAdminUseCase,
+  getMarketingByAdminUseCase,
+  addSupportToAdminUseCase,
+  getSupportByAdminUseCase,
+  addFinancesToAdminUseCase,
+  getFinancesByAdminUseCase,
 );
 
-// Defining routes with middleware validation and assigning controller methods
+// —————— RUTAS DE CREACIÓN ——————
+// Public registration (sin middleware)
+router.post('/registry', userController.create);
+
+// Create user
+router.post(
+  '/',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.create,
+);
+
+// —————— RUTAS DE LECTURA ESTÁTICAS ——————
+// Get all users
 router.get(
   '/',
   validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
 );
 
+// Get students by tutor (usa el token, no recibe ID por URL)
 router.get(
-  '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT', 'VIEWER', 'TUTOR', 'UNIVERSITY']),
-  userController.getById,
-);
-
-router.post('/', userController.create);
-
-router.get(
-  '/:id/students',
+  '/students',
   validateRoleMiddleware(['ADMIN', 'TUTOR']),
   userController.getStudentsByTutor,
 );
+
+// Get info managers by university (usa el token o un param interno)
 router.get(
-  '/:id/infomanagers',
+  '/infomanagers',
   validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
   userController.getInfoManagersByUniversity,
 );
+
+// Get viewers by university
 router.get(
-  '/:id/viewers',
+  '/viewers',
   validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
   userController.getViewersByUniversity,
 );
-router.post(
-  '/',
-  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
-  userController.create,
-);
-router.post('/registry', userController.create);
 
+// Get marketing by admin (usa el token, no recibe ID por URL)
+router.get(
+  '/marketing',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getMarketingByAdmin,
+);
+
+// Get support by admin (usa el token, no recibe ID por URL)
+router.get(
+  '/support',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getSupportByAdmin,
+);
+
+// Get finances by admin (usa el token, no recibe ID por URL)
+router.get(
+  '/finances',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getFinancesByAdmin,
+);
+
+// —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
+// Para que cada usuario actualice su propio perfil
 router.patch(
+  '/',
+  validateRoleMiddleware([
+    'ADMIN',
+    'TUTOR',
+    'UNIVERSITY',
+    'STUDENT',
+    'VIEWER',
+    'MARKETING',
+    'SUPPORT',
+    'FINANCES',
+  ]),
+  userController.update,
+);
+
+// Update user by Email
+router.patch('/by-email/:email', userController.updateByEmail);
+
+// —————— RUTA DE DELETE “ESPECIAL” ——————
+router.delete(
+  '/',
+  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
+  userController.delete,
+);
+
+// —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
+
+// Get user by ID
+router.get(
   '/:id',
   validateRoleMiddleware([
     'ADMIN',
     'STUDENT',
+    'VIEWER',
     'TUTOR',
     'UNIVERSITY',
-    'VIEWER',
-    'INFOMANAGER',
+    'MARKETING',
+    'SUPPORT',
+    'FINANCES',
   ]),
-  userController.update,
+  userController.getById,
 );
-router.patch('/by-email/:email', userController.updateByEmail);
 
-router.delete(
+// Update user by ID - Para que los usuarios raiz modifiquen la info de sus usuarios creados
+router.patch(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
-  userController.delete,
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.updateById,
 );
 
 export default router;
