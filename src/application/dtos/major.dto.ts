@@ -12,32 +12,21 @@ export const MajorBaseSchema = Type.Object({
   price: Type.Number(),
   description: Type.String(),
   pensumLink: Type.String({ format: 'uri' }),
-  jobId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
+  jobOpportunityIds: Type.Array(Type.String({ pattern: '^[0-9a-fA-F]{24}$' })), // ← aquí
   focus: Type.String(),
   createdBy: Type.Optional(Type.String({ pattern: '^[0-9a-fA-F]{24}$' })),
 });
 
 export type MajorBaseDto = Static<typeof MajorBaseSchema>;
 
-// Esquema para crear un Major (entrada)
-export const CreateMajorSchema = MajorBaseSchema;
-export type CreateMajorDto = Static<typeof CreateMajorSchema>;
+// ... CreateMajorSchema y UpdateMajorSchema heredan como antes ...
 
-// Esquema para actualizar un Major (entrada: todos los campos son opcionales)
-export const UpdateMajorSchema = Type.Partial(CreateMajorSchema);
-export type UpdateMajorDto = Static<typeof UpdateMajorSchema>;
-
-// Esquema para la respuesta de un Major (salida)
-// Clave: mantenemos createdBy como opcional aquí también
 export const MajorResponseSchema = Type.Intersect([
-  MajorBaseSchema, // Este ya tiene createdBy como opcional
+  MajorBaseSchema,
   Type.Object({
     id: Type.String(),
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' }),
-    // Ya no definimos createdBy aquí, para que se use el del MajorBaseSchema que es opcional
-
   }),
 ]);
-
 export type MajorResponseDto = Static<typeof MajorResponseSchema>;

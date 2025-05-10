@@ -13,7 +13,7 @@ export class MajorRepository implements IMajorRepository {
       price: doc.price,
       description: doc.description,
       pensumLink: doc.pensumLink,
-      jobId: doc.jobId as unknown as string,
+      jobOpportunityIds: doc.jobOpportunityIds.map((id) => id.toString()),
       focus: doc.focus,
       //createdBy: doc.createdBy.toString(),
       createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
@@ -33,7 +33,7 @@ export class MajorRepository implements IMajorRepository {
       price: doc.price,
       description: doc.description,
       pensumLink: doc.pensumLink,
-      jobId: doc.jobId as unknown as string,
+      jobOpportunityIds: doc.jobOpportunityIds.map((id) => id.toString()),
       focus: doc.focus,
       createdBy: doc.createdBy.toString(),
       createdAt: doc.createdAt.toISOString(),
@@ -66,7 +66,7 @@ export class MajorRepository implements IMajorRepository {
       price: doc.price,
       description: doc.description,
       pensumLink: doc.pensumLink,
-      jobId: doc.jobId as unknown as string,
+      jobOpportunityIds: doc.jobOpportunityIds.map((id) => id.toString()),
       focus: doc.focus,
       createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt,
@@ -89,11 +89,37 @@ export class MajorRepository implements IMajorRepository {
       price: doc.price,
       description: doc.description,
       pensumLink: doc.pensumLink,
-      jobId: doc.jobId.toString(),
+      jobOpportunityIds: doc.jobOpportunityIds.map((id) => id.toString()),
       focus: doc.focus,
       createdBy: doc.createdBy ? doc.createdBy.toString() : undefined,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     }));
+  }
+
+  public async addJobOpportunity(
+    majorId: string,
+    jobOpportunityId: string,
+  ): Promise<MajorResponseDto | null> {
+    const doc = await MajorModel.findByIdAndUpdate(
+      majorId,
+      { $addToSet: { jobOpportunityIds: jobOpportunityId } },
+      { new: true },
+    ).populate('jobOpportunityIds');
+    if (!doc) return null;
+    return {
+      id: doc._id.toString(),
+      name: doc.name,
+      institutionId: doc.institutionId.toString(),
+      difficulty: doc.difficulty,
+      price: doc.price,
+      description: doc.description,
+      pensumLink: doc.pensumLink,
+      jobOpportunityIds: doc.jobOpportunityIds.map((id) => id.toString()),
+      focus: doc.focus,
+      createdBy: doc.createdBy?.toString(),
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    };
   }
 }

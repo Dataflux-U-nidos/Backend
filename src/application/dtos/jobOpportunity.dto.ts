@@ -4,7 +4,6 @@ export const JobOpportunitySchema = Type.Object({
   id: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   name: Type.String(),
   description: Type.String(),
-  jobId: Type.String({ pattern: '^[0-9a-fA-F]{24}$' }),
   salary: Type.Number(),
 });
 

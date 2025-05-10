@@ -13,6 +13,7 @@ export * from '../use-cases/major/get-major-by-id.use-case';
 export * from '../use-cases/major/update-major.use-case';
 export * from '../use-cases/major/delete-major.use-case';
 export * from './major/get-majors-by-institution.use-case';
+export * from './major/add-job-opportunity-to-major.use-case';
 //Use cases job opportunity
 export * from './jobOpportunity/createJobOpportunity.useCase';
 export * from './jobOpportunity/deleteJobOpportunity.useCase';
@@ -40,6 +41,8 @@ export * from '../use-cases/user/add-marketing-to-admin.use-case';
 export * from '../use-cases/user/get-marketing-by-admin.use-case';
 export * from '../use-cases/user/add-support-to-admin.use-case';
 export * from '../use-cases/user/get-support-by-admin.use-case';
+export * from '../use-cases/user/update-test-result.use-case';
+export * from '../use-cases/user/update-final-result.use-case';
 // Use cases comment
 export * from './comment/get-all-comments.use-case';
 export * from '../use-cases/comment/get-comment-by-id.use-case';

@@ -4,17 +4,34 @@ import { UserBaseModel, UserBaseDocument } from './user.base.model';
 export interface StudentDocument extends UserBaseDocument {
   last_name: string;
   age: number;
+  zone: string;
   locality: string;
   school: string;
-  preferences: Record<string, unknown>;
+  preferences: string[];
+  le: number;
+  ma: number;
+  ci: number;
+  cc: number;
+  idi: number;
+  ar: number;
 }
 
 const StudentSchema = new Schema<Partial<StudentDocument>>({
   last_name: { type: String, required: true },
   age: { type: Number, required: true },
+  zone: { type: String, required: false },
   locality: { type: String, required: false },
   school: { type: String, required: false },
-  preferences: { type: Schema.Types.Mixed, required: false },
+  preferences: {
+    type: [String],
+    default: [],
+  },
+  le: { type: Number, required: false, default: 0 },
+  ma: { type: Number, required: false, default: 0 },
+  ci: { type: Number, required: false, default: 0 },
+  cc: { type: Number, required: false, default: 0 },
+  idi: { type: Number, required: false, default: 0 },
+  ar: { type: Number, required: false, default: 0 },
 });
 
 export const StudentModel = UserBaseModel.discriminator<StudentDocument>(

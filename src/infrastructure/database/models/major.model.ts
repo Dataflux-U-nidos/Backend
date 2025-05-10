@@ -8,7 +8,7 @@ export interface MajorDocument extends Document {
   price: number;
   description: string;
   pensumLink: string;
-  jobId: Types.ObjectId;
+  jobOpportunityIds: Types.ObjectId[];
   focus: string;
   createdBy: Types.ObjectId;
   createdAt: Date;
@@ -18,7 +18,11 @@ export interface MajorDocument extends Document {
 const MajorSchema = new Schema<MajorDocument>(
   {
     name: { type: String, required: true },
-    institutionId: { type: Schema.Types.ObjectId, required: true },
+    institutionId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Institutions',
+      required: true,
+    },
     difficulty: {
       type: String,
       enum: ['EASY', 'MEDIUM', 'HARD'],
@@ -27,13 +31,17 @@ const MajorSchema = new Schema<MajorDocument>(
     price: { type: Number, required: true },
     description: { type: String, required: true },
     pensumLink: { type: String, required: true },
-    jobId: { type: Schema.Types.ObjectId, required: true },
+    jobOpportunityIds: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'JobOpportunity',
+        default: [],
+      },
+    ],
     focus: { type: String, required: true },
-    createdBy: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'Users' },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
 export const MajorModel = model<MajorDocument>('Majors', MajorSchema);

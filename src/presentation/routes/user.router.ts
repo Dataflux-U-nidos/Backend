@@ -21,6 +21,8 @@ import {
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
   GetFinancesByAdminUseCase,
+  UpdateTestResultUseCase,
+  UpdateFinalResultUseCase,
 } from '../../application';
 
 const router = Router();
@@ -58,6 +60,8 @@ const addSupportToAdminUseCase = new AddSupportToAdminUseCase(userRepository);
 const getSupportByAdminUseCase = new GetSupportByAdminUseCase(userRepository);
 const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository);
 const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository);
+const updateTestResultUseCase = new UpdateTestResultUseCase(userRepository);
+const updateFinalResultUseCase = new UpdateFinalResultUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -79,6 +83,8 @@ const userController = new UserController(
   getSupportByAdminUseCase,
   addFinancesToAdminUseCase,
   getFinancesByAdminUseCase,
+  updateTestResultUseCase,
+  updateFinalResultUseCase,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
@@ -157,6 +163,18 @@ router.patch(
     'FINANCES',
   ]),
   userController.update,
+);
+
+router.patch(
+  '/form-result',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  userController.updateTestResult,
+);
+
+router.patch(
+  '/final-result',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  userController.updateFinalResult,
 );
 
 // Update user by Email
