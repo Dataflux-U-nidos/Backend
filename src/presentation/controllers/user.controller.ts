@@ -21,6 +21,7 @@ import {
   GetFinancesByAdminUseCase,
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
+  GetRecommendationsUseCase,
 } from '../../application';
 import {
   CreateUserDto,
@@ -56,6 +57,7 @@ export class UserController {
     private readonly getFinancesByAdminUseCase: GetFinancesByAdminUseCase,
     private readonly updateTestResultUseCase: UpdateTestResultUseCase,
     private readonly updateFinalResultUseCase: UpdateFinalResultUseCase,
+    private readonly getRecommendationsUseCase: GetRecommendationsUseCase,
   ) {}
 
   public getAll = async (
@@ -392,6 +394,25 @@ export class UserController {
       res.status(200).json(user);
     } catch (err) {
       next(err);
+    }
+  };
+
+  public getRecommendations = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const recommendations =
+        await this.getRecommendationsUseCase.execute(userId);
+      res.status(200).json(recommendations);
+    } catch (error) {
+      next(error);
     }
   };
 }

@@ -43,6 +43,7 @@ export * from '../use-cases/user/add-support-to-admin.use-case';
 export * from '../use-cases/user/get-support-by-admin.use-case';
 export * from '../use-cases/user/update-test-result.use-case';
 export * from '../use-cases/user/update-final-result.use-case';
+export * from '../use-cases/user/get-recommendations.use-case';
 // Use cases comment
 export * from './comment/get-all-comments.use-case';
 export * from '../use-cases/comment/get-comment-by-id.use-case';

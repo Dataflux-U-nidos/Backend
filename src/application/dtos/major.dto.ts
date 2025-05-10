@@ -15,6 +15,7 @@ export const MajorBaseSchema = Type.Object({
   jobOpportunityIds: Type.Array(Type.String({ pattern: '^[0-9a-fA-F]{24}$' })), // ← aquí
   focus: Type.String(),
   createdBy: Type.Optional(Type.String({ pattern: '^[0-9a-fA-F]{24}$' })),
+  preferences: Type.Array(Type.String()),
 });
 
 export type MajorBaseDto = Static<typeof MajorBaseSchema>;

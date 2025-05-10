@@ -19,8 +19,8 @@ export interface StudentDocument extends UserBaseDocument {
 const StudentSchema = new Schema<Partial<StudentDocument>>({
   last_name: { type: String, required: true },
   age: { type: Number, required: true },
-  zone: { type: String, required: false },
-  locality: { type: String, required: false },
+  zone: { type: String, required: false, default: '' },
+  locality: { type: String, required: false, default: '' },
   school: { type: String, required: false },
   preferences: {
     type: [String],

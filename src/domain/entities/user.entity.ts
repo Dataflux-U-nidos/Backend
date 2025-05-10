@@ -70,6 +70,8 @@ export interface TutorUser extends BaseUser {
 
 export interface UniversityUser extends BaseUser {
   userType: 'UNIVERSITY';
+  zone: string;
+  locality: string;
   address: string;
   infomanagers: string[];
   viewers: string[];

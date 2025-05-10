@@ -343,6 +343,7 @@ export class UserRepository implements IUserRepository {
     if ('preferences' in doc) base.preferences = doc.preferences;
     if ('students' in doc && Array.isArray(doc.students))
       base.students = doc.students.map((s) => s.toString());
+    if ('zone' in doc) base.zone = doc.zone;
     if ('address' in doc) base.address = doc.address;
     if ('infomanagers' in doc && Array.isArray(doc.infomanagers))
       base.infomanagers = doc.infomanagers.map((s) => s.toString());
@@ -472,13 +473,15 @@ export class UserRepository implements IUserRepository {
     if (!doc) return null;
 
     // 2) Asignar sólo los campos de test
-    const { le, ma, ci, cc, idi, ar } = data;
+    const { zone, locality, le, ma, ci, cc, idi, ar } = data;
+    doc.zone = zone;
+    doc.locality = locality;
     doc.le = le;
     doc.ma = ma;
     doc.ci = ci;
     doc.cc = cc;
     doc.idi = idi;
-    if (ar !== undefined) doc.ar = ar;
+    doc.ar = ar;
 
     // 3) Salvar y mapear
     const updated = await doc.save();
@@ -491,10 +494,6 @@ export class UserRepository implements IUserRepository {
   ): Promise<User | null> {
     const doc = await StudentModel.findById(userId).exec();
     if (!doc) return null;
-
-    // 1) Zona y localidad
-    doc.zone = data.zone;
-    doc.locality = data.locality;
 
     // 2) Promedia campo a campo
     doc.le = (doc.le + data.le) / 2;

@@ -10,6 +10,7 @@ export interface Major {
   jobOpportunityIds: string[];
   focus: string;
   createdBy?: string;
+  preferences: string[];
   createdAt: Date;
   updatedAt: Date;
 }

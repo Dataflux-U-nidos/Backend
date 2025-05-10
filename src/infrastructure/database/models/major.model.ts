@@ -10,6 +10,7 @@ export interface MajorDocument extends Document {
   pensumLink: string;
   jobOpportunityIds: Types.ObjectId[];
   focus: string;
+  preferences: string[];
   createdBy: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -40,6 +41,7 @@ const MajorSchema = new Schema<MajorDocument>(
     ],
     focus: { type: String, required: true },
     createdBy: { type: Schema.Types.ObjectId, ref: 'Users' },
+    preferences: { type: [String], default: [] },
   },
   { timestamps: true },
 );

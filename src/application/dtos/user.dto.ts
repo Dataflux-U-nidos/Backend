@@ -163,6 +163,7 @@ export const UserResponseSchema = Type.Object(
     last_name: Type.Optional(Type.String()),
     age: Type.Optional(Type.Number()),
     userType: UserTypeEnum,
+    zone: Type.Optional(Type.String()),
     locality: Type.Optional(Type.String()),
     school: Type.Optional(Type.String()),
     preferences: Type.Optional(Type.Array(Type.String())),
@@ -190,6 +191,8 @@ export type UsersListDto = Static<typeof UsersListSchema>;
 
 // application/dtos/user.dto.ts
 export class UpdateTestResultDto {
+  zone!: string;
+  locality!: string;
   le!: number;
   ma!: number;
   ci!: number;
@@ -200,8 +203,6 @@ export class UpdateTestResultDto {
 
 // src/application/dtos/user.dto.ts
 export class UpdateFinalResultDto {
-  zone!: string;
-  locality!: string;
   le!: number;
   ma!: number;
   ci!: number;

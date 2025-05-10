@@ -1,7 +1,10 @@
 // src/presentation/routes/user.router.ts
 import { Router } from 'express';
 import { UserController, validateRoleMiddleware } from '../../presentation';
-import { UserRepository } from '../../infrastructure/database/repositories';
+import {
+  UserRepository,
+  MajorRepository,
+} from '../../infrastructure/database/repositories';
 import {
   CreateUserUseCase,
   GetAllUsersUseCase,
@@ -23,12 +26,14 @@ import {
   GetFinancesByAdminUseCase,
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
+  GetRecommendationsUseCase,
 } from '../../application';
 
 const router = Router();
 
 // instance repository
 const userRepository = new UserRepository();
+const majorRepository = new MajorRepository();
 
 // instance use cases
 const createUserUseCase = new CreateUserUseCase(userRepository);
@@ -62,6 +67,10 @@ const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository);
 const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository);
 const updateTestResultUseCase = new UpdateTestResultUseCase(userRepository);
 const updateFinalResultUseCase = new UpdateFinalResultUseCase(userRepository);
+const getRecommendationsUseCase = new GetRecommendationsUseCase(
+  userRepository,
+  majorRepository,
+);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -85,6 +94,7 @@ const userController = new UserController(
   getFinancesByAdminUseCase,
   updateTestResultUseCase,
   updateFinalResultUseCase,
+  getRecommendationsUseCase,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
@@ -146,6 +156,12 @@ router.get(
   '/finances',
   validateRoleMiddleware(['ADMIN']),
   userController.getFinancesByAdmin,
+);
+
+router.get(
+  '/recommendations',
+  validateRoleMiddleware(['STUDENT']),
+  userController.getRecommendations,
 );
 
 // —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
