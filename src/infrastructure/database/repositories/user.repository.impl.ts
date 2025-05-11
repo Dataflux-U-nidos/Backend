@@ -405,6 +405,7 @@ export class UserRepository implements IUserRepository {
           locality: d.locality,
           school: d.school,
           preferences: d.preferences,
+          testCompleted: d.testCompleted,
         } as StudentUser;
       }
       case 'VIEWER':

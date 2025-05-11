@@ -35,6 +35,7 @@ export interface StudentUser extends BaseUser {
   locality: string;
   school: string;
   preferences: string[];
+  testCompleted: boolean;
   le: number;
   ma: number;
   ci: number;
