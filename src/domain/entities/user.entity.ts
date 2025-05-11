@@ -31,9 +31,16 @@ export interface StudentUser extends BaseUser {
   userType: 'STUDENT';
   last_name: string;
   age: number;
+  zone: string;
   locality: string;
   school: string;
-  preferences: Record<string, unknown>;
+  preferences: string[];
+  le: number;
+  ma: number;
+  ci: number;
+  cc: number;
+  idi: number;
+  ar: number;
 }
 
 export interface TutorUser extends BaseUser {
@@ -43,6 +50,8 @@ export interface TutorUser extends BaseUser {
 
 export interface UniversityUser extends BaseUser {
   userType: 'UNIVERSITY';
+  zone: string;
+  locality: string;
   infomanagers: string[];
   viewers: string[];
   subscriptionPlanId: string;
@@ -61,6 +70,8 @@ export interface TutorUser extends BaseUser {
 
 export interface UniversityUser extends BaseUser {
   userType: 'UNIVERSITY';
+  zone: string;
+  locality: string;
   address: string;
   infomanagers: string[];
   viewers: string[];

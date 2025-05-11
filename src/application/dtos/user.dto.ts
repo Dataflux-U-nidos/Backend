@@ -45,9 +45,16 @@ const StudentSchema = Type.Intersect(
       ...BaseFields,
       last_name: Type.String(),
       age: Type.Number(),
+      zone: Type.String(),
       locality: Type.String(),
       school: Type.String(),
-      preferences: Type.Record(Type.String(), Type.Unknown()),
+      preferences: Type.Optional(Type.Array(Type.String())),
+      le: Type.Optional(Type.Number()),
+      ma: Type.Optional(Type.Number()),
+      ci: Type.Optional(Type.Number()),
+      cc: Type.Optional(Type.Number()),
+      idi: Type.Optional(Type.Number()),
+      ar: Type.Optional(Type.Number()),
     }),
   ],
   { title: 'CreateStudentDto' },
@@ -78,6 +85,8 @@ const UniversitySchema = Type.Intersect(
     Type.Object({ userType: Type.Literal('UNIVERSITY') }),
     Type.Object({
       ...BaseFields,
+      zone: Type.String(),
+      locality: Type.String(),
       address: Type.String(),
       infomanagers: Type.Array(Type.String({ format: 'uuid' })),
       viewers: Type.Array(Type.String({ format: 'uuid' })),
@@ -154,9 +163,10 @@ export const UserResponseSchema = Type.Object(
     last_name: Type.Optional(Type.String()),
     age: Type.Optional(Type.Number()),
     userType: UserTypeEnum,
+    zone: Type.Optional(Type.String()),
     locality: Type.Optional(Type.String()),
     school: Type.Optional(Type.String()),
-    preferences: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
+    preferences: Type.Optional(Type.Array(Type.String())),
     students: Type.Optional(Type.Array(Type.String())),
     address: Type.Optional(Type.String()),
     infomanagers: Type.Optional(Type.Array(Type.String())),
@@ -178,3 +188,25 @@ export const UsersListSchema = Type.Object({
   users: Type.Array(UserResponseSchema),
 });
 export type UsersListDto = Static<typeof UsersListSchema>;
+
+// application/dtos/user.dto.ts
+export class UpdateTestResultDto {
+  zone!: string;
+  locality!: string;
+  le!: number;
+  ma!: number;
+  ci!: number;
+  cc!: number;
+  idi!: number;
+  ar!: number;
+}
+
+// src/application/dtos/user.dto.ts
+export class UpdateFinalResultDto {
+  le!: number;
+  ma!: number;
+  ci!: number;
+  cc!: number;
+  idi!: number;
+  ar!: number;
+}

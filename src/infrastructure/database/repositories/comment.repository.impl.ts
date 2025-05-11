@@ -61,4 +61,17 @@ export class CommentRepository implements ICommentRepository {
     const result = await CommentModel.findByIdAndDelete(id);
     return result !== null;
   }
+
+  public async findByMajor(majorId: string): Promise<CommentResponseDto[]> {
+    const docs = await CommentModel.find({ majorId }).sort({ createdAt: -1 }); // más recientes primero
+
+    return docs.map((doc) => ({
+      id: doc._id.toString(),
+      userId: doc.userId.toString(),
+      majorId: doc.majorId.toString(),
+      text: doc.text,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
+    }));
+  }
 }

@@ -16,4 +16,5 @@ export interface ICommentRepository {
   ): Promise<CommentResponseDto | null>;
 
   delete(id: string): Promise<boolean>;
+  findByMajor(majorId: string): Promise<CommentResponseDto[]>;
 }
