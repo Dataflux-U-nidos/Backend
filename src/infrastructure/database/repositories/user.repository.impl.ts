@@ -341,6 +341,7 @@ export class UserRepository implements IUserRepository {
     if ('locality' in doc) base.locality = doc.locality;
     if ('school' in doc) base.school = doc.school;
     if ('preferences' in doc) base.preferences = doc.preferences;
+    if ('testCompleted' in doc) base.testCompleted = doc.testCompleted;
     if ('students' in doc && Array.isArray(doc.students))
       base.students = doc.students.map((s) => s.toString());
     if ('zone' in doc) base.zone = doc.zone;
