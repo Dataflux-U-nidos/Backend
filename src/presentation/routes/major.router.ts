@@ -12,6 +12,7 @@ import {
   DeleteMajorUseCase,
   GetMajorsByInstitutionUseCase,
   GetUserByIdUseCase,
+  AddJobOpportunityToMajorUseCase,
 } from '../../application';
 
 const router = Router();
@@ -28,6 +29,9 @@ const getMajorsByUniversityUseCase = new GetMajorsByInstitutionUseCase(
   majorRepository,
 );
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
+const addJobOpportunityToMajorUseCase = new AddJobOpportunityToMajorUseCase(
+  majorRepository,
+);
 
 const majorController = new MajorController(
   createMajorUseCase,
@@ -37,6 +41,7 @@ const majorController = new MajorController(
   deleteMajorUseCase,
   getMajorsByUniversityUseCase,
   getUserByIdUseCase,
+  addJobOpportunityToMajorUseCase,
 );
 
 // Defining routes with middleware validation and assigning controller methods
@@ -61,6 +66,13 @@ router.post(
   '/',
   validateRoleMiddleware(['INFOMANAGER']),
   majorController.create,
+);
+
+// src/presentation/routes/major.routes.ts
+router.patch(
+  '/job-opportunities/:id',
+  validateRoleMiddleware(['INFOMANAGER', 'ADMIN']),
+  majorController.addJobOpportunity,
 );
 
 router.patch(

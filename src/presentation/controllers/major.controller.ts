@@ -8,6 +8,7 @@ import {
   DeleteMajorUseCase,
   GetMajorsByInstitutionUseCase,
   GetUserByIdUseCase,
+  AddJobOpportunityToMajorUseCase,
 } from '../../application';
 import { UserType } from '../../domain/entities/user.entity';
 
@@ -24,6 +25,7 @@ export class MajorController {
     private readonly deleteMajorUseCase: DeleteMajorUseCase,
     private readonly getMajorsByInstitutionUseCase: GetMajorsByInstitutionUseCase,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
+    private readonly addJobOpportunityUseCase: AddJobOpportunityToMajorUseCase,
   ) {}
 
   public getAll = async (
@@ -134,6 +136,28 @@ export class MajorController {
       const majors =
         await this.getMajorsByInstitutionUseCase.execute(institutionId);
       res.status(200).json(majors);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public addJobOpportunity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id } = req.params; // majorId
+      const { jobOpportunityId } = req.body;
+      const updated = await this.addJobOpportunityUseCase.execute(
+        id,
+        jobOpportunityId,
+      );
+      if (!updated) {
+        res.status(404).json({ message: 'Major not found' });
+        return;
+      }
+      res.status(200).json(updated);
     } catch (err) {
       next(err);
     }

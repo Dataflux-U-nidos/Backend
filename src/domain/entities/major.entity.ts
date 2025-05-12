@@ -1,16 +1,17 @@
+// src/domain/major.ts
 export interface Major {
-  id: string; // Ojo: en MongoDB será _id, pero en la capa de dominio podemos llamarlo "id"
+  id: string;
   name: string;
-  institutionId: string; // se asocia con institution
+  institutionId: string;
   difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   price: number;
   description: string;
   pensumLink: string;
-  jobId: string;
+  jobOpportunityIds: string[];
   focus: string;
   createdBy?: string;
+  preferences: string[];
   createdAt: Date;
   updatedAt: Date;
 }
-
 export default Major;

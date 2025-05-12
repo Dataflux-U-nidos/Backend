@@ -5,6 +5,7 @@ import {
   GetCommentByIdUseCase,
   UpdateCommentUseCase,
   DeleteCommentUseCase,
+  GetCommentsByMajorUseCase,
   UserType,
 } from '../../application';
 
@@ -19,6 +20,7 @@ export class CommentController {
     private readonly getCommentByIdUseCase: GetCommentByIdUseCase,
     private readonly updateCommentUseCase: UpdateCommentUseCase,
     private readonly deleteCommentUseCase: DeleteCommentUseCase,
+    private readonly getCommentsByMajorUseCase: GetCommentsByMajorUseCase,
   ) {}
 
   public getAll = async (
@@ -109,6 +111,20 @@ export class CommentController {
       }
     } catch (error) {
       next(error);
+    }
+  };
+  // en CommentController
+  public getByMajor = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { majorId } = req.params;
+      const comments = await this.getCommentsByMajorUseCase.execute(majorId);
+      res.status(200).json(comments);
+    } catch (err) {
+      next(err);
     }
   };
 }

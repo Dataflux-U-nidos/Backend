@@ -6,6 +6,8 @@ export interface UniversityDocument extends UserBaseDocument {
   infomanagers: string[];
   viewers: string[];
   subscriptionPlanId: Types.ObjectId;
+  zone: string;
+  locality: string;
 }
 
 const UniversitySchema = new Schema<Partial<UniversityDocument>>({
@@ -17,6 +19,8 @@ const UniversitySchema = new Schema<Partial<UniversityDocument>>({
     ref: 'SubscriptionPlan',
     required: true,
   },
+  zone: { type: String, required: false },
+  locality: { type: String, required: false },
 });
 
 export const UniversityModel = UserBaseModel.discriminator<UniversityDocument>(

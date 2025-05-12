@@ -8,4 +8,8 @@ export interface IMajorRepository {
   update(id: string, data: Partial<Omit<Major, 'id'>>): Promise<Major | null>;
   delete(id: string): Promise<boolean>;
   findByInstitution(institutionId: string): Promise<Major[]>;
+  addJobOpportunity(
+    majorId: string,
+    jobOpportunityId: string,
+  ): Promise<MajorResponseDto | null>;
 }

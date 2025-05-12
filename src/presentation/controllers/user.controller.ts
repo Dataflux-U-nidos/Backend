@@ -19,8 +19,16 @@ import {
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
   GetFinancesByAdminUseCase,
+  UpdateTestResultUseCase,
+  UpdateFinalResultUseCase,
+  GetRecommendationsUseCase,
 } from '../../application';
-import { CreateUserDto, UpdateUserDto } from '../../application/dtos/user.dto';
+import {
+  CreateUserDto,
+  UpdateFinalResultDto,
+  UpdateTestResultDto,
+  UpdateUserDto,
+} from '../../application/dtos/user.dto';
 import { UserType } from '../../domain/entities/user.entity';
 
 interface RequestWithUser extends Request {
@@ -47,6 +55,9 @@ export class UserController {
     private readonly getSupportByAdminUseCase: GetSupportByAdminUseCase,
     private readonly addFinancesToAdminUseCase: AddFinancesToAdminUseCase,
     private readonly getFinancesByAdminUseCase: GetFinancesByAdminUseCase,
+    private readonly updateTestResultUseCase: UpdateTestResultUseCase,
+    private readonly updateFinalResultUseCase: UpdateFinalResultUseCase,
+    private readonly getRecommendationsUseCase: GetRecommendationsUseCase,
   ) {}
 
   public getAll = async (
@@ -343,6 +354,63 @@ export class UserController {
       }
       const list = await this.getFinancesByAdminUseCase.execute(adminId);
       res.status(200).json(list);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateTestResult = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const dto = req.body as UpdateTestResultDto;
+      const user = await this.updateTestResultUseCase.execute(userId, dto);
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public updateFinalResult = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const dto = req.body as UpdateFinalResultDto;
+      const user = await this.updateFinalResultUseCase.execute(userId, dto);
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getRecommendations = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const recommendations =
+        await this.getRecommendationsUseCase.execute(userId);
+      res.status(200).json(recommendations);
     } catch (error) {
       next(error);
     }

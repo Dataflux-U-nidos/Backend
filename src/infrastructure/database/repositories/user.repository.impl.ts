@@ -13,7 +13,11 @@ import {
   SupportUser,
   FinancesUser,
 } from '../../../domain/entities/user.entity';
-import { UserResponseDto } from '../../../application/dtos/user.dto';
+import {
+  UpdateFinalResultDto,
+  UpdateTestResultDto,
+  UserResponseDto,
+} from '../../../application/dtos/user.dto';
 import { UserBaseModel, UserBaseDocument } from '../../../infrastructure/';
 import {
   StudentModel,
@@ -47,6 +51,8 @@ type UserDocument =
   | MarketingDocument
   | SupportDocument
   | FinancesDocument;
+
+type Metric = 'le' | 'ma' | 'ci' | 'cc' | 'idi' | 'ar';
 
 export class UserRepository implements IUserRepository {
   public async findAll(filter?: {
@@ -337,6 +343,7 @@ export class UserRepository implements IUserRepository {
     if ('preferences' in doc) base.preferences = doc.preferences;
     if ('students' in doc && Array.isArray(doc.students))
       base.students = doc.students.map((s) => s.toString());
+    if ('zone' in doc) base.zone = doc.zone;
     if ('address' in doc) base.address = doc.address;
     if ('infomanagers' in doc && Array.isArray(doc.infomanagers))
       base.infomanagers = doc.infomanagers.map((s) => s.toString());
@@ -455,5 +462,68 @@ export class UserRepository implements IUserRepository {
       default:
         return base as User;
     }
+  }
+
+  public async updateTestResult(
+    userId: string,
+    data: UpdateTestResultDto,
+  ): Promise<User | null> {
+    // 1) Buscar y castearlo al modelo Student
+    const doc = await StudentModel.findById(userId).exec();
+    if (!doc) return null;
+
+    // 2) Asignar sólo los campos de test
+    const { zone, locality, le, ma, ci, cc, idi, ar } = data;
+    doc.zone = zone;
+    doc.locality = locality;
+    doc.le = le;
+    doc.ma = ma;
+    doc.ci = ci;
+    doc.cc = cc;
+    doc.idi = idi;
+    doc.ar = ar;
+
+    // 3) Salvar y mapear
+    const updated = await doc.save();
+    return this.mapEntity(updated);
+  }
+
+  public async updateFinalResult(
+    userId: string,
+    data: UpdateFinalResultDto,
+  ): Promise<User | null> {
+    const doc = await StudentModel.findById(userId).exec();
+    if (!doc) return null;
+
+    // 2) Promedia campo a campo
+    doc.le = (doc.le + data.le) / 2;
+    doc.ma = (doc.ma + data.ma) / 2;
+    doc.ci = (doc.ci + data.ci) / 2;
+    doc.cc = (doc.cc + data.cc) / 2;
+    doc.idi = (doc.idi + data.idi) / 2;
+    doc.ar = (doc.ar + data.ar) / 2;
+
+    // 3) Construye el array de tuplas
+    const scores: [Metric, number][] = [
+      ['le', doc.le],
+      ['ma', doc.ma],
+      ['ci', doc.ci],
+      ['cc', doc.cc],
+      ['idi', doc.idi],
+      ['ar', doc.ar],
+    ];
+
+    // 4) Ordena una copia y extrae top-2
+    const sortedScores = scores
+      .slice() // <-- copia para no mutar original
+      .sort(([, a], [, b]) => b - a); // <-- ahora ya no da warning
+    const top2 = sortedScores.slice(0, 2).map(([metric]) => metric);
+
+    // 5) Actualiza preferences (ahora string[])
+    doc.preferences = Array.from(new Set([...doc.preferences, ...top2]));
+
+    // 6) Guarda y mapea
+    const updated = await doc.save();
+    return this.mapEntity(updated);
   }
 }
