@@ -84,10 +84,12 @@ export class AuthController {
           .json({ message: 'No se encontró token de acceso en Authorization' });
         return;
       }
+      console.log('Authorization header:', authHeader);
       const accessToken = authHeader.slice(7).trim();
       const session = await this.getSessionUseCase.execute(accessToken);
       res.status(200).json({ userType: session.userType });
     } catch (error: unknown) {
+      console.log('Error en getSession:', error);
       if (error instanceof Error) {
         res.status(401).json({ message: error.message });
         console.log('Error en getSession:', error.message);
