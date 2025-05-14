@@ -153,31 +153,6 @@ export class UserRepository implements IUserRepository {
     };
   }
 
-  public async updateByEmail(
-    email: string,
-    data: Partial<Omit<User, 'id'>>,
-  ): Promise<User | null> {
-    const doc = await UserModel.findOneAndUpdate({ email }, data, {
-      new: true,
-    });
-    if (!doc) return null;
-
-    return {
-      id: doc._id as unknown as string,
-      name: doc.name,
-      last_name: doc.last_name,
-      email: doc.email,
-      password: doc.password,
-      age: doc.age,
-      type: doc.type,
-      locality: doc.locality,
-      school: doc.school,
-      preferences: doc.preferences,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
-    };
-  }
-
   public async delete(id: string): Promise<boolean> {
     const doc = await UserBaseModel.findByIdAndDelete(id).exec();
     return doc !== null;
@@ -446,6 +421,17 @@ export class UserRepository implements IUserRepository {
           infomanagers: d.infomanagers.map((s) => s.toString()),
           viewers: d.viewers.map((s) => s.toString()),
           subscriptionPlanId: d.subscriptionPlanId.toString(),
+          location_l: d.location_l,
+          price_range: d.price_range,
+          aceptation_difficulty: d.aceptation_difficulty,
+          description: d.description,
+          link: d.link,
+          events: d.events.map((event) => ({
+            name: event.name,
+            description: event.description,
+            date: event.date,
+            location: event.location,
+          })),
         } as UniversityUser;
       }
       case 'INFOMANAGER': {

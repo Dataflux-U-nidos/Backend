@@ -82,6 +82,27 @@ const UniversitySchema = Type.Intersect(
       infomanagers: Type.Array(Type.String({ format: 'uuid' })),
       viewers: Type.Array(Type.String({ format: 'uuid' })),
       subscriptionPlanId: Type.Optional(Type.String({ format: 'uuid' })),
+      location_l: Type.String(),
+      price_range: Type.Union([
+        Type.Literal('LOW'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HIGH'),
+      ]),
+      aceptation_difficulty: Type.Union([
+        Type.Literal('EASY'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HARD'),
+      ]),
+      description: Type.String(),
+      link: Type.String(),
+      events: Type.Array(
+        Type.Object({
+          name: Type.String(),
+          description: Type.String(),
+          date: Type.String({ format: 'date-time' }),
+          location: Type.String(),
+        }),
+      ),
     }),
   ],
   { title: 'CreateUniversityDto' },
@@ -168,6 +189,33 @@ export const UserResponseSchema = Type.Object(
     universityId: Type.Optional(Type.String()),
     createdAt: Type.String({ format: 'date-time' }),
     updatedAt: Type.String({ format: 'date-time' }),
+    location_l: Type.Optional(Type.String()),
+    price_range: Type.Optional(
+      Type.Union([
+        Type.Literal('LOW'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HIGH'),
+      ]),
+    ),
+    aceptation_difficulty: Type.Optional(
+      Type.Union([
+        Type.Literal('EASY'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HARD'),
+      ]),
+    ),
+    description: Type.Optional(Type.String()),
+    link: Type.Optional(Type.String()),
+    events: Type.Optional(
+      Type.Array(
+        Type.Object({
+          name: Type.String(),
+          description: Type.String(),
+          date: Type.String({ format: 'date-time' }),
+          location: Type.String(),
+        }),
+      ),
+    ),
   },
   { title: 'UserResponseDto' },
 );

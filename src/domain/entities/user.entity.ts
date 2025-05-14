@@ -41,13 +41,6 @@ export interface TutorUser extends BaseUser {
   students: string[];
 }
 
-export interface UniversityUser extends BaseUser {
-  userType: 'UNIVERSITY';
-  infomanagers: string[];
-  viewers: string[];
-  subscriptionPlanId: string;
-}
-
 export interface ViewerUser extends BaseUser {
   userType: 'VIEWER';
   last_name: string;
@@ -64,6 +57,20 @@ export interface UniversityUser extends BaseUser {
   address: string;
   infomanagers: string[];
   viewers: string[];
+  subscriptionPlanId: string;
+  location_l: string;
+  price_range: 'LOW' | 'MEDIUM' | 'HIGH';
+  aceptation_difficulty: 'EASY' | 'MEDIUM' | 'HARD';
+  description: string;
+  link: string;
+  events: [
+    {
+      name: string;
+      description: string;
+      date: Date;
+      location: string;
+    },
+  ];
 }
 
 export interface InfoManagerUser extends BaseUser {
