@@ -203,6 +203,13 @@ router.delete(
   userController.delete,
 );
 
+// —————— RUTA PARA ELIMINAR USUARIO POR ID ——————
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.deleteById,
+);
+
 // —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
 
 // Get user by ID

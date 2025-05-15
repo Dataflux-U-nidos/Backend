@@ -415,4 +415,26 @@ export class UserController {
       next(error);
     }
   };
+
+  public deleteById = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const deleted = await this.deleteUserUseCase.execute(id);
+      if (!deleted) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+      res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

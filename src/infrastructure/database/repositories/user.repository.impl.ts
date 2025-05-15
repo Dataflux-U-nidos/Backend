@@ -361,6 +361,9 @@ export class UserRepository implements IUserRepository {
       base.support = doc.support.map((s) => s.toString());
     if ('finances' in doc && Array.isArray(doc.finances))
       base.finances = doc.finances.map((s) => s.toString());
+    if ('testCompleted' in doc) {
+      base.testCompleted = doc.testCompleted;
+    }
     return base as UserResponseDto;
   }
 
