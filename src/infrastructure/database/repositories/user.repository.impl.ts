@@ -193,6 +193,21 @@ export class UserRepository implements IUserRepository {
     return tutorDoc.students.map((d) => this.mapDoc(d));
   }
 
+  // Find all users by support filtering by userType
+  public async findUsersBySupport(filter?: {
+    userType?: string;
+    email?: string;
+  }): Promise<UserResponseDto[]> {
+    const query: { userType?: string; email?: string } = {};
+    if (filter?.userType) query.userType = filter.userType;
+    if (filter?.email) query.email = filter.email;
+
+    const docs = await UserBaseModel.find(query)
+      .populate<{ support: SupportDocument[] }>('support')
+      .exec();
+    return docs.map((doc) => this.mapDoc(doc));
+  }
+
   public async addStudentToTutor(
     tutorId: string,
     studentId: string,

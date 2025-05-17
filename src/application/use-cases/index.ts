@@ -33,6 +33,7 @@ export * from '../use-cases/user/add-student-to-tutor.use-case';
 export * from '../use-cases/user/add-infomanager-to-university.use-case';
 export * from '../use-cases/user/add-viewer-to-university.use-case';
 export * from '../use-cases/user/get-viewers-by-university.use-case';
+export * from '../use-cases/user/get-users-by-support.use-case';
 export * from '../use-cases/user/get-infomanagers-by-university.use-case';
 export * from '../use-cases/user/add-finances-to-admin.use-case';
 export * from './user/get-finances-by-admin.use-case';

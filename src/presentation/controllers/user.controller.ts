@@ -18,6 +18,7 @@ import {
   AddSupportToAdminUseCase,
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
+  GetUsersBySupportUseCase,
   GetFinancesByAdminUseCase,
 } from '../../application';
 import { CreateUserDto, UpdateUserDto } from '../../application/dtos/user.dto';
@@ -47,6 +48,7 @@ export class UserController {
     private readonly getSupportByAdminUseCase: GetSupportByAdminUseCase,
     private readonly addFinancesToAdminUseCase: AddFinancesToAdminUseCase,
     private readonly getFinancesByAdminUseCase: GetFinancesByAdminUseCase,
+    private readonly getUsersBySupportUseCase: GetUsersBySupportUseCase,
   ) {}
 
   public getAll = async (
@@ -252,6 +254,24 @@ export class UserController {
       const students = await this.getStudentsByTutorUseCase.execute(tutorId);
       res.status(200).json(students);
     } catch (error) {
+      next(error);
+    }
+  };
+
+  public getUsersBySupport = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { userType, email } = req.query;
+      const users = await this.getUsersBySupportUseCase.execute(
+        typeof userType === 'string' ? userType : undefined,
+        typeof email === 'string' ? email : undefined,
+      );
+      res.status(200).json(users);
+    } catch (error) {
+      console.error('Error in getUsersBySupport:', error);
       next(error);
     }
   };

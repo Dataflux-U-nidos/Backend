@@ -21,6 +21,7 @@ import {
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
   GetFinancesByAdminUseCase,
+  GetUsersBySupportUseCase,
 } from '../../application';
 
 const router = Router();
@@ -58,6 +59,7 @@ const addSupportToAdminUseCase = new AddSupportToAdminUseCase(userRepository);
 const getSupportByAdminUseCase = new GetSupportByAdminUseCase(userRepository);
 const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository);
 const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository);
+const getUsersBySupportUseCase = new GetUsersBySupportUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -79,6 +81,7 @@ const userController = new UserController(
   getSupportByAdminUseCase,
   addFinancesToAdminUseCase,
   getFinancesByAdminUseCase,
+  getUsersBySupportUseCase,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
@@ -98,6 +101,13 @@ router.get(
   '/',
   validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
+);
+
+// Get all users by support
+router.get(
+  '/support-users',
+  validateRoleMiddleware(['ADMIN', 'SUPPORT']),
+  userController.getUsersBySupport,
 );
 
 // Get students by tutor (usa el token, no recibe ID por URL)
