@@ -16,7 +16,7 @@ export class JobOpportunityController {
     private readonly getJobOpportunityByIdUseCase: GetJobOpportunityByIdUseCase,
     private readonly updateJobOpportunityUseCase: UpdateJobOpportunityUseCase,
     private readonly deleteJobOpportunityUseCase: DeleteJobOpportunityUseCase,
-    private readonly getJobOpportunitiesByMajorUseCase: GetJobOpportunitiesByMajorUseCase, 
+    private readonly getJobOpportunitiesByMajorUseCase: GetJobOpportunitiesByMajorUseCase,
   ) {}
 
   // Métodos existentes...
@@ -57,47 +57,47 @@ export class JobOpportunityController {
 
   // Nuevo método para obtener por carrera
   public getByMajor = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    const { majorId } = req.params;
-    
-    // Primero encuentra la carrera para obtener los jobOpportunityIds
-    const major = await MajorModel.findById(majorId);
-    
-    if (!major) {
-      res.status(404).json({ message: 'Carrera no encontrada' });
-      return;
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { majorId } = req.params;
+
+      // Primero encuentra la carrera para obtener los jobOpportunityIds
+      const major = await MajorModel.findById(majorId);
+
+      if (!major) {
+        res.status(404).json({ message: 'Carrera no encontrada' });
+        return;
+      }
+
+      // Si no hay jobOpportunityIds, retorna un array vacío
+      if (!major.jobOpportunityIds || major.jobOpportunityIds.length === 0) {
+        res.status(200).json([]);
+        return;
+      }
+
+      // Obtén las job opportunities relacionadas
+      const jobOpportunities = await JobOpportunityModel.find({
+        _id: { $in: major.jobOpportunityIds },
+      });
+
+      // Mapea los resultados al formato esperado
+      const mappedJobOpportunities = jobOpportunities.map((doc) => ({
+        id: doc._id as unknown as string,
+        name: doc.name,
+        description: doc.description,
+        salary: doc.salary,
+        createdAt: doc.createdAt,
+        updatedAt: doc.updatedAt,
+      }));
+
+      res.status(200).json(mappedJobOpportunities);
+    } catch (error) {
+      next(error);
     }
-    
-    // Si no hay jobOpportunityIds, retorna un array vacío
-    if (!major.jobOpportunityIds || major.jobOpportunityIds.length === 0) {
-      res.status(200).json([]);
-      return;
-    }
-    
-    // Obtén las job opportunities relacionadas
-    const jobOpportunities = await JobOpportunityModel.find({
-      '_id': { $in: major.jobOpportunityIds }
-    });
-    
-    // Mapea los resultados al formato esperado
-    const mappedJobOpportunities = jobOpportunities.map((doc) => ({
-      id: doc._id as unknown as string,
-      name: doc.name,
-      description: doc.description,
-      salary: doc.salary,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
-    }));
-    
-    res.status(200).json(mappedJobOpportunities);
-  } catch (error) {
-    next(error);
-  }
-};
+  };
 
   public create = async (
     req: Request,
