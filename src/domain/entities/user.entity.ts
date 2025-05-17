@@ -19,7 +19,7 @@ export interface BaseUser {
   updatedAt: Date;
 }
 
-interface Event {
+export interface Event {
   name: string;
   description: string;
   date: Date;
