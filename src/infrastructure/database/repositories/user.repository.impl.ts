@@ -364,6 +364,18 @@ export class UserRepository implements IUserRepository {
     if ('testCompleted' in doc) {
       base.testCompleted = doc.testCompleted;
     }
+    if ('price_range' in doc) base.price_range = doc.price_range;
+    if ('aceptation_difficulty' in doc)
+      base.aceptation_difficulty = doc.aceptation_difficulty;
+    if ('description' in doc) base.description = doc.description;
+    if ('link' in doc) base.link = doc.link;
+    if ('events' in doc)
+      base.events = doc.events.map((event) => ({
+        name: event.name,
+        description: event.description,
+        location: event.location,
+        date: event.date.toISOString(),
+      }));
     return base as UserResponseDto;
   }
 
@@ -433,6 +445,18 @@ export class UserRepository implements IUserRepository {
           infomanagers: d.infomanagers.map((s) => s.toString()),
           viewers: d.viewers.map((s) => s.toString()),
           subscriptionPlanId: d.subscriptionPlanId.toString(),
+          zone: d.zone,
+          locality: d.locality,
+          price_range: d.price_range,
+          aceptation_difficulty: d.aceptation_difficulty,
+          description: d.description,
+          link: d.link,
+          events: d.events.map((event) => ({
+            name: event.name,
+            description: event.description,
+            location: event.location,
+            date: event.date,
+          })),
         } as UniversityUser;
       }
       case 'INFOMANAGER': {

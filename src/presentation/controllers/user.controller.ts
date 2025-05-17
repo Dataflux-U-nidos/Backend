@@ -71,7 +71,7 @@ export class UserController {
       const emailFilter = typeof email === 'string' ? email : undefined;
 
       const users = await this.getAllUsersUseCase.execute({
-        type: typeFilter,
+        userType: typeFilter,
         email: emailFilter,
       });
 
@@ -436,5 +436,31 @@ export class UserController {
     } catch (error) {
       next(error);
     }
+  };
+
+  public getAllUniversities = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const universities = await this.getAllUsersUseCase.execute({
+        userType: 'UNIVERSITY', // Filtro clave aquí
+      });
+
+      res.status(200).json(universities);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getUniversityById = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const university = await this.getUserByIdUseCase.execute(req.params.id);
+    if (university?.userType !== 'UNIVERSITY') {
+      res.status(404).json({ message: 'Universidad no encontrada' });
+    }
+    res.json(university);
   };
 }
