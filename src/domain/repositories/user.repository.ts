@@ -12,7 +12,7 @@ export interface IUserRepository {
    * @param filter Optional filters: userType and/or email.
    */
   findAll(filter?: {
-    userType?: string;
+    userType?: string; // Cambiar de 'type' a 'userType'
     email?: string;
   }): Promise<UserResponseDto[]>;
 

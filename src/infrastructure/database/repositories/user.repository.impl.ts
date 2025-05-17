@@ -341,6 +341,7 @@ export class UserRepository implements IUserRepository {
     if ('locality' in doc) base.locality = doc.locality;
     if ('school' in doc) base.school = doc.school;
     if ('preferences' in doc) base.preferences = doc.preferences;
+    if ('testCompleted' in doc) base.testCompleted = doc.testCompleted;
     if ('students' in doc && Array.isArray(doc.students))
       base.students = doc.students.map((s) => s.toString());
     if ('zone' in doc) base.zone = doc.zone;
@@ -360,6 +361,21 @@ export class UserRepository implements IUserRepository {
       base.support = doc.support.map((s) => s.toString());
     if ('finances' in doc && Array.isArray(doc.finances))
       base.finances = doc.finances.map((s) => s.toString());
+    if ('testCompleted' in doc) {
+      base.testCompleted = doc.testCompleted;
+    }
+    if ('price_range' in doc) base.price_range = doc.price_range;
+    if ('aceptation_difficulty' in doc)
+      base.aceptation_difficulty = doc.aceptation_difficulty;
+    if ('description' in doc) base.description = doc.description;
+    if ('link' in doc) base.link = doc.link;
+    if ('events' in doc)
+      base.events = doc.events.map((event) => ({
+        name: event.name,
+        description: event.description,
+        location: event.location,
+        date: event.date.toISOString(),
+      }));
     return base as UserResponseDto;
   }
 
@@ -405,6 +421,7 @@ export class UserRepository implements IUserRepository {
           locality: d.locality,
           school: d.school,
           preferences: d.preferences,
+          testCompleted: d.testCompleted,
         } as StudentUser;
       }
       case 'VIEWER':
@@ -428,6 +445,18 @@ export class UserRepository implements IUserRepository {
           infomanagers: d.infomanagers.map((s) => s.toString()),
           viewers: d.viewers.map((s) => s.toString()),
           subscriptionPlanId: d.subscriptionPlanId.toString(),
+          zone: d.zone,
+          locality: d.locality,
+          price_range: d.price_range,
+          aceptation_difficulty: d.aceptation_difficulty,
+          description: d.description,
+          link: d.link,
+          events: d.events.map((event) => ({
+            name: event.name,
+            description: event.description,
+            location: event.location,
+            date: event.date,
+          })),
         } as UniversityUser;
       }
       case 'INFOMANAGER': {

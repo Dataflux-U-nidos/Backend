@@ -1,5 +1,12 @@
 import { Type, Static } from '@sinclair/typebox';
 
+export const EventSchema = Type.Object({
+  name: Type.String(),
+  description: Type.String(),
+  date: Type.String({ format: 'date-time' }), // ISO 8601
+  location: Type.String(),
+});
+
 // Enumeración de tipos válida
 export const UserTypeEnum = Type.Union(
   [
@@ -49,6 +56,7 @@ const StudentSchema = Type.Intersect(
       locality: Type.String(),
       school: Type.String(),
       preferences: Type.Optional(Type.Array(Type.String())),
+      testCompleted: Type.Optional(Type.Boolean()),
       le: Type.Optional(Type.Number()),
       ma: Type.Optional(Type.Number()),
       ci: Type.Optional(Type.Number()),
@@ -88,6 +96,20 @@ const UniversitySchema = Type.Intersect(
       zone: Type.String(),
       locality: Type.String(),
       address: Type.String(),
+      // Campos migrados de EducationalInstitution (excepto location_l)
+      price_range: Type.Union([
+        Type.Literal('LOW'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HIGH'),
+      ]),
+      aceptation_difficulty: Type.Union([
+        Type.Literal('EASY'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HARD'),
+      ]),
+      description: Type.String(),
+      link: Type.String({ format: 'uri' }),
+      events: Type.Array(EventSchema),
       infomanagers: Type.Array(Type.String({ format: 'uuid' })),
       viewers: Type.Array(Type.String({ format: 'uuid' })),
       subscriptionPlanId: Type.Optional(Type.String({ format: 'uuid' })),
@@ -167,11 +189,29 @@ export const UserResponseSchema = Type.Object(
     locality: Type.Optional(Type.String()),
     school: Type.Optional(Type.String()),
     preferences: Type.Optional(Type.Array(Type.String())),
+    testCompleted: Type.Optional(Type.Boolean()),
     students: Type.Optional(Type.Array(Type.String())),
     address: Type.Optional(Type.String()),
     infomanagers: Type.Optional(Type.Array(Type.String())),
     viewers: Type.Optional(Type.Array(Type.String())),
     subscriptionPlanId: Type.Optional(Type.String()),
+    price_range: Type.Optional(
+      Type.Union([
+        Type.Literal('LOW'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HIGH'),
+      ]),
+    ),
+    aceptation_difficulty: Type.Optional(
+      Type.Union([
+        Type.Literal('EASY'),
+        Type.Literal('MEDIUM'),
+        Type.Literal('HARD'),
+      ]),
+    ),
+    description: Type.Optional(Type.String()),
+    link: Type.Optional(Type.String({ format: 'uri' })),
+    events: Type.Optional(Type.Array(EventSchema)),
     marketing: Type.Optional(Type.Array(Type.String())),
     support: Type.Optional(Type.Array(Type.String())),
     finances: Type.Optional(Type.Array(Type.String())),

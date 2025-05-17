@@ -164,6 +164,8 @@ router.get(
   userController.getRecommendations,
 );
 
+router.get('/universities', userController.getAllUniversities);
+
 // —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
 // Para que cada usuario actualice su propio perfil
 router.patch(
@@ -203,6 +205,13 @@ router.delete(
   userController.delete,
 );
 
+// —————— RUTA PARA ELIMINAR USUARIO POR ID ——————
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.deleteById,
+);
+
 // —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
 
 // Get user by ID
@@ -219,6 +228,13 @@ router.get(
     'FINANCES',
   ]),
   userController.getById,
+);
+
+// Get university By Id
+router.get(
+  '/universities/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
+  userController.getUniversityById,
 );
 
 // Update user by ID - Para que los usuarios raiz modifiquen la info de sus usuarios creados

@@ -6,7 +6,6 @@ import {
 import config from './infrastructure/config';
 import { database } from './infrastructure';
 import {
-  educationalInstitutionRouter,
   commentRouter,
   majorRouter,
   userRouter,
@@ -28,10 +27,6 @@ configureMiddlewares(app);
 app.use(`${config.api.conventionApi}/major`, majorRouter);
 app.use(`${config.api.conventionApi}/email`, emailRouter);
 app.use(`${config.api.conventionApi}/user`, userRouter);
-app.use(
-  `${config.api.conventionApi}/educational-institution`,
-  educationalInstitutionRouter,
-);
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 app.use(`${config.api.conventionApi}/auth`, authRouter);

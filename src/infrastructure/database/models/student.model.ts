@@ -8,6 +8,7 @@ export interface StudentDocument extends UserBaseDocument {
   locality: string;
   school: string;
   preferences: string[];
+  testCompleted: boolean;
   le: number;
   ma: number;
   ci: number;
@@ -26,6 +27,7 @@ const StudentSchema = new Schema<Partial<StudentDocument>>({
     type: [String],
     default: [],
   },
+  testCompleted: { type: Boolean, required: false, default: false },
   le: { type: Number, required: false, default: 0 },
   ma: { type: Number, required: false, default: 0 },
   ci: { type: Number, required: false, default: 0 },
