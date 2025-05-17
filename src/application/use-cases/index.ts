@@ -13,6 +13,7 @@ export * from './jobOpportunity/deleteJobOpportunity.useCase';
 export * from './jobOpportunity/getAllJobOpportunity.useCase';
 export * from './jobOpportunity/getJobOpportunityById.useCase';
 export * from './jobOpportunity/updateJobOpportunity.useCase';
+export * from './jobOpportunity/getJobOpportunitiesByMajorUseCase';
 //Use cases user
 export * from '../use-cases/user/create-user.use-case';
 export * from '../use-cases/user/delete-user.use-case';
