@@ -8,6 +8,7 @@ import {
 import {
   CreateSatisfactionSurveyUseCase,
   GetStudentSurveysUseCase,
+  GetSurveyStatsUseCase,
 } from '../../application/use-cases';
 import { validateRoleMiddleware } from '../middleware';
 //import { validateRoleMiddleware } from '../middleware';
@@ -27,11 +28,13 @@ const getSurveysUseCase = new GetStudentSurveysUseCase(
   surveyRepository,
   userRepository,
 );
+const getSurveyStatsUseCase = new GetSurveyStatsUseCase(surveyRepository);
 
 // Controller
 const surveyController = new SatisfactionSurveyController(
   createSurveyUseCase,
   getSurveysUseCase,
+  getSurveyStatsUseCase,
 );
 
 // Routes
@@ -45,6 +48,13 @@ router.get(
   '/students/:studentId',
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'STUDENT']),
   surveyController.getByStudent,
+);
+
+// src/presentation/routes/satisfaction-survey.router.ts
+router.get(
+  '/stats',
+  validateRoleMiddleware(['ADMIN']), // Solo admins
+  surveyController.getStats,
 );
 
 export default router;

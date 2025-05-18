@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import {
   CreateSatisfactionSurveyUseCase,
   GetStudentSurveysUseCase,
+  GetSurveyStatsUseCase,
 } from '../../application/use-cases';
 import { CreateSatisfactionSurveyDto } from '../../application/dtos/satisfaction-survey.dto';
 import { UserType } from '../../domain';
@@ -15,6 +16,7 @@ export class SatisfactionSurveyController {
   constructor(
     private readonly createSurveyUseCase: CreateSatisfactionSurveyUseCase,
     private readonly getSurveysUseCase: GetStudentSurveysUseCase,
+    private readonly getSurveyStatsUseCase: GetSurveyStatsUseCase,
   ) {}
 
   public create = async (
@@ -63,6 +65,19 @@ export class SatisfactionSurveyController {
       const { studentId } = req.params;
       const surveys = await this.getSurveysUseCase.execute(studentId);
       res.status(200).json(surveys);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getStats = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const stats = await this.getSurveyStatsUseCase.execute();
+      res.status(200).json(stats);
     } catch (error) {
       next(error);
     }

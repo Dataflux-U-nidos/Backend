@@ -77,3 +77,4 @@ export * from './studentTest/vocational-partial.use-case';
 // Use cases satisfaction survey
 export * from './satisfactionSurvey/create-satisfaction-survey.use-case';
 export * from './satisfactionSurvey/get-student-surveys.use-case';
+export * from './satisfactionSurvey/get-survey-stats.use-case';

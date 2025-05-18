@@ -1,5 +1,8 @@
 // src/domain/repositories/satisfaction-survey.repository.ts
-import { SatisfactionSurveyResponseDto } from '../../application/dtos/satisfaction-survey.dto';
+import {
+  SatisfactionSurveyResponseDto,
+  SurveyStatsResponseDto,
+} from '../../application/dtos/satisfaction-survey.dto';
 
 export interface ISatisfactionSurveyRepository {
   /**
@@ -18,6 +21,8 @@ export interface ISatisfactionSurveyRepository {
    * @param studentId ID del estudiante
    */
   findByStudentId(studentId: string): Promise<SatisfactionSurveyResponseDto[]>;
+
+  getSurveyStats(): Promise<SurveyStatsResponseDto>;
 
   /**
    * Opcional: Métodos adicionales según necesidades
