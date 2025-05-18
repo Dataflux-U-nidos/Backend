@@ -260,19 +260,24 @@ export class UserController {
 
   public getUsersBySupport: RequestHandler = async (req, res, next) => {
     try {
-      const rawType = req.query.userType;
-      const rawSearch = req.query.search;
+      const { userType, search } = req.query;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
 
-      const userType = typeof rawType === 'string' ? rawType : undefined;
-      const search = typeof rawSearch === 'string' ? rawSearch : undefined;
-
-      const users = await this.getUsersBySupportUseCase.execute(
-        userType,
-        search,
+      const result = await this.getUsersBySupportUseCase.execute(
+        typeof userType === 'string' ? userType : undefined,
+        typeof search === 'string' ? search : undefined,
+        page,
+        limit,
       );
-      res.status(200).json(users);
+
+      res.status(200).json({
+        items: result.items,
+        total: result.total,
+        page,
+        limit,
+      });
     } catch (err) {
-      console.error('Error in getUsersBySupport:', err);
       next(err);
     }
   };

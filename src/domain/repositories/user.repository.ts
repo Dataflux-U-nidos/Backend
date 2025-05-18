@@ -40,18 +40,18 @@ export interface IUserRepository {
 
   delete(id: string): Promise<boolean>;
 
-  /** Get all students associated with a given tutor. */
-  findUsersBySupport(params: {
-    userType?: string;
-    email?: string;
-    search?: string;
-  }): Promise<UserResponseDto[]>;
-
   // Get all users by support Filtering by userType
-  findUsersBySupport(filter?: {
-    userType?: string;
-    email?: string;
-  }): Promise<UserResponseDto[]>;
+  findUsersBySupport(
+    filter?: {
+      userType?: string;
+      email?: string;
+      search?: string;
+    },
+    options?: {
+      page?: number;
+      limit?: number;
+    },
+  ): Promise<{ items: UserResponseDto[]; total: number }>;
 
   /** Add a student ID to a tutor's student list. */
   addStudentToTutor(tutorId: string, studentId: string): Promise<void>;

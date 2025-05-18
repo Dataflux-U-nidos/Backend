@@ -194,32 +194,37 @@ export class UserRepository implements IUserRepository {
   }
 
   // Find all users by support filtering by userType
-  public async findUsersBySupport(filter?: {
-    userType?: string;
-    search?: string;
-  }): Promise<UserResponseDto[]> {
+  public async findUsersBySupport(
+    filter?: { userType?: string; search?: string },
+    options?: { page?: number; limit?: number },
+  ): Promise<{ items: UserResponseDto[]; total: number }> {
     const mongoFilter: Record<string, unknown> = {};
 
-    // filter by userType if provided
     if (filter?.userType) {
       mongoFilter.userType = filter.userType;
     }
-
-    // if a search term is provided, match email OR name OR last_name (case‑insensitive)
     if (filter?.search) {
-      const regex = new RegExp(filter.search, 'i');
-      mongoFilter.$or = [
-        { email: regex },
-        { name: regex },
-        { last_name: regex },
-      ];
+      const re = new RegExp(filter.search, 'i');
+      mongoFilter.$or = [{ email: re }, { name: re }, { last_name: re }];
     }
 
-    const docs = await UserBaseModel.find(mongoFilter)
-      .populate<{ support: SupportDocument[] }>('support')
-      .exec();
+    const page = options?.page && options.page > 0 ? options.page : 1;
+    const limit = options?.limit && options.limit > 0 ? options.limit : 10;
+    const skip = (page - 1) * limit;
 
-    return docs.map((doc) => this.mapDoc(doc));
+    const [docs, total] = await Promise.all([
+      UserBaseModel.find(mongoFilter)
+        .skip(skip)
+        .limit(limit)
+        .populate<{ support: SupportDocument[] }>('support')
+        .exec(),
+      UserBaseModel.countDocuments(mongoFilter).exec(),
+    ]);
+
+    return {
+      items: docs.map((doc) => this.mapDoc(doc)),
+      total,
+    };
   }
 
   public async addStudentToTutor(

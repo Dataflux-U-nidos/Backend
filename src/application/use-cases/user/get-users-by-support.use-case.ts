@@ -7,7 +7,12 @@ export class GetUsersBySupportUseCase {
   public async execute(
     userType?: string,
     search?: string,
-  ): Promise<UserResponseDto[]> {
-    return this.userRepo.findUsersBySupport({ userType, search });
+    page = 1,
+    limit = 10,
+  ): Promise<{ items: UserResponseDto[]; total: number }> {
+    return this.userRepo.findUsersBySupport(
+      { userType, search },
+      { page, limit },
+    );
   }
 }
