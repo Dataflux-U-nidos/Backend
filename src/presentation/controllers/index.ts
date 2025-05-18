@@ -8,3 +8,4 @@ export * from './email.controller';
 export * from './campaign.controller';
 export * from './subscriptionPlan.controller';
 export * from './studentTest.controller';
+export * from './satisfaction-survey.controller';

@@ -23,6 +23,7 @@ import {
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
   GetRecommendationsUseCase,
+  GetPlatformStatsUseCase,
 } from '../../application';
 import {
   CreateUserDto,
@@ -59,6 +60,7 @@ export class UserController {
     private readonly updateTestResultUseCase: UpdateTestResultUseCase,
     private readonly updateFinalResultUseCase: UpdateFinalResultUseCase,
     private readonly getRecommendationsUseCase: GetRecommendationsUseCase,
+    private readonly getPlatformStatsUseCase: GetPlatformStatsUseCase,
     private readonly getUsersBySupportUseCase: GetUsersBySupportUseCase,
   ) {}
 
@@ -488,5 +490,18 @@ export class UserController {
       res.status(404).json({ message: 'Universidad no encontrada' });
     }
     res.json(university);
+  };
+
+  public getPlatformStats = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const stats = await this.getPlatformStatsUseCase.execute();
+      res.status(200).json(stats);
+    } catch (error) {
+      next(error);
+    }
   };
 }

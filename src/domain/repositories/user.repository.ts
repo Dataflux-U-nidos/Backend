@@ -1,4 +1,6 @@
 // src/domain/repositories/user.repository.ts
+import { PlatformStatsResponseDto } from '../../application/dtos/platform-stats.dto';
+import { SatisfactionSurveyResponseDto } from '../../application/dtos/satisfaction-survey.dto';
 import {
   UpdateFinalResultDto,
   UpdateTestResultDto,
@@ -108,4 +110,11 @@ export interface IUserRepository {
     userId: string,
     data: UpdateFinalResultDto,
   ): Promise<User | null>;
+
+  addSurveyToStudent(studentId: string, surveyId: string): Promise<void>;
+  getStudentSurveys(
+    studentId: string,
+  ): Promise<SatisfactionSurveyResponseDto[]>;
+
+  getPlatformStats(): Promise<PlatformStatsResponseDto>;
 }
