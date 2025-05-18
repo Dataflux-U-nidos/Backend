@@ -14,11 +14,13 @@
   - application
     - dtos
       - auth.dto.ts
+      - campaign.dto.ts
       - comment.dto.ts
       - educationalInstitution.dto.ts
       - index.ts
       - jobOpportunity.dto.ts
       - major.dto.ts
+      - subscriptionPlan.dto.ts
       - user.dto.ts
     - exceptions
       - index.ts
@@ -31,11 +33,20 @@
         - getSession.useCase.ts
         - login.use-case.ts
         - refreshToken.useCase.ts
+      - campaign
+        - create-campaign.use-case.ts
+        - delete-campaign.use-case.ts
+        - get-all-campaigns.use-case.ts
+        - get-campaigns-by-id.use-case.ts
+        - get-campaigns-by-user.use-case.ts
+        - get-total-investment.use-case.ts
+        - update-campaign.use-case.ts
       - comment
         - create-comment.use-case.ts
         - delete-comment.use-case.ts
         - get-all-comments.use-case.ts
         - get-comment-by-id.use-case.ts
+        - get-comments-by-major.use-case.ts
         - update-comment.use-case.ts
       - educationalInstitution
         - createEducationalInstitution.useCase.ts
@@ -53,40 +64,67 @@
         - getJobOpportunityById.useCase.ts
         - updateJobOpportunity.useCase.ts
       - major
+        - add-job-opportunity-to-major.use-case.ts
         - create-major.use-case.ts
         - delete-major.use-case.ts
         - get-all-majors.use-case.ts
         - get-major-by-id.use-case.ts
+        - get-majors-by-institution.use-case.ts
         - update-major.use-case.ts
+      - studentTest
+        - psychometric.use-case.ts
+        - vocational-partial.use-case.ts
+        - vocational.use-case.ts
+      - suscriptionPlan
+        - create-subscription-plan.use-case.ts
+        - delete-subscription-plan.use-case.ts
+        - get-all-subscription-plans.use-case.ts
+        - get-revenue-by-plan.use-case.ts
+        - get-subscription-plan-by-id.use-case.ts
+        - get-total-revenue.use-case.ts
+        - update-subscription-plan.use-case.ts
       - user
+        - add-finances-to-admin.use-case.ts
         - add-infomanager-to-university.use-case.ts
+        - add-marketing-to-admin.use-case.ts
         - add-student-to-tutor.use-case.ts
+        - add-support-to-admin.use-case.ts
         - add-viewer-to-university.use-case.ts
         - create-user.use-case.ts
         - delete-user.use-case.ts
         - get-all-users.use-case.ts
+        - get-finances-by-admin.use-case.ts
         - get-infomanagers-by-university.use-case.ts
+        - get-marketing-by-admin.use-case.ts
+        - get-recommendations.use-case.ts
         - get-students-by-tutor.use-case.ts
+        - get-support-by-admin.use-case.ts
         - get-user-by-email.use-case.ts
         - get-user-by-id.use-case.ts
         - get-viewers-by-university.use-case.ts
+        - update-final-result.use-case.ts
+        - update-test-result.use-case.ts
         - update-user-by-email.use-case.ts
         - update-user.use-case.ts
   - domain
     - entities
+      - campaign.entity.ts
       - comment.entity.ts
       - educationalInstitution.entity.ts
       - index.ts
       - jobOpportunity.entity.ts
       - major.entity.ts
+      - subscriptionPlan.entity.ts
       - user.entity.ts
     - index.ts
     - repositories
+      - campaign.repository.ts
       - comment.repository.ts
       - educationalInstitution.repository.ts
       - index.ts
       - jobOpportunity.repository.ts
       - major.repository.ts
+      - subscriptionPlan.repository.ts
       - user.repository.ts
   - infrastructure
     - config
@@ -97,23 +135,30 @@
       - index.ts
       - models
         - admin.model.ts
+        - campaign.model.ts
         - comment.model.ts
         - educationalInstitution.model.ts
+        - finances.model.ts
         - index.ts
         - infomanager.model.ts
         - jobOpportunity.model.ts
         - major.model.ts
+        - marketing.model.ts
         - student.model.ts
+        - subscriptionPlan.model.ts
+        - support.model.ts
         - tutor.model.ts
         - university.model.ts
         - user.base.model.ts
         - viewer.model.ts
       - repositories
+        - campaign.repository.impl.ts
         - comment.repository.impl.ts
         - educationalInstitution.repository.impl.ts
         - index.ts
         - jobOpportunity.repository.impl.ts
         - major.repository.impl.ts
+        - subscriptionPlan.repository.impl.ts
         - user.repository.impl.ts
     - index.ts
     - logger
@@ -121,12 +166,15 @@
   - presentation
     - controllers
       - auth.controller.ts
+      - campaign.controller.ts
       - comment.controller.ts
       - educationalInstitution.controller.ts
       - email.controller.ts
       - index.ts
       - jobOpportunity.controller.ts
       - major.controller.ts
+      - studentTest.controller.ts
+      - subscriptionPlan.controller.ts
       - user.controller.ts
     - index.ts
     - middleware
@@ -136,12 +184,15 @@
       - jwtMiddleware.ts
     - routes
       - auth.router.ts
+      - campaign.router.ts
       - comment.router.ts
       - educationalInstitution.router.ts
       - email.router.ts
       - index.ts
       - jobOpportunity.router.ts
       - major.router.ts
+      - studentTest.router.ts
+      - subscriptionPlan.routes.ts
       - user.router.ts
   - server.ts
   - shared
@@ -157,13 +208,21 @@
       - validateEnv.ts
   - tests
     - integration
+      - businessLogic
+        - majorComments.test.ts
+        - searchEducationalInstitution.test.ts
+        - searchJobOpportunity.test.ts
+        - studentTest.test.ts
       - crud
+        - financesCrud.test.ts
         - infoManagerCrud.test.ts
+        - marketingCrud.test.ts
         - studentCrud.test.ts
+        - supportCrud.test.ts
         - tutorCrud.test.ts
         - universityCrud.test.ts
       - logIn
-        - logInAdministrator.test.ts
+        - loginAdministrator.test.ts
         - loginStudent.test.ts
         - logInViewer.test.ts
     - unit

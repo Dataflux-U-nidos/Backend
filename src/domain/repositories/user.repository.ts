@@ -1,5 +1,9 @@
 // src/domain/repositories/user.repository.ts
-import { UserResponseDto } from '../../application/dtos/user.dto';
+import {
+  UpdateFinalResultDto,
+  UpdateTestResultDto,
+  UserResponseDto,
+} from '../../application/dtos/user.dto';
 import { BaseUser, User } from '../entities/user.entity';
 
 export interface IUserRepository {
@@ -8,7 +12,7 @@ export interface IUserRepository {
    * @param filter Optional filters: userType and/or email.
    */
   findAll(filter?: {
-    userType?: string;
+    userType?: string; // Cambiar de 'type' a 'userType'
     email?: string;
   }): Promise<UserResponseDto[]>;
 
@@ -92,4 +96,14 @@ export interface IUserRepository {
 
   /** Get all finances associated with a admin. */
   findFinancesByAdmin(adminId: string): Promise<UserResponseDto[]>;
+
+  updateTestResult(
+    userId: string,
+    data: UpdateTestResultDto,
+  ): Promise<User | null>;
+
+  updateFinalResult(
+    userId: string,
+    data: UpdateFinalResultDto,
+  ): Promise<User | null>;
 }

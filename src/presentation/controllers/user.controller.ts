@@ -20,8 +20,16 @@ import {
   AddFinancesToAdminUseCase,
   GetUsersBySupportUseCase,
   GetFinancesByAdminUseCase,
+  UpdateTestResultUseCase,
+  UpdateFinalResultUseCase,
+  GetRecommendationsUseCase,
 } from '../../application';
-import { CreateUserDto, UpdateUserDto } from '../../application/dtos/user.dto';
+import {
+  CreateUserDto,
+  UpdateFinalResultDto,
+  UpdateTestResultDto,
+  UpdateUserDto,
+} from '../../application/dtos/user.dto';
 import { UserType } from '../../domain/entities/user.entity';
 
 interface RequestWithUser extends Request {
@@ -48,6 +56,9 @@ export class UserController {
     private readonly getSupportByAdminUseCase: GetSupportByAdminUseCase,
     private readonly addFinancesToAdminUseCase: AddFinancesToAdminUseCase,
     private readonly getFinancesByAdminUseCase: GetFinancesByAdminUseCase,
+    private readonly updateTestResultUseCase: UpdateTestResultUseCase,
+    private readonly updateFinalResultUseCase: UpdateFinalResultUseCase,
+    private readonly getRecommendationsUseCase: GetRecommendationsUseCase,
     private readonly getUsersBySupportUseCase: GetUsersBySupportUseCase,
   ) {}
 
@@ -62,7 +73,7 @@ export class UserController {
       const emailFilter = typeof email === 'string' ? email : undefined;
 
       const users = await this.getAllUsersUseCase.execute({
-        type: typeFilter,
+        userType: typeFilter,
         email: emailFilter,
       });
 
@@ -372,5 +383,110 @@ export class UserController {
     } catch (error) {
       next(error);
     }
+  };
+
+  public updateTestResult = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const dto = req.body as UpdateTestResultDto;
+      const user = await this.updateTestResultUseCase.execute(userId, dto);
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public updateFinalResult = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const dto = req.body as UpdateFinalResultDto;
+      const user = await this.updateFinalResultUseCase.execute(userId, dto);
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getRecommendations = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const recommendations =
+        await this.getRecommendationsUseCase.execute(userId);
+      res.status(200).json(recommendations);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteById = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const deleted = await this.deleteUserUseCase.execute(id);
+      if (!deleted) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+      res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getAllUniversities = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const universities = await this.getAllUsersUseCase.execute({
+        userType: 'UNIVERSITY', // Filtro clave aquí
+      });
+
+      res.status(200).json(universities);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getUniversityById = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const university = await this.getUserByIdUseCase.execute(req.params.id);
+    if (university?.userType !== 'UNIVERSITY') {
+      res.status(404).json({ message: 'Universidad no encontrada' });
+    }
+    res.json(university);
   };
 }

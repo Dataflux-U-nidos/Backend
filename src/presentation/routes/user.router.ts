@@ -1,7 +1,10 @@
 // src/presentation/routes/user.router.ts
 import { Router } from 'express';
 import { UserController, validateRoleMiddleware } from '../../presentation';
-import { UserRepository } from '../../infrastructure/database/repositories';
+import {
+  UserRepository,
+  MajorRepository,
+} from '../../infrastructure/database/repositories';
 import {
   CreateUserUseCase,
   GetAllUsersUseCase,
@@ -21,6 +24,9 @@ import {
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
   GetFinancesByAdminUseCase,
+  UpdateTestResultUseCase,
+  UpdateFinalResultUseCase,
+  GetRecommendationsUseCase,
   GetUsersBySupportUseCase,
 } from '../../application';
 
@@ -28,6 +34,7 @@ const router = Router();
 
 // instance repository
 const userRepository = new UserRepository();
+const majorRepository = new MajorRepository();
 
 // instance use cases
 const createUserUseCase = new CreateUserUseCase(userRepository);
@@ -59,6 +66,12 @@ const addSupportToAdminUseCase = new AddSupportToAdminUseCase(userRepository);
 const getSupportByAdminUseCase = new GetSupportByAdminUseCase(userRepository);
 const addFinancesToAdminUseCase = new AddFinancesToAdminUseCase(userRepository);
 const getFinancesByAdminUseCase = new GetFinancesByAdminUseCase(userRepository);
+const updateTestResultUseCase = new UpdateTestResultUseCase(userRepository);
+const updateFinalResultUseCase = new UpdateFinalResultUseCase(userRepository);
+const getRecommendationsUseCase = new GetRecommendationsUseCase(
+  userRepository,
+  majorRepository,
+);
 const getUsersBySupportUseCase = new GetUsersBySupportUseCase(userRepository);
 
 // Instance controller with use cases injected
@@ -81,6 +94,9 @@ const userController = new UserController(
   getSupportByAdminUseCase,
   addFinancesToAdminUseCase,
   getFinancesByAdminUseCase,
+  updateTestResultUseCase,
+  updateFinalResultUseCase,
+  getRecommendationsUseCase,
   getUsersBySupportUseCase,
 );
 
@@ -152,6 +168,14 @@ router.get(
   userController.getFinancesByAdmin,
 );
 
+router.get(
+  '/recommendations',
+  validateRoleMiddleware(['STUDENT']),
+  userController.getRecommendations,
+);
+
+router.get('/universities', userController.getAllUniversities);
+
 // —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
 // Para que cada usuario actualice su propio perfil
 router.patch(
@@ -169,6 +193,18 @@ router.patch(
   userController.update,
 );
 
+router.patch(
+  '/form-result',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  userController.updateTestResult,
+);
+
+router.patch(
+  '/final-result',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  userController.updateFinalResult,
+);
+
 // Update user by Email
 router.patch('/by-email/:email', userController.updateByEmail);
 
@@ -177,6 +213,13 @@ router.delete(
   '/',
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
   userController.delete,
+);
+
+// —————— RUTA PARA ELIMINAR USUARIO POR ID ——————
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.deleteById,
 );
 
 // —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
@@ -195,6 +238,13 @@ router.get(
     'FINANCES',
   ]),
   userController.getById,
+);
+
+// Get university By Id
+router.get(
+  '/universities/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
+  userController.getUniversityById,
 );
 
 // Update user by ID - Para que los usuarios raiz modifiquen la info de sus usuarios creados

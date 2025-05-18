@@ -53,7 +53,7 @@ router.get(
 );
 router.post(
   '/',
-  validateRoleMiddleware(['ADMIN']),
+  validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   jobOpportunityController.create,
 );
 router.patch(

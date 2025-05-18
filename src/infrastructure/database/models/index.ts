@@ -1,4 +1,3 @@
-export * from './educationalInstitution.model';
 export * from './major.model';
 export * from './user.base.model';
 export * from './jobOpportunity.model';
