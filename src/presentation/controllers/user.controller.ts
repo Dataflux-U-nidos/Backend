@@ -18,6 +18,7 @@ import {
   AddSupportToAdminUseCase,
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
+  GetUsersBySupportUseCase,
   GetFinancesByAdminUseCase,
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
@@ -58,6 +59,7 @@ export class UserController {
     private readonly updateTestResultUseCase: UpdateTestResultUseCase,
     private readonly updateFinalResultUseCase: UpdateFinalResultUseCase,
     private readonly getRecommendationsUseCase: GetRecommendationsUseCase,
+    private readonly getUsersBySupportUseCase: GetUsersBySupportUseCase,
   ) {}
 
   public getAll = async (
@@ -264,6 +266,30 @@ export class UserController {
       res.status(200).json(students);
     } catch (error) {
       next(error);
+    }
+  };
+
+  public getUsersBySupport: RequestHandler = async (req, res, next) => {
+    try {
+      const { userType, search } = req.query;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const result = await this.getUsersBySupportUseCase.execute(
+        typeof userType === 'string' ? userType : undefined,
+        typeof search === 'string' ? search : undefined,
+        page,
+        limit,
+      );
+
+      res.status(200).json({
+        items: result.items,
+        total: result.total,
+        page,
+        limit,
+      });
+    } catch (err) {
+      next(err);
     }
   };
 

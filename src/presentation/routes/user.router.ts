@@ -27,6 +27,7 @@ import {
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
   GetRecommendationsUseCase,
+  GetUsersBySupportUseCase,
 } from '../../application';
 
 const router = Router();
@@ -71,6 +72,7 @@ const getRecommendationsUseCase = new GetRecommendationsUseCase(
   userRepository,
   majorRepository,
 );
+const getUsersBySupportUseCase = new GetUsersBySupportUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -95,6 +97,7 @@ const userController = new UserController(
   updateTestResultUseCase,
   updateFinalResultUseCase,
   getRecommendationsUseCase,
+  getUsersBySupportUseCase,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
@@ -114,6 +117,13 @@ router.get(
   '/',
   validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
+);
+
+// Get all users by support
+router.get(
+  '/support-users',
+  validateRoleMiddleware(['ADMIN', 'SUPPORT']),
+  userController.getUsersBySupport,
 );
 
 // Get students by tutor (usa el token, no recibe ID por URL)
