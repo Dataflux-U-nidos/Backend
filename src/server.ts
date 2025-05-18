@@ -15,6 +15,7 @@ import {
   campaignRouter,
   subscriptionPlanRouter,
   studentTestRouter,
+  satisfactionSurveyRouter,
 } from './presentation/routes';
 
 // Create express application
@@ -36,6 +37,10 @@ app.use(
   subscriptionPlanRouter,
 );
 app.use(`${config.api.conventionApi}/student-test`, studentTestRouter);
+app.use(
+  `${config.api.conventionApi}/satisfaction-survey`,
+  satisfactionSurveyRouter,
+);
 
 // Error handler
 app.use(errorHandlerMiddleware);

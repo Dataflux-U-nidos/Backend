@@ -73,3 +73,7 @@ export * from './suscriptionPlan/get-total-revenue.use-case';
 export * from './studentTest/psychometric.use-case';
 export * from './studentTest/vocational.use-case';
 export * from './studentTest/vocational-partial.use-case';
+
+// Use cases satisfaction survey
+export * from './satisfactionSurvey/create-satisfaction-survey.use-case';
+export * from './satisfactionSurvey/get-student-surveys.use-case';

@@ -9,6 +9,7 @@ export interface StudentDocument extends UserBaseDocument {
   school: string;
   preferences: string[];
   testCompleted: boolean;
+  satisfaction_surveys: string[];
   le: number;
   ma: number;
   ci: number;
@@ -34,6 +35,12 @@ const StudentSchema = new Schema<Partial<StudentDocument>>({
   cc: { type: Number, required: false, default: 0 },
   idi: { type: Number, required: false, default: 0 },
   ar: { type: Number, required: false, default: 0 },
+  satisfaction_surveys: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'SatisfactionSurvey',
+    },
+  ],
 });
 
 export const StudentModel = UserBaseModel.discriminator<StudentDocument>(

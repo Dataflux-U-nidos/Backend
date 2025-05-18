@@ -39,6 +39,7 @@ import {
   FinancesModel,
   FinancesDocument,
 } from '../../../infrastructure';
+import { SatisfactionSurveyResponseDto } from '../../../application/dtos/satisfaction-survey.dto';
 
 type UserDocument =
   | UserBaseDocument
@@ -313,6 +314,43 @@ export class UserRepository implements IUserRepository {
       default:
         return UserBaseModel;
     }
+  }
+
+  public async addSurveyToStudent(
+    studentId: string,
+    surveyId: string,
+  ): Promise<void> {
+    const result = await StudentModel.findByIdAndUpdate(
+      studentId,
+      { $push: { satisfaction_surveys: surveyId } },
+      { new: true, runValidators: true },
+    ).exec();
+
+    if (!result) {
+      throw new Error('Estudiante no encontrado para actualizar encuestas');
+    }
+  }
+
+  public async getStudentSurveys(
+    studentId: string,
+  ): Promise<SatisfactionSurveyResponseDto[]> {
+    const student = await StudentModel.findById(studentId)
+      .populate({
+        path: 'satisfaction_surveys',
+        model: 'SatisfactionSurvey',
+        select: 'bucket_id date',
+      })
+      .exec();
+
+    if (!student) return [];
+
+    return student.satisfaction_surveys.map((survey: any) => ({
+      id: survey._id.toString(),
+      user_id: studentId,
+      bucket_id: survey.bucket_id,
+      date: survey.date.toISOString(),
+      responses: Array.isArray(survey.responses) ? survey.responses : [],
+    }));
   }
 
   private mapDoc(
