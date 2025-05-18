@@ -258,21 +258,22 @@ export class UserController {
     }
   };
 
-  public getUsersBySupport = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public getUsersBySupport: RequestHandler = async (req, res, next) => {
     try {
-      const { userType, email } = req.query;
+      const rawType = req.query.userType;
+      const rawSearch = req.query.search;
+
+      const userType = typeof rawType === 'string' ? rawType : undefined;
+      const search = typeof rawSearch === 'string' ? rawSearch : undefined;
+
       const users = await this.getUsersBySupportUseCase.execute(
-        typeof userType === 'string' ? userType : undefined,
-        typeof email === 'string' ? email : undefined,
+        userType,
+        search,
       );
       res.status(200).json(users);
-    } catch (error) {
-      console.error('Error in getUsersBySupport:', error);
-      next(error);
+    } catch (err) {
+      console.error('Error in getUsersBySupport:', err);
+      next(err);
     }
   };
 

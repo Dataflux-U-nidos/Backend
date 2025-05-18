@@ -41,7 +41,6 @@ export * from '../use-cases/user/add-marketing-to-admin.use-case';
 export * from '../use-cases/user/get-marketing-by-admin.use-case';
 export * from '../use-cases/user/add-support-to-admin.use-case';
 export * from '../use-cases/user/get-support-by-admin.use-case';
-export * from '../use-cases/user/impersonate-user.use-case';
 // Use cases comment
 export * from './comment/get-all-comments.use-case';
 export * from '../use-cases/comment/get-comment-by-id.use-case';
@@ -51,6 +50,7 @@ export * from '../use-cases/comment/delete-comment.use-case';
 export * from './auth/login.use-case';
 export * from './auth/getSession.useCase';
 export * from './auth/refreshToken.useCase';
+export * from './auth/impersonate.use-case';
 
 // Use cases email
 export * from './email/sendRecoveryEmail.useCase';

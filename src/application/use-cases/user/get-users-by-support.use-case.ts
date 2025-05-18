@@ -6,8 +6,8 @@ export class GetUsersBySupportUseCase {
 
   public async execute(
     userType?: string,
-    email?: string,
+    search?: string,
   ): Promise<UserResponseDto[]> {
-    return this.userRepo.findUsersBySupport(userType, email);
+    return this.userRepo.findUsersBySupport({ userType, search });
   }
 }

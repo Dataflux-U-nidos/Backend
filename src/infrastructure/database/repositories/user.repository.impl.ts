@@ -196,15 +196,29 @@ export class UserRepository implements IUserRepository {
   // Find all users by support filtering by userType
   public async findUsersBySupport(filter?: {
     userType?: string;
-    email?: string;
+    search?: string;
   }): Promise<UserResponseDto[]> {
-    const query: { userType?: string; email?: string } = {};
-    if (filter?.userType) query.userType = filter.userType;
-    if (filter?.email) query.email = filter.email;
+    const mongoFilter: Record<string, unknown> = {};
 
-    const docs = await UserBaseModel.find(query)
+    // filter by userType if provided
+    if (filter?.userType) {
+      mongoFilter.userType = filter.userType;
+    }
+
+    // if a search term is provided, match email OR name OR last_name (case‑insensitive)
+    if (filter?.search) {
+      const regex = new RegExp(filter.search, 'i');
+      mongoFilter.$or = [
+        { email: regex },
+        { name: regex },
+        { last_name: regex },
+      ];
+    }
+
+    const docs = await UserBaseModel.find(mongoFilter)
       .populate<{ support: SupportDocument[] }>('support')
       .exec();
+
     return docs.map((doc) => this.mapDoc(doc));
   }
 

@@ -3,7 +3,7 @@ import {
   LoginUseCase,
   RefreshTokenUseCase,
   GetSessionUseCase,
-  ImpersonateUserUseCase,
+  ImpersonateUseCase,
 } from '../../application/use-cases';
 import { LoginDto } from '../../application/dtos/auth.dto';
 import { AuthService } from '../../application/services/auth.service';
@@ -18,14 +18,14 @@ export class AuthController {
   private readonly loginUseCase: LoginUseCase;
   private readonly refreshTokenUseCase: RefreshTokenUseCase;
   private readonly getSessionUseCase: GetSessionUseCase;
-  private readonly impersonateUseCase: ImpersonateUserUseCase;
+  private readonly impersonateUseCase: ImpersonateUseCase;
 
   constructor() {
     const authService = new AuthService(new UserRepository());
     this.loginUseCase = new LoginUseCase(authService);
     this.refreshTokenUseCase = new RefreshTokenUseCase(authService);
     this.getSessionUseCase = new GetSessionUseCase(authService);
-    this.impersonateUseCase = new ImpersonateUserUseCase(new UserRepository());
+    this.impersonateUseCase = new ImpersonateUseCase(authService);
   }
 
   public async login(req: Request, res: Response): Promise<void> {
@@ -100,6 +100,9 @@ export class AuthController {
   }
 
   public async impersonate(req: RequestWithUser, res: Response): Promise<void> {
+    console.log('Impersonate endpoint hit');
+    console.log('User ID:', req.user.id);
+    console.log('Request body:', req.body);
     try {
       const impersonaterId = req.user.id;
       const { targetUserId } = req.body as ImpersonateUserDto;
