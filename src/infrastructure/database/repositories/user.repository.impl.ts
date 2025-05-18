@@ -40,6 +40,7 @@ import {
   FinancesDocument,
 } from '../../../infrastructure';
 import { SatisfactionSurveyResponseDto } from '../../../application/dtos/satisfaction-survey.dto';
+import { PlatformStatsResponseDto } from '../../../application/dtos/platform-stats.dto';
 
 type UserDocument =
   | UserBaseDocument
@@ -592,5 +593,160 @@ export class UserRepository implements IUserRepository {
     // 6) Guarda y mapea
     const updated = await doc.save();
     return this.mapEntity(updated);
+  }
+
+  async getPlatformStats(): Promise<PlatformStatsResponseDto> {
+    const stats = await UserBaseModel.aggregate([
+      {
+        $facet: {
+          userCounts: [{ $group: { _id: '$userType', count: { $sum: 1 } } }],
+          recentRegistrations: [
+            { $sort: { createdAt: -1 } },
+            { $limit: 5 },
+            {
+              $project: {
+                _id: 0,
+                userId: { $toString: '$_id' },
+                userType: 1,
+                createdAt: 1,
+              },
+            },
+          ],
+          subscriptionStats: [
+            {
+              $match: {
+                userType: 'UNIVERSITY',
+                subscriptionPlanId: { $exists: true, $ne: null },
+              },
+            },
+            {
+              $lookup: {
+                from: 'subscriptionplans', // Nombre de colección en minúsculas y plural
+                localField: 'subscriptionPlanId',
+                foreignField: '_id',
+                as: 'subscription',
+              },
+            },
+            {
+              $unwind: {
+                path: '$subscription',
+                preserveNullAndEmptyArrays: false,
+              },
+            },
+            {
+              $group: {
+                _id: '$subscription.type',
+                count: { $sum: 1 },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          totalStudents: {
+            $ifNull: [
+              {
+                $let: {
+                  vars: {
+                    filtered: {
+                      $filter: {
+                        input: '$userCounts',
+                        as: 'uc',
+                        cond: { $eq: ['$$uc._id', 'STUDENT'] },
+                      },
+                    },
+                  },
+                  in: { $arrayElemAt: ['$$filtered.count', 0] },
+                },
+              },
+              0,
+            ],
+          },
+          totalUniversities: {
+            $ifNull: [
+              {
+                $let: {
+                  vars: {
+                    filtered: {
+                      $filter: {
+                        input: '$userCounts',
+                        as: 'uc',
+                        cond: { $eq: ['$$uc._id', 'UNIVERSITY'] },
+                      },
+                    },
+                  },
+                  in: { $arrayElemAt: ['$$filtered.count', 0] },
+                },
+              },
+              0,
+            ],
+          },
+          totalTutors: {
+            $ifNull: [
+              {
+                $let: {
+                  vars: {
+                    filtered: {
+                      $filter: {
+                        input: '$userCounts',
+                        as: 'uc',
+                        cond: { $eq: ['$$uc._id', 'TUTOR'] },
+                      },
+                    },
+                  },
+                  in: { $arrayElemAt: ['$$filtered.count', 0] },
+                },
+              },
+              0,
+            ],
+          },
+          recentRegistrations: 1,
+          subscriptionDistribution: {
+            $arrayToObject: {
+              $map: {
+                input: '$subscriptionStats',
+                as: 'ss',
+                in: {
+                  k: {
+                    $switch: {
+                      branches: [
+                        { case: { $eq: ['$$ss._id', 'BASIC'] }, then: 'LOW' },
+                        {
+                          case: { $eq: ['$$ss._id', 'STANDARD'] },
+                          then: 'MEDIUM',
+                        },
+                        {
+                          case: { $eq: ['$$ss._id', 'PREMIUM'] },
+                          then: 'HIGH',
+                        },
+                      ],
+                      default: 'NO_SUBSCRIPTION',
+                    },
+                  },
+                  v: '$$ss.count',
+                },
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    return {
+      totalStudents: stats[0]?.totalStudents ?? 0,
+      totalUniversities: stats[0]?.totalUniversities ?? 0,
+      totalTutors: stats[0]?.totalTutors ?? 0,
+      activeSubscriptions: await UserBaseModel.countDocuments({
+        userType: 'UNIVERSITY',
+        subscriptionPlanId: { $exists: true, $ne: null },
+      }),
+      recentRegistrations: stats[0]?.recentRegistrations ?? [],
+      subscriptionDistribution: {
+        LOW: stats[0]?.subscriptionDistribution?.LOW ?? 0,
+        MEDIUM: stats[0]?.subscriptionDistribution?.MEDIUM ?? 0,
+        HIGH: stats[0]?.subscriptionDistribution?.HIGH ?? 0,
+      },
+    };
   }
 }

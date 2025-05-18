@@ -27,6 +27,7 @@ import {
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
   GetRecommendationsUseCase,
+  GetPlatformStatsUseCase,
 } from '../../application';
 
 const router = Router();
@@ -71,6 +72,7 @@ const getRecommendationsUseCase = new GetRecommendationsUseCase(
   userRepository,
   majorRepository,
 );
+const getPlatformStatsUseCase = new GetPlatformStatsUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -95,6 +97,7 @@ const userController = new UserController(
   updateTestResultUseCase,
   updateFinalResultUseCase,
   getRecommendationsUseCase,
+  getPlatformStatsUseCase,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
@@ -165,6 +168,13 @@ router.get(
 );
 
 router.get('/universities', userController.getAllUniversities);
+
+// Get platform stats
+router.get(
+  '/platform-stats',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getPlatformStats,
+);
 
 // —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
 // Para que cada usuario actualice su propio perfil
