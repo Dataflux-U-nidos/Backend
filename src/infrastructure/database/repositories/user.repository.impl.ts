@@ -176,6 +176,40 @@ export class UserRepository implements IUserRepository {
     return tutorDoc.students.map((d) => this.mapDoc(d));
   }
 
+  // Find all users by support filtering by userType
+  public async findUsersBySupport(
+    filter?: { userType?: string; search?: string },
+    options?: { page?: number; limit?: number },
+  ): Promise<{ items: UserResponseDto[]; total: number }> {
+    const mongoFilter: Record<string, unknown> = {};
+
+    if (filter?.userType) {
+      mongoFilter.userType = filter.userType;
+    }
+    if (filter?.search) {
+      const re = new RegExp(filter.search, 'i');
+      mongoFilter.$or = [{ email: re }, { name: re }, { last_name: re }];
+    }
+
+    const page = options?.page && options.page > 0 ? options.page : 1;
+    const limit = options?.limit && options.limit > 0 ? options.limit : 10;
+    const skip = (page - 1) * limit;
+
+    const [docs, total] = await Promise.all([
+      UserBaseModel.find(mongoFilter)
+        .skip(skip)
+        .limit(limit)
+        .populate<{ support: SupportDocument[] }>('support')
+        .exec(),
+      UserBaseModel.countDocuments(mongoFilter).exec(),
+    ]);
+
+    return {
+      items: docs.map((doc) => this.mapDoc(doc)),
+      total,
+    };
+  }
+
   public async addStudentToTutor(
     tutorId: string,
     studentId: string,
