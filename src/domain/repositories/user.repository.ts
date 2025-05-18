@@ -25,6 +25,8 @@ export interface IUserRepository {
   /** Create a new user. */
   create(data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User>;
 
+  findStudentsByTutor(tutorId: string): Promise<UserResponseDto[]>;
+
   /**
    * Update an existing user.
    * @returns The updated user or null if not found
