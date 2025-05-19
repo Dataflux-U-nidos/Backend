@@ -71,6 +71,7 @@ export class UserRepository implements IUserRepository {
 
   public async findById(id: string): Promise<UserResponseDto | null> {
     const doc = await UserBaseModel.findById(id).exec();
+    console.log('doc', doc);
     return doc ? this.mapDoc(doc) : null;
   }
 
@@ -415,6 +416,12 @@ export class UserRepository implements IUserRepository {
     if ('school' in doc) base.school = doc.school;
     if ('preferences' in doc) base.preferences = doc.preferences;
     if ('testCompleted' in doc) base.testCompleted = doc.testCompleted;
+    if ('le' in doc) base.le = doc.le;
+    if ('ma' in doc) base.ma = doc.ma;
+    if ('ci' in doc) base.ci = doc.ci;
+    if ('cc' in doc) base.cc = doc.cc;
+    if ('idi' in doc) base.idi = doc.idi;
+    if ('ar' in doc) base.ar = doc.ar;
     if ('students' in doc && Array.isArray(doc.students))
       base.students = doc.students.map((s) => s.toString());
     if ('zone' in doc) base.zone = doc.zone;
@@ -495,6 +502,12 @@ export class UserRepository implements IUserRepository {
           school: d.school,
           preferences: d.preferences,
           testCompleted: d.testCompleted,
+          le: d.le,
+          ma: d.ma,
+          ci: d.ci,
+          cc: d.cc,
+          idi: d.idi,
+          ar: d.ar,
         } as StudentUser;
       }
       case 'VIEWER':
