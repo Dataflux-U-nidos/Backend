@@ -18,10 +18,12 @@ import {
   AddSupportToAdminUseCase,
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
+  GetUsersBySupportUseCase,
   GetFinancesByAdminUseCase,
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
   GetRecommendationsUseCase,
+  GetPlatformStatsUseCase,
 } from '../../application';
 import {
   CreateUserDto,
@@ -58,6 +60,8 @@ export class UserController {
     private readonly updateTestResultUseCase: UpdateTestResultUseCase,
     private readonly updateFinalResultUseCase: UpdateFinalResultUseCase,
     private readonly getRecommendationsUseCase: GetRecommendationsUseCase,
+    private readonly getPlatformStatsUseCase: GetPlatformStatsUseCase,
+    private readonly getUsersBySupportUseCase: GetUsersBySupportUseCase,
   ) {}
 
   public getAll = async (
@@ -267,6 +271,30 @@ export class UserController {
     }
   };
 
+  public getUsersBySupport: RequestHandler = async (req, res, next) => {
+    try {
+      const { userType, search } = req.query;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const result = await this.getUsersBySupportUseCase.execute(
+        typeof userType === 'string' ? userType : undefined,
+        typeof search === 'string' ? search : undefined,
+        page,
+        limit,
+      );
+
+      res.status(200).json({
+        items: result.items,
+        total: result.total,
+        page,
+        limit,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
+
   public getInfoManagersByUniversity = async (
     req: RequestWithUser,
     res: Response,
@@ -462,5 +490,18 @@ export class UserController {
       res.status(404).json({ message: 'Universidad no encontrada' });
     }
     res.json(university);
+  };
+
+  public getPlatformStats = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const stats = await this.getPlatformStatsUseCase.execute();
+      res.status(200).json(stats);
+    } catch (error) {
+      next(error);
+    }
   };
 }

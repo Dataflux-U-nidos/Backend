@@ -39,6 +39,8 @@ import {
   FinancesModel,
   FinancesDocument,
 } from '../../../infrastructure';
+import { SatisfactionSurveyResponseDto } from '../../../application/dtos/satisfaction-survey.dto';
+import { PlatformStatsResponseDto } from '../../../application/dtos/platform-stats.dto';
 
 type UserDocument =
   | UserBaseDocument
@@ -172,6 +174,40 @@ export class UserRepository implements IUserRepository {
       .exec();
     if (!tutorDoc || !tutorDoc.students) return [];
     return tutorDoc.students.map((d) => this.mapDoc(d));
+  }
+
+  // Find all users by support filtering by userType
+  public async findUsersBySupport(
+    filter?: { userType?: string; search?: string },
+    options?: { page?: number; limit?: number },
+  ): Promise<{ items: UserResponseDto[]; total: number }> {
+    const mongoFilter: Record<string, unknown> = {};
+
+    if (filter?.userType) {
+      mongoFilter.userType = filter.userType;
+    }
+    if (filter?.search) {
+      const re = new RegExp(filter.search, 'i');
+      mongoFilter.$or = [{ email: re }, { name: re }, { last_name: re }];
+    }
+
+    const page = options?.page && options.page > 0 ? options.page : 1;
+    const limit = options?.limit && options.limit > 0 ? options.limit : 10;
+    const skip = (page - 1) * limit;
+
+    const [docs, total] = await Promise.all([
+      UserBaseModel.find(mongoFilter)
+        .skip(skip)
+        .limit(limit)
+        .populate<{ support: SupportDocument[] }>('support')
+        .exec(),
+      UserBaseModel.countDocuments(mongoFilter).exec(),
+    ]);
+
+    return {
+      items: docs.map((doc) => this.mapDoc(doc)),
+      total,
+    };
   }
 
   public async addStudentToTutor(
@@ -313,6 +349,43 @@ export class UserRepository implements IUserRepository {
       default:
         return UserBaseModel;
     }
+  }
+
+  public async addSurveyToStudent(
+    studentId: string,
+    surveyId: string,
+  ): Promise<void> {
+    const result = await StudentModel.findByIdAndUpdate(
+      studentId,
+      { $push: { satisfaction_surveys: surveyId } },
+      { new: true, runValidators: true },
+    ).exec();
+
+    if (!result) {
+      throw new Error('Estudiante no encontrado para actualizar encuestas');
+    }
+  }
+
+  public async getStudentSurveys(
+    studentId: string,
+  ): Promise<SatisfactionSurveyResponseDto[]> {
+    const student = await StudentModel.findById(studentId)
+      .populate({
+        path: 'satisfaction_surveys',
+        model: 'SatisfactionSurvey',
+        select: 'bucket_id date',
+      })
+      .exec();
+
+    if (!student) return [];
+
+    return student.satisfaction_surveys.map((survey: any) => ({
+      id: survey._id.toString(),
+      user_id: studentId,
+      bucket_id: survey.bucket_id,
+      date: survey.date.toISOString(),
+      responses: Array.isArray(survey.responses) ? survey.responses : [],
+    }));
   }
 
   private mapDoc(
@@ -554,5 +627,160 @@ export class UserRepository implements IUserRepository {
     // 6) Guarda y mapea
     const updated = await doc.save();
     return this.mapEntity(updated);
+  }
+
+  async getPlatformStats(): Promise<PlatformStatsResponseDto> {
+    const stats = await UserBaseModel.aggregate([
+      {
+        $facet: {
+          userCounts: [{ $group: { _id: '$userType', count: { $sum: 1 } } }],
+          recentRegistrations: [
+            { $sort: { createdAt: -1 } },
+            { $limit: 5 },
+            {
+              $project: {
+                _id: 0,
+                userId: { $toString: '$_id' },
+                userType: 1,
+                createdAt: 1,
+              },
+            },
+          ],
+          subscriptionStats: [
+            {
+              $match: {
+                userType: 'UNIVERSITY',
+                subscriptionPlanId: { $exists: true, $ne: null },
+              },
+            },
+            {
+              $lookup: {
+                from: 'subscriptionplans', // Nombre de colección en minúsculas y plural
+                localField: 'subscriptionPlanId',
+                foreignField: '_id',
+                as: 'subscription',
+              },
+            },
+            {
+              $unwind: {
+                path: '$subscription',
+                preserveNullAndEmptyArrays: false,
+              },
+            },
+            {
+              $group: {
+                _id: '$subscription.type',
+                count: { $sum: 1 },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          totalStudents: {
+            $ifNull: [
+              {
+                $let: {
+                  vars: {
+                    filtered: {
+                      $filter: {
+                        input: '$userCounts',
+                        as: 'uc',
+                        cond: { $eq: ['$$uc._id', 'STUDENT'] },
+                      },
+                    },
+                  },
+                  in: { $arrayElemAt: ['$$filtered.count', 0] },
+                },
+              },
+              0,
+            ],
+          },
+          totalUniversities: {
+            $ifNull: [
+              {
+                $let: {
+                  vars: {
+                    filtered: {
+                      $filter: {
+                        input: '$userCounts',
+                        as: 'uc',
+                        cond: { $eq: ['$$uc._id', 'UNIVERSITY'] },
+                      },
+                    },
+                  },
+                  in: { $arrayElemAt: ['$$filtered.count', 0] },
+                },
+              },
+              0,
+            ],
+          },
+          totalTutors: {
+            $ifNull: [
+              {
+                $let: {
+                  vars: {
+                    filtered: {
+                      $filter: {
+                        input: '$userCounts',
+                        as: 'uc',
+                        cond: { $eq: ['$$uc._id', 'TUTOR'] },
+                      },
+                    },
+                  },
+                  in: { $arrayElemAt: ['$$filtered.count', 0] },
+                },
+              },
+              0,
+            ],
+          },
+          recentRegistrations: 1,
+          subscriptionDistribution: {
+            $arrayToObject: {
+              $map: {
+                input: '$subscriptionStats',
+                as: 'ss',
+                in: {
+                  k: {
+                    $switch: {
+                      branches: [
+                        { case: { $eq: ['$$ss._id', 'BASIC'] }, then: 'LOW' },
+                        {
+                          case: { $eq: ['$$ss._id', 'STANDARD'] },
+                          then: 'MEDIUM',
+                        },
+                        {
+                          case: { $eq: ['$$ss._id', 'PREMIUM'] },
+                          then: 'HIGH',
+                        },
+                      ],
+                      default: 'NO_SUBSCRIPTION',
+                    },
+                  },
+                  v: '$$ss.count',
+                },
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    return {
+      totalStudents: stats[0]?.totalStudents ?? 0,
+      totalUniversities: stats[0]?.totalUniversities ?? 0,
+      totalTutors: stats[0]?.totalTutors ?? 0,
+      activeSubscriptions: await UserBaseModel.countDocuments({
+        userType: 'UNIVERSITY',
+        subscriptionPlanId: { $exists: true, $ne: null },
+      }),
+      recentRegistrations: stats[0]?.recentRegistrations ?? [],
+      subscriptionDistribution: {
+        LOW: stats[0]?.subscriptionDistribution?.LOW ?? 0,
+        MEDIUM: stats[0]?.subscriptionDistribution?.MEDIUM ?? 0,
+        HIGH: stats[0]?.subscriptionDistribution?.HIGH ?? 0,
+      },
+    };
   }
 }

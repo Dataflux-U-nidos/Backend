@@ -19,7 +19,6 @@ export interface UserBaseDocument extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
-
 const BaseSchema = new Schema<UserBaseDocument>(
   {
     name: { type: String, required: true },
