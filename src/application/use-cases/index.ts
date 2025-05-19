@@ -53,6 +53,7 @@ export * from './auth/impersonate.use-case';
 
 // Use cases email
 export * from './email/sendRecoveryEmail.useCase';
+export * from './email/SendCuestionaryEmailUseCase';
 
 // Use cases campaign
 export * from './campaign/create-campaign.use-case';
@@ -84,3 +85,4 @@ export * from './satisfactionSurvey/get-survey-stats.use-case';
 
 // Use cases STATS
 export * from './platformStats/get-platform-stats.use-case';
+export * from './studentTest/cuestionary.use-case';
