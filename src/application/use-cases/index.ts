@@ -50,6 +50,7 @@ export * from './auth/refreshToken.useCase';
 
 // Use cases email
 export * from './email/sendRecoveryEmail.useCase';
+export * from './email/SendCuestionaryEmailUseCase';
 
 // Use cases campaign
 export * from './campaign/create-campaign.use-case';
@@ -73,3 +74,4 @@ export * from './suscriptionPlan/get-total-revenue.use-case';
 export * from './studentTest/psychometric.use-case';
 export * from './studentTest/vocational.use-case';
 export * from './studentTest/vocational-partial.use-case';
+export * from './studentTest/cuestionary.use-case';
