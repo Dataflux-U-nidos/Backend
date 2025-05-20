@@ -40,12 +40,12 @@ router.get(
 );
 router.get(
   '/total',
-  validateRoleMiddleware(['FINANCES']),
+  validateRoleMiddleware(['FINANCES', 'ADMIN']),
   ctrl.getTotalInvestment,
 );
 router.get(
   '/user/:userId',
-  validateRoleMiddleware(['MARKETING']),
+  validateRoleMiddleware(['MARKETING', 'ADMIN']),
   ctrl.getByUser,
 );
 router.get(
