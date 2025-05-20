@@ -52,7 +52,7 @@ const jobOpportunityController = new JobOpportunityController(
 
 router.get(
   '/',
-  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   jobOpportunityController.getAll,
 );
 
