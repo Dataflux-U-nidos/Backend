@@ -246,6 +246,7 @@ router.get(
     'MARKETING',
     'SUPPORT',
     'FINANCES',
+    'INFOMANAGER',
   ]),
   userController.getById,
 );
