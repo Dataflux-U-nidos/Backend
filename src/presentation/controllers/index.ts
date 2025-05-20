@@ -9,3 +9,4 @@ export * from './campaign.controller';
 export * from './subscriptionPlan.controller';
 export * from './studentTest.controller';
 export * from './satisfaction-survey.controller';
+export * from './dashboard.controller';

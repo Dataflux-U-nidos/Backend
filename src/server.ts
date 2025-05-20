@@ -16,6 +16,7 @@ import {
   subscriptionPlanRouter,
   studentTestRouter,
   satisfactionSurveyRouter,
+  dashboardRouter,
 } from './presentation/routes';
 
 // Create express application
@@ -41,6 +42,7 @@ app.use(
   `${config.api.conventionApi}/satisfaction-survey`,
   satisfactionSurveyRouter,
 );
+app.use(`${config.api.conventionApi}/dashboard`, dashboardRouter);
 
 // Error handler
 app.use(errorHandlerMiddleware);

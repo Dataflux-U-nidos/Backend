@@ -9,6 +9,7 @@ import campaignRouter from './campaign.router';
 import subscriptionPlanRouter from './subscriptionPlan.routes';
 import studentTestRouter from './studentTest.router';
 import satisfactionSurveyRouter from './satisfaction-survey.router';
+import dashboardRouter from './dashboard.router';
 
 export {
   majorRouter,
@@ -21,4 +22,5 @@ export {
   subscriptionPlanRouter,
   studentTestRouter,
   satisfactionSurveyRouter,
+  dashboardRouter,
 };
