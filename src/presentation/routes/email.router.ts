@@ -1,16 +1,25 @@
 import { Router } from 'express';
 import { EmailController } from '../../presentation/controllers/email.controller';
-import { SendRecoveryEmailUseCase } from '../../application/';
+import {
+  SendRecoveryEmailUseCase,
+  SendCuestionaryEmailUseCase,
+} from '../../application/';
 import { UserRepository } from '../../infrastructure/';
 
 const router = Router();
 
-// Instancias necesarias
 const userRepository = new UserRepository();
 const sendRecoveryEmailUseCase = new SendRecoveryEmailUseCase(userRepository);
-const emailController = new EmailController(sendRecoveryEmailUseCase);
+const sendCuestionaryEmailUseCase = new SendCuestionaryEmailUseCase(
+  userRepository,
+);
 
-// Ruta usando el método de la instancia
+const emailController = new EmailController(
+  sendRecoveryEmailUseCase,
+  sendCuestionaryEmailUseCase,
+);
+
 router.post('/recover', emailController.recoverPassword);
+router.post('/cuestionary', emailController.sendCuestionary);
 
 export default router;

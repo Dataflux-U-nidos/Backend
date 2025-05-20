@@ -18,10 +18,12 @@ import {
   AddSupportToAdminUseCase,
   GetSupportByAdminUseCase,
   AddFinancesToAdminUseCase,
+  GetUsersBySupportUseCase,
   GetFinancesByAdminUseCase,
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
   GetRecommendationsUseCase,
+  GetPlatformStatsUseCase,
 } from '../../application';
 import {
   CreateUserDto,
@@ -58,6 +60,8 @@ export class UserController {
     private readonly updateTestResultUseCase: UpdateTestResultUseCase,
     private readonly updateFinalResultUseCase: UpdateFinalResultUseCase,
     private readonly getRecommendationsUseCase: GetRecommendationsUseCase,
+    private readonly getPlatformStatsUseCase: GetPlatformStatsUseCase,
+    private readonly getUsersBySupportUseCase: GetUsersBySupportUseCase,
   ) {}
 
   public getAll = async (
@@ -71,7 +75,7 @@ export class UserController {
       const emailFilter = typeof email === 'string' ? email : undefined;
 
       const users = await this.getAllUsersUseCase.execute({
-        type: typeFilter,
+        userType: typeFilter,
         email: emailFilter,
       });
 
@@ -267,6 +271,30 @@ export class UserController {
     }
   };
 
+  public getUsersBySupport: RequestHandler = async (req, res, next) => {
+    try {
+      const { userType, search } = req.query;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const result = await this.getUsersBySupportUseCase.execute(
+        typeof userType === 'string' ? userType : undefined,
+        typeof search === 'string' ? search : undefined,
+        page,
+        limit,
+      );
+
+      res.status(200).json({
+        items: result.items,
+        total: result.total,
+        page,
+        limit,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
+
   public getInfoManagersByUniversity = async (
     req: RequestWithUser,
     res: Response,
@@ -411,6 +439,81 @@ export class UserController {
       const recommendations =
         await this.getRecommendationsUseCase.execute(userId);
       res.status(200).json(recommendations);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteById = async (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const deleted = await this.deleteUserUseCase.execute(id);
+      if (!deleted) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+      res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getAllUniversities = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const universities = await this.getAllUsersUseCase.execute({
+        userType: 'UNIVERSITY', // Filtro clave aquí
+      });
+
+      res.status(200).json(universities);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getUniversityById = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    try {
+      const university = await this.getUserByIdUseCase.execute(req.params.id);
+
+      console.log('Request:', req.params.id);
+      if (university?.userType !== 'UNIVERSITY') {
+        console.log('No es universidad');
+        res.status(404).json({ message: 'Universidad no encontrada' });
+        return; // ⬅️ Este return detiene la ejecución
+      }
+
+      console.log('universidad', university);
+      res.status(200).json(university);
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Internal server error';
+      res.status(500).json({ message: errorMessage });
+    }
+  };
+
+  public getPlatformStats = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const stats = await this.getPlatformStatsUseCase.execute();
+      res.status(200).json(stats);
     } catch (error) {
       next(error);
     }
