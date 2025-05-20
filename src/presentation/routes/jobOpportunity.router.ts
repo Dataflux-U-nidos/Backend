@@ -1,20 +1,25 @@
+// 5. Actualizar el router con el orden correcto de rutas:
+
 import { Router } from 'express';
 import {
   JobOpportunityController,
   validateRoleMiddleware,
 } from '../../presentation';
 import { JobOpportunityRepository } from '../../infrastructure/database/repositories';
+import { MajorRepository } from '../../infrastructure/database/repositories'; // Import necesario
 import {
   CreateJobOpportunityUseCase,
   DeleteJobOpportunityUseCase,
   GetAllJobOpportunityUseCase,
   GetJobOpportunityByIdUseCase,
   UpdateJobOpportunityUseCase,
+  GetJobOpportunitiesByMajorUseCase,
 } from '../../application';
 
 const router = Router();
 
 const jobOpportunityRepository = new JobOpportunityRepository();
+const majorRepository = new MajorRepository(); // Nueva instancia
 
 const createJobOpportunityUseCase = new CreateJobOpportunityUseCase(
   jobOpportunityRepository,
@@ -31,6 +36,10 @@ const updateJobOpportunityUseCase = new UpdateJobOpportunityUseCase(
 const deleteJobOpportunityUseCase = new DeleteJobOpportunityUseCase(
   jobOpportunityRepository,
 );
+const getJobOpportunitiesByMajorUseCase = new GetJobOpportunitiesByMajorUseCase(
+  jobOpportunityRepository,
+  majorRepository, // Pasar ambos repositories
+);
 
 const jobOpportunityController = new JobOpportunityController(
   createJobOpportunityUseCase,
@@ -38,19 +47,29 @@ const jobOpportunityController = new JobOpportunityController(
   getJobOpportunityByIdUseCase,
   updateJobOpportunityUseCase,
   deleteJobOpportunityUseCase,
+  getJobOpportunitiesByMajorUseCase,
 );
 
-// Defining routes with middleware validation and assigning controller methods
 router.get(
   '/',
-  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   jobOpportunityController.getAll,
 );
+
+// Esta ruta debe ir ANTES que /:id
+router.get(
+  '/major/:majorId',
+  validateRoleMiddleware(['STUDENT', 'ADMIN']),
+  jobOpportunityController.getByMajor,
+);
+
+// Esta ruta va después de las rutas específicas
 router.get(
   '/:id',
   validateRoleMiddleware(['STUDENT', 'ADMIN']),
   jobOpportunityController.getById,
 );
+
 router.post(
   '/',
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),

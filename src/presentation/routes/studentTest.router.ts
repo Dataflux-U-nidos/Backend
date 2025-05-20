@@ -3,21 +3,23 @@ import {
   PsychometricUseCase,
   VocationalUseCase,
   VocationalPartialUseCase,
+  CuestionaryUseCase,
 } from '../../application';
 import { StudentTestController } from '../controllers';
-import {logRequest} from '../middleware/logRequest';
-
+import { logRequest } from '../middleware/logRequest';
 
 const router = Router();
 
 const psychometricUseCase = new PsychometricUseCase();
 const vocationalUseCase = new VocationalUseCase();
 const vocationalPartialUseCase = new VocationalPartialUseCase();
+const cuestionaryUseCase = new CuestionaryUseCase();
 
 const studentTestController = new StudentTestController(
   psychometricUseCase,
   vocationalUseCase,
   vocationalPartialUseCase,
+  cuestionaryUseCase,
 );
 
 router.get(
@@ -37,5 +39,6 @@ router.get(
   logRequest('/vocational-partial', 'GET', 'Get partial vocational test'),
   studentTestController.getPartialVocationalTest,
 );
+router.get('/satisfaction', studentTestController.getCuestionaryTest);
 
 export default router;

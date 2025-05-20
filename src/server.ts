@@ -6,7 +6,6 @@ import {
 import config from './infrastructure/config';
 import { database } from './infrastructure';
 import {
-  educationalInstitutionRouter,
   commentRouter,
   majorRouter,
   userRouter,
@@ -16,6 +15,8 @@ import {
   campaignRouter,
   subscriptionPlanRouter,
   studentTestRouter,
+  satisfactionSurveyRouter,
+  dashboardRouter,
 } from './presentation/routes';
 import logger from './shared/utils/logger';
 // Create express application
@@ -28,10 +29,6 @@ configureMiddlewares(app);
 app.use(`${config.api.conventionApi}/major`, majorRouter);
 app.use(`${config.api.conventionApi}/email`, emailRouter);
 app.use(`${config.api.conventionApi}/user`, userRouter);
-app.use(
-  `${config.api.conventionApi}/educational-institution`,
-  educationalInstitutionRouter,
-);
 app.use(`${config.api.conventionApi}/opportunity`, JobOpportunityRouter);
 app.use(`${config.api.conventionApi}/comment`, commentRouter);
 app.use(`${config.api.conventionApi}/auth`, authRouter);
@@ -41,6 +38,11 @@ app.use(
   subscriptionPlanRouter,
 );
 app.use(`${config.api.conventionApi}/student-test`, studentTestRouter);
+app.use(
+  `${config.api.conventionApi}/satisfaction-survey`,
+  satisfactionSurveyRouter,
+);
+app.use(`${config.api.conventionApi}/dashboard`, dashboardRouter);
 
 // Error handler
 app.use(errorHandlerMiddleware);
@@ -78,8 +80,6 @@ const startServer = async () => {
     process.exit(1);
   }
 };
-
-
 
 // Only start the server if not in a testing environment
 if (config.env.nodeEnv !== 'test') {

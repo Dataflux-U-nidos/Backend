@@ -8,6 +8,8 @@ export interface StudentDocument extends UserBaseDocument {
   locality: string;
   school: string;
   preferences: string[];
+  testCompleted: boolean;
+  satisfaction_surveys: string[];
   le: number;
   ma: number;
   ci: number;
@@ -26,12 +28,19 @@ const StudentSchema = new Schema<Partial<StudentDocument>>({
     type: [String],
     default: [],
   },
+  testCompleted: { type: Boolean, required: false, default: false },
   le: { type: Number, required: false, default: 0 },
   ma: { type: Number, required: false, default: 0 },
   ci: { type: Number, required: false, default: 0 },
   cc: { type: Number, required: false, default: 0 },
   idi: { type: Number, required: false, default: 0 },
   ar: { type: Number, required: false, default: 0 },
+  satisfaction_surveys: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'SatisfactionSurvey',
+    },
+  ],
 });
 
 export const StudentModel = UserBaseModel.discriminator<StudentDocument>(

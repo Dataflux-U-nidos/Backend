@@ -19,6 +19,13 @@ export interface BaseUser {
   updatedAt: Date;
 }
 
+export interface Event {
+  name: string;
+  description: string;
+  date: Date;
+  location: string;
+}
+
 export interface AdminUser extends BaseUser {
   userType: 'ADMIN';
   last_name: string;
@@ -35,6 +42,7 @@ export interface StudentUser extends BaseUser {
   locality: string;
   school: string;
   preferences: string[];
+  testCompleted: boolean;
   le: number;
   ma: number;
   ci: number;
@@ -46,15 +54,6 @@ export interface StudentUser extends BaseUser {
 export interface TutorUser extends BaseUser {
   userType: 'TUTOR';
   students: string[];
-}
-
-export interface UniversityUser extends BaseUser {
-  userType: 'UNIVERSITY';
-  zone: string;
-  locality: string;
-  infomanagers: string[];
-  viewers: string[];
-  subscriptionPlanId: string;
 }
 
 export interface ViewerUser extends BaseUser {
@@ -73,6 +72,12 @@ export interface UniversityUser extends BaseUser {
   zone: string;
   locality: string;
   address: string;
+  price_range: 'LOW' | 'MEDIUM' | 'HIGH';
+  aceptation_difficulty: 'EASY' | 'MEDIUM' | 'HARD';
+  subscriptionPlanId: string;
+  description: string;
+  link: string;
+  events: Event[];
   infomanagers: string[];
   viewers: string[];
 }

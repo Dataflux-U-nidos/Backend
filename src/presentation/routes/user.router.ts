@@ -27,6 +27,8 @@ import {
   UpdateTestResultUseCase,
   UpdateFinalResultUseCase,
   GetRecommendationsUseCase,
+  GetPlatformStatsUseCase,
+  GetUsersBySupportUseCase,
 } from '../../application';
 
 const router = Router();
@@ -71,6 +73,8 @@ const getRecommendationsUseCase = new GetRecommendationsUseCase(
   userRepository,
   majorRepository,
 );
+const getPlatformStatsUseCase = new GetPlatformStatsUseCase(userRepository);
+const getUsersBySupportUseCase = new GetUsersBySupportUseCase(userRepository);
 
 // Instance controller with use cases injected
 const userController = new UserController(
@@ -95,6 +99,8 @@ const userController = new UserController(
   updateTestResultUseCase,
   updateFinalResultUseCase,
   getRecommendationsUseCase,
+  getPlatformStatsUseCase,
+  getUsersBySupportUseCase,
 );
 
 // —————— RUTAS DE CREACIÓN ——————
@@ -114,6 +120,13 @@ router.get(
   '/',
   validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
+);
+
+// Get all users by support
+router.get(
+  '/support-users',
+  validateRoleMiddleware(['ADMIN', 'SUPPORT']),
+  userController.getUsersBySupport,
 );
 
 // Get students by tutor (usa el token, no recibe ID por URL)
@@ -164,6 +177,15 @@ router.get(
   userController.getRecommendations,
 );
 
+router.get('/universities', userController.getAllUniversities);
+
+// Get platform stats
+router.get(
+  '/platform-stats',
+  validateRoleMiddleware(['ADMIN']),
+  userController.getPlatformStats,
+);
+
 // —————— RUTAS DE ACTUALIZACIÓN “ESPECIAL” ——————
 // Para que cada usuario actualice su propio perfil
 router.patch(
@@ -177,6 +199,7 @@ router.patch(
     'MARKETING',
     'SUPPORT',
     'FINANCES',
+    'INFOMANAGER',
   ]),
   userController.update,
 );
@@ -203,6 +226,13 @@ router.delete(
   userController.delete,
 );
 
+// —————— RUTA PARA ELIMINAR USUARIO POR ID ——————
+router.delete(
+  '/:id',
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  userController.deleteById,
+);
+
 // —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
 
 // Get user by ID
@@ -217,14 +247,22 @@ router.get(
     'MARKETING',
     'SUPPORT',
     'FINANCES',
+    'INFOMANAGER',
   ]),
   userController.getById,
+);
+
+// Get university By Id
+router.get(
+  '/universities/:id',
+  validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
+  userController.getUniversityById,
 );
 
 // Update user by ID - Para que los usuarios raiz modifiquen la info de sus usuarios creados
 router.patch(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY', 'INFOMANAGER']),
   userController.updateById,
 );
 
