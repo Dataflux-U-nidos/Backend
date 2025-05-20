@@ -9,7 +9,7 @@ interface RecommendationWithUniversityInfo {
   _id: string;
   name: string;
   description: string;
-  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
+  difficulty: "EASY" | "MEDIUM" | "HARD";
   price: number;
   focus: string;
   institutionId: string;
@@ -18,7 +18,7 @@ interface RecommendationWithUniversityInfo {
   preferences: string[];
   createdAt: string;
   updatedAt: string;
-
+  
   // Información completa de la universidad
   university: {
     id: string;
@@ -92,16 +92,15 @@ export class GetRecommendationsUseCase {
               zone: university.zone || '',
               locality: university.locality || '',
               price_range: university.price_range || 'MEDIUM',
-              aceptation_difficulty:
-                university.aceptation_difficulty || 'MEDIUM',
+              aceptation_difficulty: university.aceptation_difficulty || 'MEDIUM',
               description: university.description || '',
               link: university.link || '',
-              events: (university.events || []).map((event) => ({
+              events: (university.events || []).map(event => ({
                 name: event.name,
                 description: event.description,
                 date: event.date,
-                location: event.location,
-              })),
+                location: event.location
+              }))
             };
           }
         },
@@ -135,7 +134,7 @@ export class GetRecommendationsUseCase {
         preferences: major.preferences,
         createdAt: major.createdAt.toISOString(),
         updatedAt: major.updatedAt.toISOString(),
-        university: university,
+        university: university
       };
 
       if (sameZone && sameLocality) {
