@@ -199,6 +199,7 @@ router.patch(
     'MARKETING',
     'SUPPORT',
     'FINANCES',
+    'INFOMANAGER',
   ]),
   userController.update,
 );
