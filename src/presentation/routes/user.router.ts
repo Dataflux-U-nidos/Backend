@@ -199,6 +199,7 @@ router.patch(
     'MARKETING',
     'SUPPORT',
     'FINANCES',
+    'INFOMANAGER',
   ]),
   userController.update,
 );
@@ -261,7 +262,7 @@ router.get(
 // Update user by ID - Para que los usuarios raiz modifiquen la info de sus usuarios creados
 router.patch(
   '/:id',
-  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
+  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY', 'INFOMANAGER']),
   userController.updateById,
 );
 

@@ -481,15 +481,29 @@ export class UserController {
       next(error);
     }
   };
+
   public getUniversityById = async (
     req: Request,
     res: Response,
   ): Promise<void> => {
-    const university = await this.getUserByIdUseCase.execute(req.params.id);
-    if (university?.userType !== 'UNIVERSITY') {
-      res.status(404).json({ message: 'Universidad no encontrada' });
+    try {
+      const university = await this.getUserByIdUseCase.execute(req.params.id);
+
+      console.log('Request:', req.params.id);
+      if (university?.userType !== 'UNIVERSITY') {
+        console.log('No es universidad');
+        res.status(404).json({ message: 'Universidad no encontrada' });
+        return; // ⬅️ Este return detiene la ejecución
+      }
+
+      console.log('universidad', university);
+      res.status(200).json(university);
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Internal server error';
+      res.status(500).json({ message: errorMessage });
     }
-    res.json(university);
   };
 
   public getPlatformStats = async (
