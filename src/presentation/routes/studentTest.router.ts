@@ -6,6 +6,7 @@ import {
   CuestionaryUseCase,
 } from '../../application';
 import { StudentTestController } from '../controllers';
+import { logRequest } from '../middleware/logRequest';
 
 const router = Router();
 
@@ -21,10 +22,21 @@ const studentTestController = new StudentTestController(
   cuestionaryUseCase,
 );
 
-router.get('/psychometric', studentTestController.getPsychometricTest);
-router.get('/vocational', studentTestController.getVocationalTest);
+router.get(
+  '/psychometric',
+  logRequest('/psychometric', 'GET', 'Get psychometric test'),
+  studentTestController.getPsychometricTest,
+);
+
+router.get(
+  '/vocational',
+  logRequest('/vocational', 'GET', 'Get vocational test'),
+  studentTestController.getVocationalTest,
+);
+
 router.get(
   '/vocational-partial',
+  logRequest('/vocational-partial', 'GET', 'Get partial vocational test'),
   studentTestController.getPartialVocationalTest,
 );
 router.get('/satisfaction', studentTestController.getCuestionaryTest);
