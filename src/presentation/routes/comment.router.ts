@@ -7,6 +7,7 @@ import {
   GetCommentByIdUseCase,
   UpdateCommentUseCase,
   DeleteCommentUseCase,
+  GetCommentsByMajorUseCase,
 } from '../../application';
 
 const router = Router();
@@ -18,6 +19,9 @@ const getAllCommentsUseCase = new GetAllCommentsUseCase(commentRepository);
 const getCommentByIdUseCase = new GetCommentByIdUseCase(commentRepository);
 const updateCommentUseCase = new UpdateCommentUseCase(commentRepository);
 const deleteCommentUseCase = new DeleteCommentUseCase(commentRepository);
+const getCommentsByMajorUseCase = new GetCommentsByMajorUseCase(
+  commentRepository,
+);
 
 const commentController = new CommentController(
   createCommentUseCase,
@@ -25,6 +29,7 @@ const commentController = new CommentController(
   getCommentByIdUseCase,
   updateCommentUseCase,
   deleteCommentUseCase,
+  getCommentsByMajorUseCase,
 );
 
 // Defining routes with middleware validation and assigning controller methods
@@ -32,6 +37,11 @@ router.get(
   '/',
   validateRoleMiddleware(['ADMIN', 'STUDENT']),
   commentController.getAll,
+);
+router.get(
+  '/major/:majorId',
+  validateRoleMiddleware(['ADMIN', 'STUDENT']),
+  commentController.getByMajor,
 );
 router.get(
   '/:id',

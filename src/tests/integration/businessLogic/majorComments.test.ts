@@ -36,5 +36,5 @@ describe('Comments on mayors', () => {
       .delete(`/api/v1/comment/${commentId}`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
     expect(response.status).toBe(200);
-  })
+  });
 });

@@ -3,6 +3,7 @@ import {
   PsychometricUseCase,
   VocationalUseCase,
   VocationalPartialUseCase,
+  CuestionaryUseCase,
 } from '../../application';
 
 export class StudentTestController {
@@ -10,6 +11,7 @@ export class StudentTestController {
     private readonly psychometricUseCase: PsychometricUseCase,
     private readonly vocationalUseCase: VocationalUseCase,
     private readonly vocationalPartialUseCase: VocationalPartialUseCase,
+    private readonly cuestionaryUseCase: CuestionaryUseCase,
   ) {}
 
   public getPsychometricTest = async (
@@ -50,6 +52,20 @@ export class StudentTestController {
       res.status(200).json({ data });
     } catch (error) {
       console.error('Error en getPartialVocationalTest:', error);
+      next(error);
+    }
+  };
+
+  public getCuestionaryTest = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const data = await this.cuestionaryUseCase.execute();
+      res.status(200).json({ data });
+    } catch (error) {
+      console.error('Error en getCuestionaryTest:', error);
       next(error);
     }
   };
