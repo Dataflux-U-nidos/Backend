@@ -5,7 +5,7 @@ import {
   SendCuestionaryEmailUseCase,
 } from '../../application/';
 import { UserRepository } from '../../infrastructure/';
-
+import { logRequest } from '../middleware/logRequest';
 const router = Router();
 
 const userRepository = new UserRepository();
@@ -19,7 +19,16 @@ const emailController = new EmailController(
   sendCuestionaryEmailUseCase,
 );
 
-router.post('/recover', emailController.recoverPassword);
-router.post('/cuestionary', emailController.sendCuestionary);
+router.post(
+  '/recover',
+  logRequest('/email/recover', 'POST', 'SendRecoveryEmail'),
+  emailController.recoverPassword,
+);
+
+router.post(
+  '/cuestionary',
+  logRequest('/email/cuestionary', 'POST', 'SendCuestionaryEmail'),
+  emailController.sendCuestionary,
+);
 
 export default router;

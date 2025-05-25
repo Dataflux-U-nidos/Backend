@@ -9,7 +9,7 @@ import {
   DeleteCommentUseCase,
   GetCommentsByMajorUseCase,
 } from '../../application';
-
+import { logRequest } from '../middleware/logRequest';
 const router = Router();
 
 const commentRepository = new CommentRepository();
@@ -35,27 +35,32 @@ const commentController = new CommentController(
 // Defining routes with middleware validation and assigning controller methods
 router.get(
   '/',
+  logRequest('/comment', 'GET', 'GetAllComments'),
   validateRoleMiddleware(['ADMIN', 'STUDENT']),
   commentController.getAll,
 );
 router.get(
   '/major/:majorId',
+  logRequest('/comment/major/:majorId', 'GET', 'GetCommentsByMajor'),
   validateRoleMiddleware(['ADMIN', 'STUDENT']),
   commentController.getByMajor,
 );
 router.get(
   '/:id',
+  logRequest('/comment/:id', 'GET', 'GetCommentById'),
   validateRoleMiddleware(['ADMIN', 'STUDENT']),
   commentController.getById,
 );
-router.post('/', validateRoleMiddleware(['STUDENT']), commentController.create);
+router.post('/',  logRequest('/comment', 'POST', 'CreateComment'), validateRoleMiddleware(['STUDENT']), commentController.create);
 router.patch(
   '/:id',
+  logRequest('/comment/:id', 'PATCH', 'UpdateComment'),
   validateRoleMiddleware(['STUDENT']),
   commentController.update,
 );
 router.delete(
   '/:id',
+  logRequest('/comment/:id', 'DELETE', 'DeleteComment'),
   validateRoleMiddleware(['STUDENT', 'ADMIN']),
   commentController.delete,
 );

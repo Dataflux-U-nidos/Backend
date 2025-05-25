@@ -60,7 +60,7 @@ const startServer = async () => {
       console.log(`🚀 Servidor corriendo en el puerto ${config.server.port}`);
 
       // 🔁 Logger cada 10 minutos
-      const TEN_MINUTES_MS = 1000 * 60 * 10;
+      const THIRTY_MINUTES_MS = 1000 * 60 * 30;
 
       setInterval(() => {
         const uptimeMinutes = Math.floor(process.uptime() / 60);
@@ -73,7 +73,7 @@ const startServer = async () => {
           memoryMB: (memory.rss / 1024 / 1024).toFixed(2),
           timestamp: new Date().toISOString(),
         });
-      }, TEN_MINUTES_MS);
+      }, THIRTY_MINUTES_MS);
     });
   } catch (error) {
     console.error('❌ Error al iniciar la aplicación:', error);
