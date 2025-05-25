@@ -30,6 +30,7 @@ import {
   GetPlatformStatsUseCase,
   GetUsersBySupportUseCase,
 } from '../../application';
+import { logRequest } from '../middleware/logRequest';
 
 const router = Router();
 
@@ -105,11 +106,14 @@ const userController = new UserController(
 
 // —————— RUTAS DE CREACIÓN ——————
 // Public registration (sin middleware)
-router.post('/registry', userController.create);
+router.post('/registry',
+  logRequest('/user/registry', 'POST', 'CreateUser'),
+   userController.create);
 
 // Create user
 router.post(
   '/',
+  logRequest('/user', 'POST', 'CreateUser'),
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
   userController.create,
 );
@@ -118,6 +122,7 @@ router.post(
 // Get all users
 router.get(
   '/',
+  logRequest('/user', 'GET', 'GetAllUsers'),
   validateRoleMiddleware(['ADMIN', 'VIEWER', 'UNIVERSITY']),
   userController.getAll,
 );
@@ -125,6 +130,7 @@ router.get(
 // Get all users by support
 router.get(
   '/support-users',
+  logRequest('/user/support-users', 'GET', 'GetUsersBySupport'),
   validateRoleMiddleware(['ADMIN', 'SUPPORT']),
   userController.getUsersBySupport,
 );
@@ -132,6 +138,7 @@ router.get(
 // Get students by tutor (usa el token, no recibe ID por URL)
 router.get(
   '/students',
+  logRequest('/user/students', 'GET', 'GetStudentsByTutor'),
   validateRoleMiddleware(['ADMIN', 'TUTOR']),
   userController.getStudentsByTutor,
 );
@@ -139,6 +146,7 @@ router.get(
 // Get info managers by university (usa el token o un param interno)
 router.get(
   '/infomanagers',
+  logRequest('/user/infomanagers', 'GET', 'GetInfoManagersByUniversity'),
   validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
   userController.getInfoManagersByUniversity,
 );
@@ -146,6 +154,7 @@ router.get(
 // Get viewers by university
 router.get(
   '/viewers',
+  logRequest('/user/viewers', 'GET', 'GetViewersByUniversity'),
   validateRoleMiddleware(['ADMIN', 'UNIVERSITY']),
   userController.getViewersByUniversity,
 );
@@ -153,6 +162,7 @@ router.get(
 // Get marketing by admin (usa el token, no recibe ID por URL)
 router.get(
   '/marketing',
+  logRequest('/user/marketing', 'GET', 'GetMarketingByAdmin'),
   validateRoleMiddleware(['ADMIN']),
   userController.getMarketingByAdmin,
 );
@@ -160,6 +170,7 @@ router.get(
 // Get support by admin (usa el token, no recibe ID por URL)
 router.get(
   '/support',
+  logRequest('/user/support', 'GET', 'GetSupportByAdmin'),
   validateRoleMiddleware(['ADMIN']),
   userController.getSupportByAdmin,
 );
@@ -167,21 +178,26 @@ router.get(
 // Get finances by admin (usa el token, no recibe ID por URL)
 router.get(
   '/finances',
+  logRequest('/user/finances', 'GET', 'GetFinancesByAdmin'),
   validateRoleMiddleware(['ADMIN']),
   userController.getFinancesByAdmin,
 );
 
 router.get(
   '/recommendations',
+  logRequest('/user/recommendations', 'GET', 'GetRecommendations'),
   validateRoleMiddleware(['STUDENT']),
   userController.getRecommendations,
 );
 
-router.get('/universities', userController.getAllUniversities);
+router.get('/universities', 
+  logRequest('/user/universities', 'GET', 'GetAllUniversities'),
+  userController.getAllUniversities);
 
 // Get platform stats
 router.get(
   '/platform-stats',
+  logRequest('/user/platform-stats', 'GET', 'GetPlatformStats'),
   validateRoleMiddleware(['ADMIN']),
   userController.getPlatformStats,
 );
@@ -190,6 +206,7 @@ router.get(
 // Para que cada usuario actualice su propio perfil
 router.patch(
   '/',
+  logRequest('/user', 'PATCH', 'UpdateUser'),
   validateRoleMiddleware([
     'ADMIN',
     'TUTOR',
@@ -206,22 +223,27 @@ router.patch(
 
 router.patch(
   '/form-result',
+  logRequest('/user/form-result', 'PATCH', 'UpdateUser'),
   validateRoleMiddleware(['STUDENT', 'ADMIN']),
   userController.updateTestResult,
 );
 
 router.patch(
   '/final-result',
+  logRequest('/user/final-result', 'PATCH', 'UpdateUser'),
   validateRoleMiddleware(['STUDENT', 'ADMIN']),
   userController.updateFinalResult,
 );
 
 // Update user by Email
-router.patch('/by-email/:email', userController.updateByEmail);
+router.patch('/by-email/:email', 
+  logRequest('/user/by-email/:email', 'PATCH', 'UpdateUserByEmail'),
+  userController.updateByEmail);
 
 // —————— RUTA DE DELETE “ESPECIAL” ——————
 router.delete(
   '/',
+  logRequest('/user', 'DELETE', 'DeleteUser'),
   validateRoleMiddleware(['ADMIN', 'STUDENT', 'TUTOR', 'UNIVERSITY']),
   userController.delete,
 );
@@ -229,6 +251,7 @@ router.delete(
 // —————— RUTA PARA ELIMINAR USUARIO POR ID ——————
 router.delete(
   '/:id',
+  logRequest('/user/:id', 'DELETE', 'DeleteUserById'),
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY']),
   userController.deleteById,
 );
@@ -238,6 +261,7 @@ router.delete(
 // Get user by ID
 router.get(
   '/:id',
+  logRequest('/user/:id', 'GET', 'GetUserById'),
   validateRoleMiddleware([
     'ADMIN',
     'STUDENT',
@@ -255,6 +279,7 @@ router.get(
 // Get university By Id
 router.get(
   '/universities/:id',
+  logRequest('/user/universities/:id', 'GET', 'GetUniversityById'),
   validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   userController.getUniversityById,
 );
@@ -262,6 +287,7 @@ router.get(
 // Update user by ID - Para que los usuarios raiz modifiquen la info de sus usuarios creados
 router.patch(
   '/:id',
+  logRequest('/user/:id', 'PATCH', 'UpdateUserById'),
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY', 'INFOMANAGER', 'STUDENT']),
   userController.updateById,
 );

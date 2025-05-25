@@ -15,6 +15,7 @@ import {
   UpdateJobOpportunityUseCase,
   GetJobOpportunitiesByMajorUseCase,
 } from '../../application';
+import { logRequest } from '../middleware/logRequest';
 
 const router = Router();
 
@@ -52,6 +53,7 @@ const jobOpportunityController = new JobOpportunityController(
 
 router.get(
   '/',
+  logRequest('/jobOpportunity', 'GET', 'GetAllJobOpportunities'),
   validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   jobOpportunityController.getAll,
 );
@@ -59,6 +61,11 @@ router.get(
 // Esta ruta debe ir ANTES que /:id
 router.get(
   '/major/:majorId',
+  logRequest(
+    '/jobOpportunity/major/:majorId',
+    'GET',
+    'GetJobOpportunitiesByMajor',
+  ),
   validateRoleMiddleware(['STUDENT', 'ADMIN']),
   jobOpportunityController.getByMajor,
 );
@@ -66,22 +73,26 @@ router.get(
 // Esta ruta va después de las rutas específicas
 router.get(
   '/:id',
+  logRequest('/jobOpportunity/:id', 'GET', 'GetJobOpportunityById'),
   validateRoleMiddleware(['STUDENT', 'ADMIN']),
   jobOpportunityController.getById,
 );
 
 router.post(
   '/',
+  logRequest('/jobOpportunity', 'POST', 'CreateJobOpportunity'),
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   jobOpportunityController.create,
 );
 router.patch(
   '/:id',
+  logRequest('/jobOpportunity/:id', 'PATCH', 'UpdateJobOpportunity'),
   validateRoleMiddleware(['ADMIN']),
   jobOpportunityController.update,
 );
 router.delete(
   '/:id',
+  logRequest('/jobOpportunity/:id', 'DELETE', 'DeleteJobOpportunity'),
   validateRoleMiddleware(['ADMIN']),
   jobOpportunityController.delete,
 );

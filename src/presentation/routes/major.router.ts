@@ -14,6 +14,7 @@ import {
   GetUserByIdUseCase,
   AddJobOpportunityToMajorUseCase,
 } from '../../application';
+import { logRequest } from '../middleware/logRequest';
 
 const router = Router();
 
@@ -47,23 +48,27 @@ const majorController = new MajorController(
 // Defining routes with middleware validation and assigning controller methods
 router.get(
   '/',
+  logRequest('/major', 'GET', 'GetAllMajors'),
   validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   majorController.getAll,
 );
 router.get(
   '/:id',
+  logRequest('/major/:id', 'GET', 'GetMajorById'),
   validateRoleMiddleware(['STUDENT', 'ADMIN', 'INFOMANAGER']),
   majorController.getById,
 );
 
 router.get(
   '/university/:institutionId',
+  logRequest('/major/university/:institutionId', 'GET', 'GetMajorsByInstitution'),
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   majorController.getByInstitution,
 );
 
 router.post(
   '/',
+  logRequest('/major', 'POST', 'CreateMajor'),
   validateRoleMiddleware(['INFOMANAGER']),
   majorController.create,
 );
@@ -71,18 +76,25 @@ router.post(
 // src/presentation/routes/major.routes.ts
 router.patch(
   '/job-opportunities/:id',
+  logRequest(
+    '/major/job-opportunities/:id',
+    'PATCH',
+    'AddJobOpportunityToMajor',
+  ),
   validateRoleMiddleware(['INFOMANAGER', 'ADMIN']),
   majorController.addJobOpportunity,
 );
 
 router.patch(
   '/:id',
+  logRequest('/major/:id', 'PATCH', 'UpdateMajor'),
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   majorController.update,
 );
 
 router.delete(
   '/:id',
+  logRequest('/major/:id', 'DELETE', 'DeleteMajor'),
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   majorController.delete,
 );
