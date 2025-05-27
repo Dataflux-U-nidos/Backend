@@ -82,5 +82,4 @@ router.delete(
   ctrl.delete,
 );
 
-
 export default router;
