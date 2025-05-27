@@ -106,9 +106,11 @@ const userController = new UserController(
 
 // —————— RUTAS DE CREACIÓN ——————
 // Public registration (sin middleware)
-router.post('/registry',
+router.post(
+  '/registry',
   logRequest('/user/registry', 'POST', 'CreateUser'),
-   userController.create);
+  userController.create,
+);
 
 // Create user
 router.post(
@@ -190,9 +192,11 @@ router.get(
   userController.getRecommendations,
 );
 
-router.get('/universities', 
+router.get(
+  '/universities',
   logRequest('/user/universities', 'GET', 'GetAllUniversities'),
-  userController.getAllUniversities);
+  userController.getAllUniversities,
+);
 
 // Get platform stats
 router.get(
@@ -236,9 +240,11 @@ router.patch(
 );
 
 // Update user by Email
-router.patch('/by-email/:email', 
+router.patch(
+  '/by-email/:email',
   logRequest('/user/by-email/:email', 'PATCH', 'UpdateUserByEmail'),
-  userController.updateByEmail);
+  userController.updateByEmail,
+);
 
 // —————— RUTA DE DELETE “ESPECIAL” ——————
 router.delete(
@@ -288,7 +294,13 @@ router.get(
 router.patch(
   '/:id',
   logRequest('/user/:id', 'PATCH', 'UpdateUserById'),
-  validateRoleMiddleware(['ADMIN', 'TUTOR', 'UNIVERSITY', 'INFOMANAGER', 'STUDENT']),
+  validateRoleMiddleware([
+    'ADMIN',
+    'TUTOR',
+    'UNIVERSITY',
+    'INFOMANAGER',
+    'STUDENT',
+  ]),
   userController.updateById,
 );
 

@@ -51,7 +51,12 @@ router.get(
   validateRoleMiddleware(['ADMIN', 'STUDENT']),
   commentController.getById,
 );
-router.post('/',  logRequest('/comment', 'POST', 'CreateComment'), validateRoleMiddleware(['STUDENT']), commentController.create);
+router.post(
+  '/',
+  logRequest('/comment', 'POST', 'CreateComment'),
+  validateRoleMiddleware(['STUDENT']),
+  commentController.create,
+);
 router.patch(
   '/:id',
   logRequest('/comment/:id', 'PATCH', 'UpdateComment'),

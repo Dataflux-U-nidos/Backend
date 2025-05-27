@@ -61,7 +61,11 @@ router.get(
 
 router.get(
   '/university/:institutionId',
-  logRequest('/major/university/:institutionId', 'GET', 'GetMajorsByInstitution'),
+  logRequest(
+    '/major/university/:institutionId',
+    'GET',
+    'GetMajorsByInstitution',
+  ),
   validateRoleMiddleware(['ADMIN', 'INFOMANAGER']),
   majorController.getByInstitution,
 );
