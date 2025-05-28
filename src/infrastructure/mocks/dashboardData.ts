@@ -94,6 +94,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3101234567',
     EmailContacto: 'laura.rodriguez@gmail.com',
+    state: 'CONTACTADO',
   },
   {
     Nombre: 'Mateo',
@@ -104,6 +105,7 @@ export const usersData = [
     NombreAcudiente: 'Carolina Gómez',
     CelularContacto: '3017654321',
     EmailContacto: 'carolina.gomez@gmail.com',
+    state: 'CONTACTADO',
   },
   {
     Nombre: 'Juliana',
@@ -114,6 +116,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3129876543',
     EmailContacto: 'juli.ramirez@hotmail.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Samuel',
@@ -124,6 +127,7 @@ export const usersData = [
     NombreAcudiente: 'Andrés Herrera',
     CelularContacto: '3142233445',
     EmailContacto: 'andres.herrera@gmail.com',
+    state: 'PROGRESO',
   },
   {
     Nombre: 'Valentina',
@@ -134,6 +138,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3179988776',
     EmailContacto: 'valentina.munoz@yahoo.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Nicolás',
@@ -144,6 +149,7 @@ export const usersData = [
     NombreAcudiente: 'Camila Rodríguez',
     CelularContacto: '3201122334',
     EmailContacto: 'camila.rodriguez@outlook.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Mariana',
@@ -154,6 +160,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3113344556',
     EmailContacto: 'mariana.lopez@gmail.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Emiliano',
@@ -164,6 +171,7 @@ export const usersData = [
     NombreAcudiente: 'Laura Jiménez',
     CelularContacto: '3009876543',
     EmailContacto: 'laura.jimenez@hotmail.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Judith',
@@ -174,6 +182,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3009876543',
     EmailContacto: 'berta15@valencia.biz',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Ignacio',
@@ -184,6 +193,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3009876543',
     EmailContacto: 'claudiatorrez@bustos.net',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Minerva',
@@ -194,6 +204,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3009876543',
     EmailContacto: 'dulce-maria32@hurtado.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Augusto',
@@ -204,6 +215,7 @@ export const usersData = [
     NombreAcudiente: '-',
     CelularContacto: '3009876543',
     EmailContacto: 'qsalcedo@hotmail.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Jonás',
@@ -214,6 +226,7 @@ export const usersData = [
     NombreAcudiente: 'Rodrigo Meza',
     CelularContacto: '3009876543',
     EmailContacto: 'de-jesusmarisela@gmail.com',
+    state: 'PENDIENTE',
   },
   {
     Nombre: 'Samuel',
@@ -224,5 +237,6 @@ export const usersData = [
     NombreAcudiente: 'Camilo Alejandro Zelaya',
     CelularContacto: '3009876543',
     EmailContacto: 'garciaangelica@hotmail.com',
+    state: 'PENDIENTE',
   },
 ];
