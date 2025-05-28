@@ -17,9 +17,13 @@ const config = {
     mongoUri: process.env.MONGO_URI as string,
   },
   lambda: {
-    lambdaUrl: (process.env.LAMBDA_URL as string) || '',
+    lambdaUrl: process.env.LAMBDA_URL as string || '',
+    psychometricUrl:
+      'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/psychometric?version=1',
     vocationalUrl:
       'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/vocational?version=1',
+    vocationalPartialUrl:
+      'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/vocational-partial?version=1',
     SatisfacionUrl:
       'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/cuestionary?version=1',
   },
