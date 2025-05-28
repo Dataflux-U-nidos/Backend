@@ -1,5 +1,11 @@
 // src/domain/repositories/user.repository.ts
-import { UserResponseDto } from '../../application/dtos/user.dto';
+import { PlatformStatsResponseDto } from '../../application/dtos/platform-stats.dto';
+import { SatisfactionSurveyResponseDto } from '../../application/dtos/satisfaction-survey.dto';
+import {
+  UpdateFinalResultDto,
+  UpdateTestResultDto,
+  UserResponseDto,
+} from '../../application/dtos/user.dto';
 import { BaseUser, User } from '../entities/user.entity';
 
 export interface IUserRepository {
@@ -8,7 +14,7 @@ export interface IUserRepository {
    * @param filter Optional filters: userType and/or email.
    */
   findAll(filter?: {
-    userType?: string;
+    userType?: string; // Cambiar de 'type' a 'userType'
     email?: string;
   }): Promise<UserResponseDto[]>;
 
@@ -20,6 +26,8 @@ export interface IUserRepository {
 
   /** Create a new user. */
   create(data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User>;
+
+  findStudentsByTutor(tutorId: string): Promise<UserResponseDto[]>;
 
   /**
    * Update an existing user.
@@ -40,8 +48,18 @@ export interface IUserRepository {
 
   delete(id: string): Promise<boolean>;
 
-  /** Get all students associated with a given tutor. */
-  findStudentsByTutor(tutorId: string): Promise<UserResponseDto[]>;
+  // Get all users by support Filtering by userType
+  findUsersBySupport(
+    filter?: {
+      userType?: string;
+      email?: string;
+      search?: string;
+    },
+    options?: {
+      page?: number;
+      limit?: number;
+    },
+  ): Promise<{ items: UserResponseDto[]; total: number }>;
 
   /** Add a student ID to a tutor's student list. */
   addStudentToTutor(tutorId: string, studentId: string): Promise<void>;
@@ -82,4 +100,21 @@ export interface IUserRepository {
 
   /** Get all finances associated with a admin. */
   findFinancesByAdmin(adminId: string): Promise<UserResponseDto[]>;
+
+  updateTestResult(
+    userId: string,
+    data: UpdateTestResultDto,
+  ): Promise<User | null>;
+
+  updateFinalResult(
+    userId: string,
+    data: UpdateFinalResultDto,
+  ): Promise<User | null>;
+
+  addSurveyToStudent(studentId: string, surveyId: string): Promise<void>;
+  getStudentSurveys(
+    studentId: string,
+  ): Promise<SatisfactionSurveyResponseDto[]>;
+
+  getPlatformStats(): Promise<PlatformStatsResponseDto>;
 }

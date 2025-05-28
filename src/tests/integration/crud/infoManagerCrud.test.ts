@@ -13,7 +13,7 @@ let majorId: string;
 describe('Integration tests InfoManager - CRUD', () => {
   it('should login as a infoManager', async () => {
     const response = await request(app).post('/api/v1/auth/login').send({
-      email: 'andres.garcia@example.com',
+      email: 'camilo.hernandez@example.com',
       password: 'password123',
     });
 

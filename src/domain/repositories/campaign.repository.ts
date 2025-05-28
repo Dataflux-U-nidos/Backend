@@ -3,6 +3,7 @@ import {
   CreateCampaignDto,
   UpdateCampaignDto,
   CampaignResponseDto,
+  TotalInvestmentResponseDto,
 } from '../../application/dtos/campaign.dto';
 
 export interface ICampaignRepository {
@@ -15,4 +16,5 @@ export interface ICampaignRepository {
     data: UpdateCampaignDto,
   ): Promise<CampaignResponseDto | null>;
   delete(id: string): Promise<boolean>;
+  getTotalInvestment(): Promise<TotalInvestmentResponseDto>;
 }

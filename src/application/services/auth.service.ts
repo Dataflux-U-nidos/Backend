@@ -75,4 +75,34 @@ export class AuthService {
       throw new Error('Token inválido o expirado');
     }
   }
+
+  public async impersonate(
+    impersonatorId: string,
+    targetUserId: string,
+  ): Promise<JwtTokensDto> {
+    const target = await this.userRepository.findById(targetUserId);
+    if (!target) {
+      throw new Error('Usuario objetivo no encontrado');
+    }
+
+    const payload = {
+      id: target.id,
+      type: target.userType,
+      impersonatorId,
+    };
+
+    const accessToken = jwt.sign(payload, config.jwt.secret, {
+      expiresIn: config.jwt.tokenExpiresIn,
+    });
+    const refreshToken = jwt.sign(payload, config.jwt.secretRefresh, {
+      expiresIn: config.jwt.refreshExpiresTokenIn,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      userType: target.userType,
+      userId: target.id,
+    };
+  }
 }

@@ -5,7 +5,13 @@ import {
   GetCommentByIdUseCase,
   UpdateCommentUseCase,
   DeleteCommentUseCase,
+  GetCommentsByMajorUseCase,
+  UserType,
 } from '../../application';
+
+interface RequestWithUser extends Request {
+  user?: { id: string; userType: UserType };
+}
 
 export class CommentController {
   constructor(
@@ -14,6 +20,7 @@ export class CommentController {
     private readonly getCommentByIdUseCase: GetCommentByIdUseCase,
     private readonly updateCommentUseCase: UpdateCommentUseCase,
     private readonly deleteCommentUseCase: DeleteCommentUseCase,
+    private readonly getCommentsByMajorUseCase: GetCommentsByMajorUseCase,
   ) {}
 
   public getAll = async (
@@ -48,12 +55,20 @@ export class CommentController {
   };
 
   public create = async (
-    req: Request,
+    req: RequestWithUser,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const newComment = await this.createCommentUseCase.execute(req.body);
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'User ID is missing' });
+        return;
+      }
+      const newComment = await this.createCommentUseCase.execute(
+        userId,
+        req.body,
+      );
       res.status(201).json(newComment);
     } catch (error) {
       next(error);
@@ -96,6 +111,20 @@ export class CommentController {
       }
     } catch (error) {
       next(error);
+    }
+  };
+  // en CommentController
+  public getByMajor = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { majorId } = req.params;
+      const comments = await this.getCommentsByMajorUseCase.execute(majorId);
+      res.status(200).json(comments);
+    } catch (err) {
+      next(err);
     }
   };
 }

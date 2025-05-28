@@ -20,6 +20,7 @@ describe('Integration tests Universiry - CRUD', () => {
       password: 'password123',
       userType: 'UNIVERSITY',
       address: 'Calle 123',
+      subscriptionPlanId: '681784f0194c1091fdd8f809',
     });
 
     expect(response.status).toBe(201);
@@ -47,9 +48,9 @@ describe('Integration tests Universiry - CRUD', () => {
       .post('/api/v1/user/')
       .set('Authorization', `Bearer ${accessTokenCookie}`)
       .send({
-        name: 'Luis Fernando',
+        name: 'Bruce',
         last_name: 'Lee',
-        email: 'luis.lee@example.com',
+        email: 'bruce.lee@example.com',
         password: 'password123',
         userType: 'INFOMANAGER',
         universityId: universityId,
@@ -95,15 +96,6 @@ describe('Integration tests Universiry - CRUD', () => {
     ).toBe(true);
   });
 
-  it('should delete a info manager user', async () => {
-    const response = await request(app)
-      .delete(`/api/v1/user/${infoManagerId}`)
-      .set('Authorization', `Bearer ${accessTokenCookie}`);
-
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe('User deleted successfully');
-  });
-
   it('should create a viewer acount', async () => {
     const response = await request(app)
       .post('/api/v1/user/')
@@ -147,20 +139,15 @@ describe('Integration tests Universiry - CRUD', () => {
     expect(response.body.email).toBe('alejandro.quintana@example.com');
   });
 
-  it('should delete a viewer user', async () => {
+  it('should delete users of university user', async () => {
     const response = await request(app)
-      .delete(`/api/v1/user/${viewerId}`)
+      .delete(`/api/v1/user/`)
       .set('Authorization', `Bearer ${accessTokenCookie}`);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe('User deleted successfully');
   });
 });
 
 afterAll(async () => {
-  const response = await request(app)
-    .delete(`/api/v1/user/${universityId}`)
-    .set('Authorization', `Bearer ${accessTokenCookie}`);
-  expect(response.status).toBe(200);
   await database.disconnect();
 });

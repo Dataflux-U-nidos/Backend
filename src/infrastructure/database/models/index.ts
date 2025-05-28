@@ -1,4 +1,3 @@
-export * from './educationalInstitution.model';
 export * from './major.model';
 export * from './user.base.model';
 export * from './jobOpportunity.model';
@@ -12,3 +11,4 @@ export * from './admin.model';
 export * from './marketing.model';
 export * from './support.model';
 export * from './finances.model';
+export * from './subscriptionPlan.model';
