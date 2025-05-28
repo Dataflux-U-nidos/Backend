@@ -13,8 +13,7 @@ const requiredEnvVars = [
 ];
 validateEnv(requiredEnvVars);
 
-const lambdaUrl =
-  'https://sreiiipsy6eog7adotnk4tbbxm0mkuxi.lambda-url.us-east-2.on.aws/';
+const lambdaUrl = 'https://4txpvbjbfcdqikzkvwnxmjhjja0hfqzf.lambda-url.us-east-1.on.aws/';
 
 const config = {
   database: {
