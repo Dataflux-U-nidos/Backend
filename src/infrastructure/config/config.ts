@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { validateEnv } from '../../shared/utils/index';
-import { formatUrl } from '../../shared/utils/url-formatter';
 import { parseTime } from '../../shared/utils/time.utils';
 
 dotenv.config();
@@ -13,14 +12,12 @@ const requiredEnvVars = [
 ];
 validateEnv(requiredEnvVars);
 
-const lambdaUrl = 'https://4txpvbjbfcdqikzkvwnxmjhjja0hfqzf.lambda-url.us-east-1.on.aws/';
-
 const config = {
   database: {
     mongoUri: process.env.MONGO_URI as string,
   },
   lambda: {
-    lambdaUrl: formatUrl(lambdaUrl, process.env.ENV ?? 'dev'),
+    lambdaUrl: process.env.LAMBDA_URL as string || '',
     psychometricUrl:
       'https://w2wi4gsxk6.execute-api.us-east-1.amazonaws.com/prod/psychometric?version=1',
     vocationalUrl:
