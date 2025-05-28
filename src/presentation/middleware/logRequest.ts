@@ -17,13 +17,23 @@ export function logRequest(
     // Hook para ejecutar al terminar la respuesta
     res.on('finish', () => {
       const duration = Date.now() - start;
-      logger.info({
+      const logData = {
         route: routePath,
         method,
         status: res.statusCode,
         durationMs: duration,
-        msg: handlerName ? `${handlerName} success` : 'Request finished',
-      });
+        msg: handlerName
+          ? `${handlerName} ${res.statusCode < 400 ? 'success' : 'failed'}`
+          : 'Request finished',
+      };
+
+      if (res.statusCode >= 500) {
+        logger.error(logData);
+      } else if (res.statusCode >= 400) {
+        logger.warn(logData);
+      } else {
+        logger.info(logData);
+      }
     });
 
     next();

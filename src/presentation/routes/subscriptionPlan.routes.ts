@@ -14,6 +14,7 @@ import {
   GetRevenueByPlanTypeUseCase,
   GetTotalRevenueByPeriodUseCase,
 } from '../../application';
+import { logRequest } from '../middleware/logRequest';
 
 const router = Router();
 
@@ -38,28 +39,38 @@ const planController = new SubscriptionPlanController(
 );
 
 // —————— RUTAS DE CREACIÓN ——————
-// Create subscription plan (ADMIN, MARKETING)
-router.post('/', validateRoleMiddleware(['ADMIN']), planController.create);
+router.post(
+  '/',
+  logRequest('/subscription-plan', 'POST', 'CreateSubscriptionPlan'),
+  validateRoleMiddleware(['ADMIN']),
+  planController.create,
+);
 
 // —————— RUTAS DE LECTURA ESTÁTICAS ——————
-// List all plans (any authenticated role)
-router.get('/', planController.getAll);
+router.get(
+  '/',
+  logRequest('/subscription-plan', 'GET', 'GetAllSubscriptionPlans'),
+  planController.getAll,
+);
+
 router.get(
   '/revenue',
+  logRequest('/subscription-plan/revenue', 'GET', 'GetTotalRevenueByPeriod'),
   validateRoleMiddleware(['FINANCES']),
   planController.getTotalRevenueByPeriod,
 );
 
 // —————— RUTAS DINÁMICAS (PARÁMETRO :id) ——————
-// Get plan by ID
 router.get(
   '/revenue/:type',
+  logRequest('/subscription-plan/revenue/:type', 'GET', 'GetRevenueByPlanType'),
   validateRoleMiddleware(['FINANCES']),
   planController.getRevenueByPlanType,
 );
 
 router.get(
   '/:id',
+  logRequest('/subscription-plan/:id', 'GET', 'GetSubscriptionPlanById'),
   validateRoleMiddleware([
     'ADMIN',
     'MARKETING',
@@ -72,14 +83,18 @@ router.get(
   planController.getById,
 );
 
-// Update plan by ID (ADMIN, MARKETING)
 router.patch(
   '/:id',
+  logRequest('/subscription-plan/:id', 'PATCH', 'UpdateSubscriptionPlan'),
   validateRoleMiddleware(['ADMIN', 'FINANCES']),
   planController.update,
 );
 
-// Delete plan by ID (ADMIN only)
-router.delete('/:id', validateRoleMiddleware(['ADMIN']), planController.delete);
+router.delete(
+  '/:id',
+  logRequest('/subscription-plan/:id', 'DELETE', 'DeleteSubscriptionPlan'),
+  validateRoleMiddleware(['ADMIN']),
+  planController.delete,
+);
 
 export default router;

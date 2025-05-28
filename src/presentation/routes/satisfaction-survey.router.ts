@@ -12,6 +12,7 @@ import {
 } from '../../application/use-cases';
 import { validateRoleMiddleware } from '../middleware';
 //import { validateRoleMiddleware } from '../middleware';
+import { logRequest } from '../middleware/logRequest';
 
 const router = Router();
 
@@ -40,12 +41,18 @@ const surveyController = new SatisfactionSurveyController(
 // Routes
 router.post(
   '/',
+  logRequest('/satisfaction-survey', 'POST', 'CreateSatisfactionSurvey'),
   validateRoleMiddleware(['STUDENT', 'ADMIN']),
   surveyController.create,
 );
 
 router.get(
   '/students/:studentId',
+  logRequest(
+    '/satisfaction-survey/students/:studentId',
+    'GET',
+    'GetStudentSurveys',
+  ),
   validateRoleMiddleware(['ADMIN', 'TUTOR', 'STUDENT']),
   surveyController.getByStudent,
 );
@@ -53,6 +60,7 @@ router.get(
 // src/presentation/routes/satisfaction-survey.router.ts
 router.get(
   '/stats',
+  logRequest('/satisfaction-survey/stats', 'GET', 'GetSurveyStats'),
   validateRoleMiddleware(['ADMIN']), // Solo admins
   surveyController.getStats,
 );
